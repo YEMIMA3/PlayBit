@@ -1,16 +1,28 @@
+$primary-color: #007bff;
+$hover-color: #0056b3;
+$text-dark: #333;
+$text-muted: #000;
+$logo-bg: #00aaff;
+$logo-text: #008080;
+
+$breakpoint-mobile: 480px;
+$breakpoint-tablet: 768px;
+
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 2rem;
-  position:fixed;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.7); 
+  background: rgba(255, 255, 255, 0.7);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-family: 'Poppins', sans-serif;
+  backdrop-filter: blur(8px);
+  box-sizing: border-box;
 
   .logo {
     display: flex;
@@ -20,7 +32,7 @@
     .logo-icon {
       width: 40px;
       height: 40px;
-      background-color: #00aaff;
+      background-color: $logo-bg;
       color: #fff;
       display: flex;
       align-items: center;
@@ -32,8 +44,12 @@
 
     .logo-text {
       font-weight: 700;
-      color: #008080; /* tealish like in image */
+      color: $logo-text;
       font-size: 1.5rem;
+
+      @media (max-width: $breakpoint-mobile) {
+        font-size: 1.2rem;
+      }
     }
   }
 
@@ -44,17 +60,16 @@
     a {
       text-decoration: underline;
       text-decoration-color: transparent;
-      color: #333;
+      color: $text-dark;
       font-weight: 500;
       transition: text-decoration-color 0.2s ease-in-out, color 0.2s ease-in-out;
 
-    &:hover {
-      color: #007bff;
-      text-decoration-color: #007bff;
-     }
+      &:hover {
+        color: $primary-color;
+        text-decoration-color: $primary-color;
+      }
     }
   }
-
 
   .auth-buttons {
     display: flex;
@@ -63,30 +78,138 @@
     .login-btn {
       background: none;
       border: none;
-      color: #000;
+      color: $text-muted;
       font-weight: 500;
       cursor: pointer;
-      font-size: 19px;
-      margin-right: 30px;
+      font-size: 1rem;
+      margin-right: 1rem;
 
       &:hover {
-        color: #007bff;
+        color: $primary-color;
+      }
+
+      @media (max-width: $breakpoint-mobile) {
+        font-size: 0.95rem;
+        margin-right: 0.5rem;
       }
     }
 
     .signup-btn {
-      background-color: #007bff;
+      background-color: $primary-color;
       color: #fff;
       border: none;
-      font-size: 15px;
+      font-size: 0.95rem;
       padding: 0.4rem 1rem;
       border-radius: 6px;
       cursor: pointer;
       font-weight: 500;
-      margin-right: 100px;
 
       &:hover {
-        background-color: #0056b3;
+        background-color: $hover-color;
+      }
+
+      @media (max-width: $breakpoint-mobile) {
+        font-size: 0.9rem;
+        padding: 0.35rem 0.9rem;
+      }
+    }
+
+    @media (max-width: $breakpoint-mobile) {
+      gap: 0.5rem;
+    }
+  }
+
+  // Hamburger menu (hidden on desktop)
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 1001;
+    position: absolute;
+    left: 82%;
+
+    .line {
+      width: 25px;
+      height: 3px;
+      background-color: #333;
+      margin: 3px 0;
+      transition: all 0.3s ease;
+
+      &.open:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+
+      &.open:nth-child(2) {
+        opacity: 0;
+      }
+
+      &.open:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
+      }
+    }
+  }
+
+  .auth-buttons-mobile {
+    display: none;
+  }
+
+  // Mobile styles
+  @media (max-width: $breakpoint-tablet) {
+    padding: 0.75rem 1rem;
+
+    .hamburger {
+      display: flex;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      height: 100vh;
+      width: 70%;
+      max-width: 300px;
+      background-color: white;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 80px 30px 30px;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+      transition: right 0.3s ease;
+      z-index: 1000;
+
+
+      &.active {
+        right: 0;
+      }
+
+      a {
+        margin: 15px 0;
+        font-size: 18px;
+      }
+    }
+
+    .auth-buttons {
+      display: none;
+    }
+
+    .auth-buttons-mobile {
+      display: block;
+      margin-top: 20px;
+      width: 100%;
+
+      .login-btn {
+        width: 100%;
+        padding: 0.5rem;
+        background-color: $primary-color;
+        color: white;
+        border-radius: 6px;
+        border: none;
+        
+        &:hover {
+          background-color: $hover-color;
+        }
       }
     }
   }
