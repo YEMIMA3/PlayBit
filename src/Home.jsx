@@ -3,17 +3,21 @@ import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import "./styles/home.scss";
 import "./styles/buttons.scss";
 
+// Images
 import heroBackground from "./assets/bg1.jpg";
 
 // Tournament images
-import tournament1 from "./assets/tournaments/tournaments.jpeg";
-import tournament2 from "./assets/tournaments/tournaments.jpeg";
-import tournament3 from "./assets/tournaments/tournaments.jpeg";
+import tournament1 from "./assets/tournaments/tournament1.jpeg";
+import tournament2 from "./assets/tournaments/tournament1.jpeg";
+import tournament3 from "./assets/tournaments/tournament1.jpeg";
 
 // Coach images
 import coach1 from "./assets/coaches/coach1.jpg";
+
+// Sports image (placeholder)
 import baseballImg from "./assets/sports/baseball.jpeg";
 
+// === Featured Sports ===
 const featuredSports = [
   { name: "Soccer", icon: "⚽", image: baseballImg },
   { name: "Basketball", icon: "🏀", image: baseballImg },
@@ -22,6 +26,7 @@ const featuredSports = [
   { name: "Baseball", icon: "⚾", image: baseballImg },
 ];
 
+// === Coaches ===
 const coaches = [
   { name: "John Martinez", sport: "Fitness & Strength", rating: 4.9, experience: "8 years", image: coach1 },
   { name: "Sarah Johnson", sport: "Basketball", rating: 4.8, experience: "6 years", image: coach1 },
@@ -31,12 +36,14 @@ const coaches = [
   { name: "Emma Davis", sport: "Yoga & Wellness", rating: 5.0, experience: "7 years", image: coach1 },
 ];
 
+// === Tournaments ===
 const tournaments = [
   { name: "City Championship Cup", sport: "Multi-Sport", date: "Dec 15-20, 2025", location: "Central Stadium", image: tournament1 },
   { name: "National Basketball League", sport: "Basketball", date: "Jan 5-12, 2026", location: "Sports Arena", image: tournament2 },
   { name: "Grand Tennis Masters", sport: "Tennis", date: "Feb 18-25, 2026", location: "Tennis Center", image: tournament3 },
 ];
 
+// === Why Choose ===
 const whyChooseFeatures = [
   { title: "Expert Coaches", description: "Connect with certified and experienced coaches across 50+ sports" },
   { title: "Personalized Training", description: "Get customized training plans and diet recommendations" },
@@ -49,26 +56,20 @@ const whyChooseFeatures = [
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Refs for horizontal scroll
   const tournamentsRef = useRef(null);
   const coachesRef = useRef(null);
 
-  const scrollLeft = (ref) => {
-    ref.current.scrollBy({ left: -320, behavior: "smooth" });
-  };
-
-  const scrollRight = (ref) => {
-    ref.current.scrollBy({ left: 320, behavior: "smooth" });
-  };
+  const scrollLeft = (ref) => ref.current.scrollBy({ left: -320, behavior: "smooth" });
+  const scrollRight = (ref) => ref.current.scrollBy({ left: 320, behavior: "smooth" });
 
   return (
     <div className="home">
-      {/* Hero Section */}
+      {/* 🌟 Hero Section */}
       <section className="hero" style={{ backgroundImage: `url(${heroBackground})` }}>
         <div className="hero__overlay"></div>
         <div className="hero__content">
           <h1 className="hero__title">Find the Right Coach, Train Smarter</h1>
-          <p className="hero__subtitle">
+          <p className="hero__subtitle" style={{fontSize:"25px",lineHeight:"35px"}}>
             Connect with professional coaches across multiple sports and take your skills to the next level
           </p>
 
@@ -95,7 +96,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Sports */}
+      {/* 🏅 Featured Sports */}
       <section className="featured-sports-section">
         <h2>Featured Sports</h2>
         <div className="sports-grid">
@@ -115,71 +116,59 @@ const Home = () => {
         </div>
       </section>
 
-{/* Live Tournaments Carousel */}
-<section className="carousel-section">
+      {/* 🏆 Live Tournaments Grid */}
+<section className="live-tournaments">
   <h2>Live Tournaments</h2>
-  <div className="carousel">
-    <button className="carousel-btn prev" onClick={() => scrollLeft(tournamentsRef)}>
-      <ChevronLeft size={20} />
-    </button>
-
-    <div className="horizontal-scroll" ref={tournamentsRef}>
-      {tournaments.map((tournament, i) => (
-        <div key={i} className="tournament-card">
-          <div className="tournament-image">
-            <img src={tournament.image} alt={tournament.name} />
-            <div className="sport-badge">{tournament.sport}</div>
-          </div>
-          <div className="tournament-info">
-            <h3>{tournament.name}</h3>
-            <p>📅 {tournament.date}</p>
-            <p>📍 {tournament.location}</p>
-            <button className="btn btn-hero" style={{ width: "100%" }}>View Details</button>
-          </div>
+  <div className="tournaments-grid">
+    {tournaments.map((t, i) => (
+      <div key={i} className="tournament-card">
+        <div className="tournament-image">
+          <img src={t.image} alt={t.name} />
+          <span className="sport-badge">{t.sport}</span>
         </div>
-      ))}
-    </div>
-
-    <button className="carousel-btn next" onClick={() => scrollRight(tournamentsRef)}>
-      <ChevronRight size={20} />
-    </button>
+        <div className="tournament-info">
+          <h3>{t.name}</h3>
+          <p>📅 {t.date}</p>
+          <p>📍 {t.location}</p>
+          <button className="btn">View Details</button>
+        </div>
+      </div>
+    ))}
   </div>
 </section>
 
-{/* Featured Coaches Carousel */}
-<section className="carousel-section">
-  <h2>Featured Coaches</h2>
-  <div className="carousel">
-    <button className="carousel-btn prev" onClick={() => scrollLeft(coachesRef)}>
-      <ChevronLeft size={20} />
-    </button>
+      {/* 👩‍🏫 Featured Coaches Carousel */}
+      <section className="featured-coaches-carousel">
+        <h2>Featured Coaches</h2>
+        <div className="carousel">
+          <button className="carousel-btn left" onClick={() => scrollLeft(coachesRef)}>
+            <ChevronLeft size={20} />
+          </button>
 
-    <div className="horizontal-scroll" ref={coachesRef}>
-      {coaches.map((coach, i) => (
-        <div key={i} className="coach-card">
-          <div className="coach-image">
-            <img src={coach.image} alt={coach.name} />
-            <div className="rating-badge">⭐ {coach.rating}</div>
+          <div className="horizontal-scroll" ref={coachesRef}>
+            {coaches.map((coach, i) => (
+              <div key={i} className="coach-card">
+                <div className="coach-image">
+                  <img src={coach.image} alt={coach.name} />
+                  <span className="rating-badge" style={{color:"black"}}>⭐ {coach.rating}</span>
+                </div>
+                <div className="coach-info">
+                  <h3>{coach.name}</h3>
+                  <p>{coach.sport}</p>
+                  <p>{coach.experience} experience</p>
+                  <button className="btn">View Profile</button>
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="coach-info">
-            <h3 className="coach-name">{coach.name}</h3>
-            <p className="coach-sport">{coach.sport}</p>
-            <p className="coach-experience">{coach.experience} experience</p>
-            <button className="btn btn-primary" style={{ width: "100%" }}>View Profile</button>
-          </div>
+
+          <button className="carousel-btn right" onClick={() => scrollRight(coachesRef)}>
+            <ChevronRight size={20} />
+          </button>
         </div>
-      ))}
-    </div>
+      </section>
 
-    <button className="carousel-btn next" onClick={() => scrollRight(coachesRef)}>
-      <ChevronRight size={20} />
-    </button>
-  </div>
-</section>
-
-
-
-      {/* Why Choose Section */}
+      {/* 💡 Why Choose Section */}
       <section className="why-choose">
         <div className="container">
           <h2>Why Choose PlayBit</h2>
@@ -197,7 +186,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Footer CTA */}
+      {/* 🚀 Footer CTA */}
       <section className="footer-cta">
         <div className="container">
           <h2>Ready to Start Your Journey?</h2>

@@ -1,6 +1,8 @@
 @use './variables' as *;
 
+// =======================
 // Animations
+// =======================
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -21,12 +23,17 @@
   to { transform: translateX(-50%); }
 }
 
+// =======================
+// Home Page Base
+// =======================
 .home {
   min-height: 100vh;
   background-color: $background;
 }
 
+// =======================
 // Hero Section
+// =======================
 .hero {
   position: relative;
   min-height: 90vh;
@@ -43,8 +50,8 @@
     background: linear-gradient(
       to bottom,
       hsla(222, 47%, 11%, 0.8) 0%,
-      hsla(222, 47%, 11%, 0.6) 50%,
-      hsla(0, 0%, 98%, 0.95) 100%
+      hsla(222, 47%, 11%, 0.6) 40%,
+      hsla(0, 0%, 90%, 0.95) 80%
     );
   }
 
@@ -55,12 +62,13 @@
     margin: 0 auto;
     padding: 5rem 1rem;
     text-align: center;
+    margin-bottom: 100px;
   }
 
   &__title {
     font-size: 3rem;
     font-weight: 700;
-    color: black;
+    color: white;
     margin-bottom: 1.5rem;
     animation: fade-in 0.6s ease-out;
 
@@ -71,7 +79,7 @@
 
   &__subtitle {
     font-size: 1.25rem;
-    color: black;
+    color: white;
     margin-bottom: 3rem;
     max-width: 48rem;
     margin-left: auto;
@@ -104,7 +112,6 @@
       border: none;
       padding: 0 1rem;
       border-radius: 0.5rem;
-      
       &:focus { outline: none; }
     }
   }
@@ -122,7 +129,9 @@
   }
 }
 
-// Featured Sports
+// =======================
+// Featured Sports Section
+// =======================
 .featured-sports-section {
   padding: 5rem 1rem;
   max-width: 1280px;
@@ -201,80 +210,219 @@
         animation: float 3s ease-in-out infinite;
       }
 
-      h3 { font-size: 1.5rem; font-weight: 700; color: black; }
+      h3 { font-size: 1.5rem; font-weight: 700; color: white; }
     }
   }
 }
 
-// Carousel Sections (Tournaments & Coaches)
-.carousel-section {
-  margin: 4rem 0;
+// =======================
+// Live Tournaments Section
+// =======================
+.live-tournaments {
+  padding: 3rem 1rem;
 
-  h2 { text-align: center; font-size: 2rem; margin-bottom: 2rem; color: black; }
+  h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: black;
+  }
 
-  .carousel {
-    display: flex;
-    align-items: center;
+  .tournaments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.75rem; // reduced gap between cards
+    @media (max-width: $breakpoint-md) {
+    gap: 0.5rem; // Tighter gaps on mobile
+  }
+  }
 
-    .carousel-btn {
-      flex-shrink: 0;
-      width: 3rem;
-      height: 3rem;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.5);
-      color: white;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      margin: 0 0.5rem;
-      font-size: 1.5rem;
-      transition: background 0.3s;
+  .tournament-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+    width: 300px;
+    height: 400px;
+    gap:0.5rem;
+    margin-left: 100px;
 
-      &:hover { background: rgba(0,0,0,0.8); }
+    &:hover { transform: translateY(-5px); }
+
+    .tournament-image {
+      position: relative;
+
+      img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+      }
+
+      .sport-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: #ff5a5f;
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: bold;
+      }
     }
 
-    .horizontal-scroll {
-      display: flex;
-      gap: 1rem;
-      overflow-x: auto;
-      scroll-behavior: smooth;
-      flex: 1;
-      padding-bottom: 1rem;
-      scroll-snap-type: x mandatory;
+    .tournament-info {
+      padding: 1rem;
 
-      &::-webkit-scrollbar { display: none; }
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+      h3 { margin-bottom: 0.5rem; color: black; }
 
-      .tournament-card,
-      .coach-card {
-        flex: 0 0 300px;
-        scroll-snap-align: start;
-        background: #fff;
-        color: black;
-        border-radius: 1rem;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        transition: transform 0.3s;
+      p {
+        margin-bottom: 0.3rem;
+        font-size: 0.9rem;
+        color: #555;
+      }
 
-        &:hover { transform: translateY(-5px); }
+      .btn {
+        margin-top: 1.0rem;
+        width: 100%;
+        flex-shrink: 0;
+        height: 3rem;
+        border-radius: 10px;
+        background: rgba(0, 123, 255, 0.8);
+        color: white;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
 
-        img { width: 100%; height: 180px; object-fit: cover; }
-
-        .info {
-          padding: 1rem;
-          margin-left: 50px; 
-          h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: black; }
-          p { font-size: 0.9rem; margin-bottom: 0.25rem; color:black;}
+        &:hover {
+          background: rgba(0, 123, 255, 1);
         }
       }
     }
   }
 }
 
+// =======================
+// Featured Coaches Carousel
+// =======================
+.featured-coaches-carousel {
+  margin: 5rem 0;
+  text-align: center;
+
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #0b1120;
+    margin-bottom: 3rem;
+  }
+
+  .carousel {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem; // space between buttons and scroll container
+    justify-content: center;
+
+    .carousel-btn {
+      flex-shrink: 0;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      background: rgba(0, 123, 255, 0.8);
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover { background: rgba(0, 123, 255, 1); }
+    }
+
+    .horizontal-scroll {
+      display: flex;
+      gap: 1.5rem;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 1rem;
+      flex: 1; // let it expand to fill available space
+
+      &::-webkit-scrollbar { display: none; }
+
+      .coach-card {
+        flex: 0 0 320px; // fixed width
+        scroll-snap-align: start;
+        background: #ffffff;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .coach-image {
+          position: relative;
+
+          img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+          }
+
+          .rating-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: #fff;
+            padding: 0.3rem 0.6rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+          }
+        }
+
+        .coach-info {
+          padding: 1.5rem;
+
+          h3 { font-size: 1.25rem; font-weight: 700; color: #0b1120; margin-bottom: 0.5rem; }
+          p { font-size: 0.95rem; color: #4a5568; margin-bottom: 0.3rem; }
+          .btn {
+            margin-top: 1rem;
+            width: 100%;
+            background: linear-gradient(90deg, #007bff, #00b4d8);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+              transform: translateY(-2px);
+              background: linear-gradient(90deg, #0056b3, #0090c8);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+// =======================
 // Why Choose Section
+// =======================
 .why-choose {
   padding: 5rem 1rem;
   background: linear-gradient(135deg, hsla(195, 85%, 45%, 0.05), hsla(195, 85%, 45%, 0.05));
@@ -289,7 +437,6 @@
       display: flex;
       gap: 1.5rem;
       animation: slide-left 30s linear infinite;
-
       &:hover { animation-play-state: paused; }
     }
   }
@@ -320,7 +467,9 @@
   }
 }
 
+// =======================
 // Footer CTA
+// =======================
 .footer-cta {
   padding: 5rem 1rem;
   margin-bottom: 25px;
@@ -329,7 +478,8 @@
 
   .container { max-width: 1280px; margin: 0 auto; }
 
-  h2 { font-size: 2.5rem; font-weight: 700; color: black; margin-bottom: 1.5rem; }
+  h2 { font-size: 3.5rem; font-weight: 700; color: white; margin-bottom: 1.5rem; }
   p { font-size: 1.25rem; color: hsla(0, 0%, 100%, 0.9); margin-bottom: 2rem; max-width: 42rem; margin: 0 auto; }
-  .btn { box-shadow: $shadow-glow; background-color: rgb(255, 145, 0); }
+
+  .btn { box-shadow: $shadow-glow; background-color: rgb(255, 145, 0); margin-top: 20px; }
 }
