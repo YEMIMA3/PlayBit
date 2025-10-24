@@ -1,4 +1,4 @@
-@use './variables' as *;
+@use './common/variables' as *;
 
 // =======================
 // Animations
@@ -220,6 +220,7 @@
 // =======================
 .live-tournaments {
   padding: 3rem 1rem;
+  background: linear-gradient(135deg, hsla(195, 85%, 45%, 0.05), hsla(195, 85%, 45%, 0.05));
 
   h2 {
     text-align: center;

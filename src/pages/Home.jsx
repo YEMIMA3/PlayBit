@@ -1,21 +1,21 @@
 import React, { useState, useRef } from "react";
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
-import "./styles/home.scss";
-import "./styles/buttons.scss";
+import "../styles/home.scss";
+import "../styles/common/buttons.scss";
 
 // Images
-import heroBackground from "./assets/bg1.jpg";
+import heroBackground from "../assets/bg1.jpg";
 
 // Tournament images
-import tournament1 from "./assets/tournaments/tournament1.jpeg";
-import tournament2 from "./assets/tournaments/tournament1.jpeg";
-import tournament3 from "./assets/tournaments/tournament1.jpeg";
+import tournament1 from "../assets/tournaments/tournament1.jpeg";
+import tournament2 from "../assets/tournaments/tournament1.jpeg";
+import tournament3 from "../assets/tournaments/tournament1.jpeg";
 
 // Coach images
-import coach1 from "./assets/coaches/coach1.jpg";
+import coach1 from "../assets/coaches/coach1.jpg";
 
 // Sports image (placeholder)
-import baseballImg from "./assets/sports/baseball.jpeg";
+import baseballImg from "../assets/sports/baseball.jpeg";
 
 // === Featured Sports ===
 const featuredSports = [
@@ -98,7 +98,7 @@ const Home = () => {
 
       {/* 🏅 Featured Sports */}
       <section className="featured-sports-section">
-        <h2>Featured Sports</h2>
+        <h2 style={{fontSize:"45px",fontWeight:"bold",marginTop:"0px"}}>Featured Sports</h2>
         <div className="sports-grid">
           {featuredSports.map((sport, i) => (
             <div key={i} className="sport-card">
@@ -118,7 +118,7 @@ const Home = () => {
 
       {/* 🏆 Live Tournaments Grid */}
 <section className="live-tournaments">
-  <h2>Live Tournaments</h2>
+  <h2 style={{fontSize:"45px",fontWeight:"bold",marginTop:"0px"}}>Live Tournaments</h2>
   <div className="tournaments-grid">
     {tournaments.map((t, i) => (
       <div key={i} className="tournament-card">
@@ -171,7 +171,7 @@ const Home = () => {
       {/* 💡 Why Choose Section */}
       <section className="why-choose">
         <div className="container">
-          <h2>Why Choose PlayBit</h2>
+          <h2 style={{fontSize:"45px",fontWeight:"bold",marginTop:"0px"}}>Why Choose PlayBit</h2>
           <div className="features-scroll">
             <div className="features-track">
               {[...whyChooseFeatures, ...whyChooseFeatures].map((f, i) => (

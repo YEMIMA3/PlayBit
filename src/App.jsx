@@ -1,6 +1,6 @@
 import React from "react";
-import Footer from "./components/Footer";
-import Home from "./Home"
+import Footer from "./common/Footer";
+import Home from "./pages/Home"
 
 function App() {
   return (
