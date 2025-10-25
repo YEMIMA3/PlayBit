@@ -1,0 +1,261 @@
+.coach-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.nav-left {
+  flex: 1;
+}
+
+.platform-name {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1f2937;
+  letter-spacing: -0.5px;
+}
+
+.nav-center {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.5rem 0;
+  position: relative;
+  transition: all 0.3s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #007bff, #00b4d8);
+    transition: width 0.3s ease;
+    border-radius: 1px;
+  }
+
+  &:hover {
+    color: #1f2937;
+
+    &::after {
+      width: 100%;
+    }
+
+    .nav-icon {
+      transform: scale(1.1);
+    }
+  }
+
+  &.active {
+    color: #007bff;
+    font-weight: 600;
+
+    &::after {
+      width: 100%;
+      background: #007bff;
+    }
+
+    .nav-icon {
+      transform: scale(1.1);
+      filter: none;
+    }
+  }
+}
+
+.nav-icon {
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.nav-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+// User profile section styling
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #f8fafc;
+  }
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #007bff, #00b4d8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #1f2937;
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+// Notification badges
+.notification-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ef4444;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.4rem;
+  border-radius: 8px;
+  min-width: 16px;
+  text-align: center;
+}
+
+// Animation for page load
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.coach-nav {
+  animation: slideInDown 0.3s ease-out;
+}
+
+// Scroll effect
+.coach-nav.scrolled {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Enhanced Responsive design */
+@media (max-width: 1024px) {
+  .coach-nav {
+    padding: 1rem 1.5rem;
+  }
+  
+  .nav-menu {
+    gap: 1.5rem;
+  }
+  
+  .nav-item {
+    font-size: 0.9rem;
+  }
+  
+  .platform-name {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .coach-nav {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .nav-menu {
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .nav-item {
+    padding: 0.5rem 0;
+  }
+  
+  .platform-name {
+    text-align: center;
+  }
+  
+  .nav-right {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-item {
+    font-size: 0.85rem;
+  }
+  
+  .nav-icon {
+    font-size: 1.1rem;
+  }
+  
+  .platform-name {
+    font-size: 1.4rem;
+  }
+  
+  .nav-menu {
+    gap: 0.75rem;
+  }
+}
+
+// Focus states for accessibility
+.nav-item:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+// Smooth transitions for all interactive elements
+.nav-item,
+.platform-name,
+.user-profile {
+  transition: all 0.3s ease;
+}

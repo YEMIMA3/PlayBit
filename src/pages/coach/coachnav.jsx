@@ -1,53 +1,119 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, User, UserCheck, Users, TrendingUp, Trophy } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import "../../styles/coach/coachnav.scss";
 
-export default function Navigation() {
+const CoachNav = () => {
+  const [activeItem, setActiveItem] = useState('dashboard');
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
-  
+  const navigate = useNavigate();
+
   const navItems = [
-    { path: '/coach/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/coach/profile', label: 'Profile', icon: User },
-    { path: '/coach/requests', label: 'Requests', icon: UserCheck },
-    { path: '/coach/groups', label: 'Groups', icon: Users },
-    { path: '/coach/progress', label: 'Progress', icon: TrendingUp },
-    { path: '/coach/tournaments', label: 'Tournaments', icon: Trophy },
+    { 
+      key: 'dashboard', 
+      path: '/coach/dashboard', 
+      icon: '📊', 
+      label: 'Dashboard',
+      badge: null
+    },
+    { 
+      key: 'profile', 
+      path: '/coach/profile', 
+      icon: '👤', 
+      label: 'Profile',
+      badge: null
+    },
+    { 
+      key: 'requests', 
+      path: '/coach/requests', 
+      icon: '📋', 
+      label: 'Requests',
+      badge: 3
+    },
+    { 
+      key: 'groups', 
+      path: '/coach/groups', 
+      icon: '👥', 
+      label: 'Groups',
+      badge: null
+    },
+    { 
+      key: 'progress', 
+      path: '/coach/progress', 
+      icon: '📈', 
+      label: 'Progress',
+      badge: null
+    },
+    { 
+      key: 'tournaments', 
+      path: '/coach/tournaments', 
+      icon: '🏆', 
+      label: 'Tournaments',
+      badge: 1
+    }
   ];
 
+  // Update active item based on current route
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const activeNav = navItems.find(item => currentPath.includes(item.key));
+    if (activeNav) {
+      setActiveItem(activeNav.key);
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      setScrolled(isScrolled);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleNavClick = (path, key, e) => {
+    e.preventDefault();
+    setActiveItem(key);
+    navigate(path); // React Router navigation
+  };
+
   return (
-    <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center">
-              <Trophy className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-slate-900">Coach Platform</span>
-          </div>
-          
-          <div className="flex items-center gap-1">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
-              
-              return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-all ${
-                    isActive
-                      ? 'bg-emerald-50 text-emerald-600'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span className="hidden sm:inline">{item.label}</span>
-                </Link>
-              );
-            })}
+    <div className={`coach-nav ${scrolled ? 'scrolled' : ''}`}>
+      <div className="nav-left">
+        <span className="platform-name">Coach Platform</span>
+      </div>
+      
+      <div className="nav-center">
+        <nav className="nav-menu">
+          {navItems.map((item) => (
+            <a
+              key={item.key}
+              href={item.path}
+              className={`nav-item ${activeItem === item.key ? 'active' : ''}`}
+              onClick={(e) => handleNavClick(item.path, item.key, e)}
+            >
+              <span className="nav-icon">{item.icon}</span>
+              {item.label}
+              {item.badge && (
+                <span className="notification-badge">{item.badge}</span>
+              )}
+            </a>
+          ))}
+        </nav>
+      </div>
+      
+      <div className="nav-right">
+        <div className="user-profile">
+          <div className="user-avatar">CM</div>
+          <div className="user-info">
+            <div className="user-name">Coach Mike</div>
+            <div className="user-role">Professional Coach</div>
           </div>
         </div>
       </div>
-    </nav>
+    </div>
   );
-}
+};
+
+export default CoachNav;

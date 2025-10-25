@@ -1,16 +1,14 @@
 import React from "react";
-import Footer from "./common/Footer";
-import Home from "./pages/Home"
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes/approutes";
+import Footer from "./components/common/Footer";
 
 function App() {
   return (
-    <div>
-
-      {/* Other sections like Navbar, Hero, etc. */}
-      <Home />
-      {/* Footer at the bottom */}
+    <BrowserRouter>
+      <AppRoutes />
       <Footer />
-    </div>
+    </BrowserRouter>
   );
 }
 

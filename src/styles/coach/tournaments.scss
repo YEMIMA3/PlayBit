@@ -1,0 +1,535 @@
+.tournaments-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  color: #333;
+
+  .page-header {
+    margin-bottom: 2rem;
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+      color: #1a1a1a;
+      font-weight: 700;
+    }
+
+    p {
+      color: #666;
+      font-size: 1.1rem;
+      margin: 0;
+    }
+  }
+
+  .main-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+
+    button {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      background: transparent;
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #666;
+      transition: all 0.3s ease;
+
+      &.active {
+        background: #007bff;
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+      }
+
+      &:hover:not(.active) {
+        background: #f8f9fa;
+        color: #333;
+      }
+    }
+  }
+
+  .view-toggle {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+
+    button {
+      padding: 0.6rem 1.2rem;
+      border: 2px solid #e0e0e0;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+
+      &.active {
+        border-color: #007bff;
+        background: #007bff;
+        color: white;
+      }
+
+      &:hover:not(.active) {
+        border-color: #007bff;
+        color: #007bff;
+      }
+    }
+  }
+
+  .create-section {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 3rem;
+    border: 1px solid #e0e0e0;
+
+    h2 {
+      margin-bottom: 1.5rem;
+      font-size: 1.4rem;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+      }
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+      margin-bottom: 1.5rem;
+    }
+
+    .primary-btn {
+      background: #007bff;
+      color: white;
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: #0056b3;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+      }
+    }
+  }
+
+  .list-section {
+    h2 {
+      margin-bottom: 1.5rem;
+      font-size: 1.6rem;
+      color: #333;
+      font-weight: 600;
+    }
+  }
+
+  // Tournament List View
+  .tournament-list {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .tournament-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .tournament-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+
+      .date-badge {
+        background: #007bff;
+        color: white;
+        padding: 0.8rem;
+        border-radius: 8px;
+        text-align: center;
+        min-width: 60px;
+
+        .month {
+          display: block;
+          font-size: 0.8rem;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+
+        .day {
+          display: block;
+          font-size: 1.4rem;
+          font-weight: 700;
+        }
+      }
+
+      .tournament-title {
+        flex: 1;
+
+        h3 {
+          margin: 0 0 0.5rem 0;
+          font-size: 1.4rem;
+          color: #333;
+          font-weight: 600;
+        }
+
+        .sport-level {
+          margin: 0;
+          color: #666;
+          font-size: 0.95rem;
+        }
+      }
+    }
+
+    .tournament-description {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+
+    .tournament-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid #e0e0e0;
+
+      .location {
+        color: #666;
+        font-weight: 500;
+      }
+
+      .full-date {
+        color: #888;
+        font-size: 0.9rem;
+      }
+    }
+
+    .registered-athletes {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e0e0e0;
+
+      .section-label {
+        margin: 0 0 1rem 0;
+        color: #666;
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+
+      .athletes-grid {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+
+        .athlete-avatar {
+          position: relative;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          overflow: hidden;
+          cursor: pointer;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+
+          .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+          }
+
+          &:hover .tooltip {
+            opacity: 1;
+          }
+        }
+
+        .more-athletes {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: #e0e0e0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 600;
+          color: #666;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+
+  // Calendar View
+  .calendar-view {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .calendar-tournament-card {
+    display: flex;
+    gap: 1.5rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+
+    .calendar-date {
+      background: #007bff;
+      color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      min-width: 70px;
+
+      .date-number {
+        display: block;
+        font-size: 1.8rem;
+        font-weight: 700;
+        line-height: 1;
+      }
+
+      .date-month {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-top: 0.25rem;
+      }
+    }
+
+    .calendar-details {
+      flex: 1;
+
+      h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.2rem;
+        color: #333;
+        font-weight: 600;
+      }
+
+      .sport-info {
+        margin: 0 0 0.75rem 0;
+        color: #666;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      .description {
+        color: #555;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+      }
+
+      .tournament-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .location {
+          color: #666;
+          font-size: 0.9rem;
+        }
+
+        .registered {
+          color: #007bff;
+          font-weight: 600;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+
+  // Announcements
+  .announcements-list {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .announcement-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #e0e0e0;
+
+    &.priority-high {
+      border-left-color: #dc3545;
+    }
+
+    &.priority-medium {
+      border-left-color: #ffc107;
+    }
+
+    &.priority-low {
+      border-left-color: #28a745;
+    }
+
+    .announcement-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+
+      .announcement-title {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        h3 {
+          margin: 0;
+          font-size: 1.3rem;
+          color: #333;
+          font-weight: 600;
+        }
+
+        .priority-badge {
+          padding: 0.3rem 0.8rem;
+          border-radius: 20px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          text-transform: uppercase;
+
+          &.high {
+            background: #dc3545;
+            color: white;
+          }
+
+          &.medium {
+            background: #ffc107;
+            color: #333;
+          }
+
+          &.low {
+            background: #28a745;
+            color: white;
+          }
+        }
+      }
+
+      .announcement-date {
+        color: #666;
+        font-size: 0.9rem;
+      }
+    }
+
+    .announcement-message {
+      color: #555;
+      line-height: 1.6;
+      margin: 0;
+      font-size: 1rem;
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .tournaments-page {
+    padding: 1rem;
+
+    .page-header {
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
+
+    .main-tabs {
+      flex-direction: column;
+    }
+
+    .create-section {
+      padding: 1.5rem;
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .tournament-card {
+      padding: 1.5rem;
+
+      .tournament-header {
+        flex-direction: column;
+        gap: 1rem;
+
+        .date-badge {
+          align-self: flex-start;
+        }
+      }
+
+      .tournament-footer {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+      }
+    }
+
+    .calendar-tournament-card {
+      flex-direction: column;
+      gap: 1rem;
+
+      .calendar-date {
+        align-self: flex-start;
+      }
+    }
+
+    .announcement-card {
+      padding: 1.5rem;
+
+      .announcement-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+      }
+    }
+  }
+}

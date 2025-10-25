@@ -1,441 +1,387 @@
-import React, { useState } from 'react';
-import { Card } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { Textarea } from '../ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Calendar } from '../ui/calendar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { Calendar as CalendarIcon, MapPin, Users, Trophy, Plus, Bell, MessageSquare } from 'lucide-react';
-import { toast } from 'sonner@2.0.3';
+import React, { useState } from "react";
+import "../../styles/coach/tournaments.scss";
+import CoachNav from './coachnav';
 
-export default function Tournaments() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [isAnnouncementDialogOpen, setIsAnnouncementDialogOpen] = useState(false);
-
+export default function CoachTournaments() {
   const [tournaments, setTournaments] = useState([
     {
       id: 1,
-      title: 'Regional Tennis Championship',
-      date: '2025-11-15',
-      location: 'Los Angeles Sports Complex',
-      sport: 'Tennis',
-      level: 'Advanced',
-      description: 'Annual regional championship for advanced players. Singles and doubles categories.',
+      title: "Regional Tennis Championship",
+      date: "2025-11-15",
+      location: "Los Angeles Sports Complex",
+      sport: "Tennis",
+      level: "Advanced",
+      description: "Annual regional championship for advanced players. Singles and doubles categories.",
       registeredAthletes: 12,
-      status: 'upcoming',
       athletes: [
-        { name: 'Alex Martinez', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop' },
-        { name: 'Marcus Thompson', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop' },
+        { id: 1, name: "Alex Martinez", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=60&h=60&fit=crop" },
+        { id: 2, name: "Marcus Thompson", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop" },
+        { id: 3, name: "Sophie Williams", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=60&h=60&fit=crop" },
+        { id: 4, name: "James Wilson", avatar: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?w=60&h=60&fit=crop" },
+        { id: 5, name: "Emma Davis", avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=60&h=60&fit=crop" },
+        { id: 6, name: "Michael Brown", avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=60&h=60&fit=crop" },
+        { id: 7, name: "Sarah Johnson", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop" }
       ]
     },
     {
       id: 2,
-      title: 'Badminton Open Tournament',
-      date: '2025-11-08',
-      location: 'Metro Indoor Arena',
-      sport: 'Badminton',
-      level: 'All Levels',
-      description: 'Open tournament for all skill levels. Great opportunity for beginners.',
+      title: "Badminton Open Tournament",
+      date: "2025-11-16",
+      location: "Metro Indoor Arena",
+      sport: "Badminton",
+      level: "All Levels",
+      description: "Open tournament for all skill levels. Great opportunity for beginners to gain experience.",
       registeredAthletes: 8,
-      status: 'upcoming',
       athletes: [
-        { name: 'Emily Chen', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop' },
-        { name: 'Ryan Park', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop' },
+        { id: 1, name: "Emily Chen", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop" },
+        { id: 2, name: "David Lee", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop" }
       ]
     },
     {
       id: 3,
-      title: 'Summer Tennis League',
-      date: '2025-12-01',
-      location: 'Coastal Tennis Center',
-      sport: 'Tennis',
-      level: 'Intermediate',
-      description: 'Weekly league matches starting December. Team format.',
-      registeredAthletes: 16,
-      status: 'upcoming',
+      title: "City Basketball Championship",
+      date: "2025-11-20",
+      location: "Downtown Sports Center",
+      sport: "Basketball",
+      level: "Intermediate",
+      description: "5v5 basketball tournament for intermediate level players.",
+      registeredAthletes: 10,
       athletes: []
-    },
+    }
   ]);
 
   const [announcements, setAnnouncements] = useState([
     {
       id: 1,
-      title: 'Training Schedule Update',
-      message: 'Next week\'s training sessions will start 30 minutes earlier due to facility maintenance.',
-      date: '2025-10-24',
-      type: 'global',
-      author: 'Sarah Johnson'
+      title: "Training Schedule Update",
+      message: "Next week's training sessions will start 30 minutes earlier due to facility maintenance. Please adjust your schedules accordingly.",
+      date: "2025-10-24",
+      priority: "high"
     },
     {
       id: 2,
-      title: 'Tournament Registration Deadline',
-      message: 'Don\'t forget to register for the Regional Championship by November 1st!',
-      date: '2025-10-23',
-      type: 'tournament',
-      author: 'Sarah Johnson'
-    },
-    {
-      id: 3,
-      title: 'New Equipment Available',
-      message: 'Professional-grade rackets are now available for rent at the facility.',
-      date: '2025-10-22',
-      type: 'global',
-      author: 'Sarah Johnson'
-    },
+      title: "New Equipment Arrival",
+      message: "New training equipment has arrived and will be available for use starting Monday.",
+      date: "2025-10-22",
+      priority: "medium"
+    }
   ]);
 
   const [newTournament, setNewTournament] = useState({
-    title: '',
-    date: '',
-    location: '',
-    sport: 'Tennis',
-    level: 'All Levels',
-    description: ''
+    title: "",
+    date: "",
+    location: "",
+    sport: "",
+    level: "",
+    description: "",
   });
 
   const [newAnnouncement, setNewAnnouncement] = useState({
-    title: '',
-    message: '',
-    type: 'global'
+    title: "",
+    message: "",
+    priority: "medium"
   });
 
-  const handleCreateTournament = () => {
-    const tournament = {
+  const [activeTab, setActiveTab] = useState("tournaments");
+  const [calendarView, setCalendarView] = useState(false);
+
+  const handleAddTournament = () => {
+    if (!newTournament.title) return;
+    const newT = {
       id: tournaments.length + 1,
       ...newTournament,
       registeredAthletes: 0,
-      status: 'upcoming',
       athletes: []
     };
-    setTournaments([...tournaments, tournament]);
-    setIsCreateDialogOpen(false);
-    setNewTournament({ title: '', date: '', location: '', sport: 'Tennis', level: 'All Levels', description: '' });
-    toast.success('Tournament created successfully!');
+    setTournaments([...tournaments, newT]);
+    setNewTournament({
+      title: "",
+      date: "",
+      location: "",
+      sport: "",
+      level: "",
+      description: "",
+    });
   };
 
-  const handleCreateAnnouncement = () => {
-    const announcement = {
+  const handleAddAnnouncement = () => {
+    if (!newAnnouncement.title) return;
+    const newA = {
       id: announcements.length + 1,
       ...newAnnouncement,
-      date: new Date().toISOString().split('T')[0],
-      author: 'Sarah Johnson'
+      date: new Date().toISOString().split("T")[0],
     };
-    setAnnouncements([announcement, ...announcements]);
-    setIsAnnouncementDialogOpen(false);
-    setNewAnnouncement({ title: '', message: '', type: 'global' });
-    toast.success('Announcement posted successfully!');
+    setAnnouncements([newA, ...announcements]);
+    setNewAnnouncement({ title: "", message: "", priority: "medium" });
   };
 
-  const upcomingTournaments = tournaments.filter(t => new Date(t.date) >= new Date());
-  const pastTournaments = tournaments.filter(t => new Date(t.date) < new Date());
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  };
+
+  const getShortDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.getDate().toString();
+  };
+
+  const getMonth = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { month: 'short' });
+  };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-6">
-        <h1 className="text-slate-900 mb-2">Tournaments & Announcements</h1>
-        <p className="text-slate-600">Manage tournaments and communicate with your athletes</p>
+    <div>
+    <CoachNav />
+    <div className="tournaments-page">
+      <div className="page-header">
+        <h1>Tournaments & Announcements</h1>
+        <p>Manage tournaments and communicate with your athletes</p>
       </div>
 
-      <Tabs defaultValue="tournaments" className="mb-6">
-        <TabsList>
-          <TabsTrigger value="tournaments">Tournaments</TabsTrigger>
-          <TabsTrigger value="announcements">Announcements</TabsTrigger>
-          <TabsTrigger value="calendar">Calendar View</TabsTrigger>
-        </TabsList>
+      <div className="main-tabs">
+        <button
+          className={activeTab === "tournaments" ? "active" : ""}
+          onClick={() => setActiveTab("tournaments")}
+        >
+          Tournaments
+        </button>
+        <button
+          className={activeTab === "announcements" ? "active" : ""}
+          onClick={() => setActiveTab("announcements")}
+        >
+          Announcements
+        </button>
+      </div>
 
-        <TabsContent value="tournaments" className="space-y-6">
-          <div className="flex justify-end">
-            <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-emerald-500 hover:bg-emerald-600 text-white">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create Tournament
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-lg">
-                <DialogHeader>
-                  <DialogTitle>Create New Tournament</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 mt-4">
-                  <div>
-                    <Label htmlFor="tournamentTitle">Tournament Title</Label>
-                    <Input
-                      id="tournamentTitle"
-                      value={newTournament.title}
-                      onChange={(e) => setNewTournament({ ...newTournament, title: e.target.value })}
-                      placeholder="e.g., Regional Tennis Championship"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="tournamentDate">Date</Label>
-                    <Input
-                      id="tournamentDate"
-                      type="date"
-                      value={newTournament.date}
-                      onChange={(e) => setNewTournament({ ...newTournament, date: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="tournamentLocation">Location</Label>
-                    <Input
-                      id="tournamentLocation"
-                      value={newTournament.location}
-                      onChange={(e) => setNewTournament({ ...newTournament, location: e.target.value })}
-                      placeholder="e.g., Los Angeles Sports Complex"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="tournamentSport">Sport</Label>
-                      <Select value={newTournament.sport} onValueChange={(value) => setNewTournament({ ...newTournament, sport: value })}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Tennis">Tennis</SelectItem>
-                          <SelectItem value="Badminton">Badminton</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="tournamentLevel">Level</Label>
-                      <Select value={newTournament.level} onValueChange={(value) => setNewTournament({ ...newTournament, level: value })}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="All Levels">All Levels</SelectItem>
-                          <SelectItem value="Beginner">Beginner</SelectItem>
-                          <SelectItem value="Intermediate">Intermediate</SelectItem>
-                          <SelectItem value="Advanced">Advanced</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="tournamentDescription">Description</Label>
-                    <Textarea
-                      id="tournamentDescription"
-                      value={newTournament.description}
-                      onChange={(e) => setNewTournament({ ...newTournament, description: e.target.value })}
-                      placeholder="Tournament details and information..."
-                      rows={4}
-                    />
-                  </div>
-                  <Button onClick={handleCreateTournament} className="w-full bg-emerald-500 hover:bg-emerald-600 text-white">
-                    Create Tournament
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+      {/* TOURNAMENTS TAB */}
+      {activeTab === "tournaments" && (
+        <div className="tab-content">
+          <div className="view-toggle">
+            <button 
+              className={!calendarView ? "active" : ""}
+              onClick={() => setCalendarView(false)}
+            >
+              List View
+            </button>
+            <button 
+              className={calendarView ? "active" : ""}
+              onClick={() => setCalendarView(true)}
+            >
+              Calendar View
+            </button>
           </div>
 
-          <div>
-            <h2 className="text-slate-900 mb-4">Upcoming Tournaments</h2>
-            <div className="grid grid-cols-1 gap-4">
-              {upcomingTournaments.map((tournament) => (
-                <Card key={tournament.id} className="p-6 hover:shadow-lg transition-all">
-                  <div className="flex flex-col md:flex-row gap-6">
-                    <div className="flex-shrink-0">
-                      <div className="w-20 h-20 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg flex flex-col items-center justify-center text-white">
-                        <span className="text-xs">{new Date(tournament.date).toLocaleString('en-US', { month: 'short' })}</span>
-                        <span className="text-2xl font-bold">{new Date(tournament.date).getDate()}</span>
+          <div className="create-section">
+            <h2>Create New Tournament</h2>
+            <div className="form-grid">
+              <input
+                type="text"
+                placeholder="Tournament Title"
+                value={newTournament.title}
+                onChange={(e) =>
+                  setNewTournament({ ...newTournament, title: e.target.value })
+                }
+              />
+              <input
+                type="date"
+                placeholder="Date"
+                value={newTournament.date}
+                onChange={(e) =>
+                  setNewTournament({ ...newTournament, date: e.target.value })
+                }
+              />
+              <input
+                type="text"
+                placeholder="Location"
+                value={newTournament.location}
+                onChange={(e) =>
+                  setNewTournament({ ...newTournament, location: e.target.value })
+                }
+              />
+              <select
+                value={newTournament.sport}
+                onChange={(e) =>
+                  setNewTournament({ ...newTournament, sport: e.target.value })
+                }
+              >
+                <option value="">Select Sport</option>
+                <option value="Tennis">Tennis</option>
+                <option value="Badminton">Badminton</option>
+                <option value="Basketball">Basketball</option>
+                <option value="Soccer">Soccer</option>
+                <option value="Swimming">Swimming</option>
+              </select>
+              <select
+                value={newTournament.level}
+                onChange={(e) =>
+                  setNewTournament({ ...newTournament, level: e.target.value })
+                }
+              >
+                <option value="">Select Level</option>
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+                <option value="All Levels">All Levels</option>
+              </select>
+            </div>
+            <textarea
+              placeholder="Tournament Description"
+              value={newTournament.description}
+              onChange={(e) =>
+                setNewTournament({
+                  ...newTournament,
+                  description: e.target.value,
+                })
+              }
+            ></textarea>
+            <button className="primary-btn" onClick={handleAddTournament}>
+              Create Tournament
+            </button>
+          </div>
+
+          <div className="list-section">
+            <h2>Upcoming Tournaments</h2>
+            
+            {calendarView ? (
+              <div className="calendar-view">
+                {tournaments.map((tournament) => (
+                  <div className="calendar-tournament-card" key={tournament.id}>
+                    <div className="calendar-date">
+                      <span className="date-number">{getShortDate(tournament.date)}</span>
+                      <span className="date-month">{getMonth(tournament.date)}</span>
+                    </div>
+                    <div className="calendar-details">
+                      <h3>{tournament.title}</h3>
+                      <p className="sport-info">{tournament.sport} • {tournament.level}</p>
+                      <p className="description">{tournament.description}</p>
+                      <div className="tournament-footer">
+                        <span className="location">📍 {tournament.location}</span>
+                        <span className="registered">{tournament.registeredAthletes} registered</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="tournament-list">
+                {tournaments.map((tournament) => (
+                  <div className="tournament-card" key={tournament.id}>
+                    <div className="tournament-header">
+                      <div className="date-badge">
+                        <span className="month">{getMonth(tournament.date)}</span>
+                        <span className="day">{getShortDate(tournament.date)}</span>
+                      </div>
+                      <div className="tournament-title">
+                        <h3>{tournament.title}</h3>
+                        <p className="sport-level">{tournament.sport} {tournament.level} • {tournament.registeredAthletes} registered</p>
                       </div>
                     </div>
                     
-                    <div className="flex-1">
-                      <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
-                        <div>
-                          <h3 className="text-slate-900 mb-2">{tournament.title}</h3>
-                          <div className="flex flex-wrap gap-2 mb-3">
-                            <Badge className="bg-blue-100 text-blue-700 border-0">
-                              {tournament.sport}
-                            </Badge>
-                            <Badge className="bg-purple-100 text-purple-700 border-0">
-                              {tournament.level}
-                            </Badge>
-                            <Badge className="bg-amber-100 text-amber-700 border-0">
-                              {tournament.registeredAthletes} registered
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <p className="text-slate-600 mb-3">{tournament.description}</p>
-                      
-                      <div className="flex flex-wrap gap-4 text-sm text-slate-500 mb-4">
-                        <div className="flex items-center gap-1">
-                          <MapPin className="w-4 h-4" />
-                          <span>{tournament.location}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <CalendarIcon className="w-4 h-4" />
-                          <span>{new Date(tournament.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</span>
-                        </div>
-                      </div>
-
-                      {tournament.athletes.length > 0 && (
-                        <div>
-                          <p className="text-sm text-slate-600 mb-2">Registered Athletes:</p>
-                          <div className="flex -space-x-2">
-                            {tournament.athletes.slice(0, 5).map((athlete, idx) => (
-                              <Avatar key={idx} className="w-8 h-8 border-2 border-white">
-                                <AvatarImage src={athlete.image} />
-                                <AvatarFallback>{athlete.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                              </Avatar>
-                            ))}
-                            {tournament.registeredAthletes > 5 && (
-                              <div className="w-8 h-8 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-xs text-slate-600">
-                                +{tournament.registeredAthletes - 5}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      )}
+                    <p className="tournament-description">{tournament.description}</p>
+                    
+                    <div className="tournament-footer">
+                      <span className="location">📍 {tournament.location}</span>
+                      <span className="full-date">{formatDate(tournament.date)}</span>
                     </div>
+
+                    {tournament.athletes.length > 0 && (
+                      <div className="registered-athletes">
+                        <p className="section-label">Registered Athletes:</p>
+                        <div className="athletes-grid">
+                          {tournament.athletes.map((athlete) => (
+                            <div key={athlete.id} className="athlete-avatar">
+                              <img src={athlete.avatar} alt={athlete.name} />
+                              <span className="tooltip">{athlete.name}</span>
+                            </div>
+                          ))}
+                          {tournament.registeredAthletes > tournament.athletes.length && (
+                            <div className="more-athletes">
+                              +{tournament.registeredAthletes - tournament.athletes.length}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </Card>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ANNOUNCEMENTS TAB */}
+      {activeTab === "announcements" && (
+        <div className="tab-content">
+          <div className="create-section">
+            <h2>Create Announcement</h2>
+            <input
+              type="text"
+              placeholder="Announcement Title"
+              value={newAnnouncement.title}
+              onChange={(e) =>
+                setNewAnnouncement({
+                  ...newAnnouncement,
+                  title: e.target.value,
+                })
+              }
+            />
+            <select
+              value={newAnnouncement.priority}
+              onChange={(e) =>
+                setNewAnnouncement({
+                  ...newAnnouncement,
+                  priority: e.target.value,
+                })
+              }
+            >
+              <option value="low">Low Priority</option>
+              <option value="medium">Medium Priority</option>
+              <option value="high">High Priority</option>
+            </select>
+            <textarea
+              placeholder="Announcement Message"
+              value={newAnnouncement.message}
+              onChange={(e) =>
+                setNewAnnouncement({
+                  ...newAnnouncement,
+                  message: e.target.value,
+                })
+              }
+            ></textarea>
+            <button className="primary-btn" onClick={handleAddAnnouncement}>
+              Post Announcement
+            </button>
+          </div>
+
+          <div className="list-section">
+            <h2>All Announcements</h2>
+            <div className="announcements-list">
+              {announcements.map((announcement) => (
+                <div className={`announcement-card priority-${announcement.priority}`} key={announcement.id}>
+                  <div className="announcement-header">
+                    <div className="announcement-title">
+                      <h3>{announcement.title}</h3>
+                      <span className={`priority-badge ${announcement.priority}`}>
+                        {announcement.priority}
+                      </span>
+                    </div>
+                    <span className="announcement-date">{formatDate(announcement.date)}</span>
+                  </div>
+                  <p className="announcement-message">{announcement.message}</p>
+                </div>
               ))}
             </div>
           </div>
-        </TabsContent>
-
-        <TabsContent value="announcements" className="space-y-6">
-          <div className="flex justify-end">
-            <Dialog open={isAnnouncementDialogOpen} onOpenChange={setIsAnnouncementDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-emerald-500 hover:bg-emerald-600 text-white">
-                  <Plus className="w-4 h-4 mr-2" />
-                  New Announcement
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-lg">
-                <DialogHeader>
-                  <DialogTitle>Create Announcement</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 mt-4">
-                  <div>
-                    <Label htmlFor="announcementTitle">Title</Label>
-                    <Input
-                      id="announcementTitle"
-                      value={newAnnouncement.title}
-                      onChange={(e) => setNewAnnouncement({ ...newAnnouncement, title: e.target.value })}
-                      placeholder="Announcement title"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="announcementType">Type</Label>
-                    <Select value={newAnnouncement.type} onValueChange={(value) => setNewAnnouncement({ ...newAnnouncement, type: value })}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="global">Global (All Athletes)</SelectItem>
-                        <SelectItem value="tournament">Tournament Related</SelectItem>
-                        <SelectItem value="training">Training Update</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="announcementMessage">Message</Label>
-                    <Textarea
-                      id="announcementMessage"
-                      value={newAnnouncement.message}
-                      onChange={(e) => setNewAnnouncement({ ...newAnnouncement, message: e.target.value })}
-                      placeholder="Type your announcement here..."
-                      rows={5}
-                    />
-                  </div>
-                  <Button onClick={handleCreateAnnouncement} className="w-full bg-emerald-500 hover:bg-emerald-600 text-white">
-                    Post Announcement
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          <div className="space-y-3">
-            {announcements.map((announcement) => (
-              <Card key={announcement.id} className="p-5 hover:shadow-md transition-all">
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center">
-                      {announcement.type === 'tournament' ? (
-                        <Trophy className="w-5 h-5 text-white" />
-                      ) : announcement.type === 'training' ? (
-                        <CalendarIcon className="w-5 h-5 text-white" />
-                      ) : (
-                        <Bell className="w-5 h-5 text-white" />
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <div>
-                        <h3 className="text-slate-900 mb-1">{announcement.title}</h3>
-                        <div className="flex gap-2">
-                          <Badge variant="outline" className="text-xs">
-                            {announcement.type}
-                          </Badge>
-                        </div>
-                      </div>
-                      <span className="text-sm text-slate-500">
-                        {new Date(announcement.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                      </span>
-                    </div>
-                    <p className="text-slate-600 mb-2">{announcement.message}</p>
-                    <p className="text-sm text-slate-400">Posted by {announcement.author}</p>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="calendar" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card className="p-6 lg:col-span-2">
-              <h3 className="text-slate-900 mb-4">Tournament Calendar</h3>
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={setSelectedDate}
-                className="rounded-md border"
-              />
-            </Card>
-            <div>
-              <h3 className="text-slate-900 mb-4">Upcoming Events</h3>
-              <div className="space-y-3">
-                {upcomingTournaments.slice(0, 5).map((tournament) => (
-                  <Card key={tournament.id} className="p-4">
-                    <div className="flex gap-3">
-                      <div className="flex-shrink-0">
-                        <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-lg flex flex-col items-center justify-center text-white">
-                          <span className="text-xs">{new Date(tournament.date).toLocaleString('en-US', { month: 'short' })}</span>
-                          <span className="text-lg font-bold">{new Date(tournament.date).getDate()}</span>
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="text-slate-900 text-sm mb-1">{tournament.title}</h4>
-                        <p className="text-slate-500 text-xs flex items-center gap-1">
-                          <MapPin className="w-3 h-3" />
-                          {tournament.location}
-                        </p>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-      </Tabs>
+        </div>
+      )}
+    </div>
     </div>
   );
 }

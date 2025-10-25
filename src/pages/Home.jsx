@@ -22,7 +22,6 @@ const featuredSports = [
   { name: "Soccer", icon: "⚽", image: baseballImg },
   { name: "Basketball", icon: "🏀", image: baseballImg },
   { name: "Tennis", icon: "🎾", image: baseballImg },
-  { name: "Swimming", icon: "🏊", image: baseballImg },
   { name: "Baseball", icon: "⚾", image: baseballImg },
 ];
 
@@ -98,7 +97,7 @@ const Home = () => {
 
       {/* 🏅 Featured Sports */}
       <section className="featured-sports-section">
-        <h2 style={{fontSize:"45px",fontWeight:"bold",marginTop:"0px"}}>Featured Sports</h2>
+        <h2 style={{fontSize:"45px",fontWeight:"bold",textAlign:"center",color:"black"}}>Featured Sports</h2>
         <div className="sports-grid">
           {featuredSports.map((sport, i) => (
             <div key={i} className="sport-card">
@@ -118,7 +117,7 @@ const Home = () => {
 
       {/* 🏆 Live Tournaments Grid */}
 <section className="live-tournaments">
-  <h2 style={{fontSize:"45px",fontWeight:"bold",marginTop:"0px"}}>Live Tournaments</h2>
+  <h2 style={{fontSize:"45px",fontWeight:"bold",textAlign:"center",color:"black"}}>Live Tournaments</h2>
   <div className="tournaments-grid">
     {tournaments.map((t, i) => (
       <div key={i} className="tournament-card">
@@ -139,7 +138,7 @@ const Home = () => {
 
       {/* 👩‍🏫 Featured Coaches Carousel */}
       <section className="featured-coaches-carousel">
-        <h2>Featured Coaches</h2>
+        <h2 style={{fontSize:"45px",fontWeight:"bold",textAlign:"center",color:"black"}}>Featured Coaches</h2>
         <div className="carousel">
           <button className="carousel-btn left" onClick={() => scrollLeft(coachesRef)}>
             <ChevronLeft size={20} />
@@ -169,9 +168,9 @@ const Home = () => {
       </section>
 
       {/* 💡 Why Choose Section */}
-      <section className="why-choose">
+      <section className="why-choose" >
         <div className="container">
-          <h2 style={{fontSize:"45px",fontWeight:"bold",marginTop:"0px"}}>Why Choose PlayBit</h2>
+          <h2 style={{fontSize:"45px",fontWeight:"bold",textAlign:"center",color:"black"}}>Why Choose PlayBit</h2>
           <div className="features-scroll">
             <div className="features-track">
               {[...whyChooseFeatures, ...whyChooseFeatures].map((f, i) => (
@@ -187,7 +186,7 @@ const Home = () => {
       </section>
 
       {/* 🚀 Footer CTA */}
-      <section className="footer-cta">
+      <section className="footer-cta" style={{marginBottom:"50px"}}>
         <div className="container">
           <h2>Ready to Start Your Journey?</h2>
           <p>Join thousands of athletes already training with PlayBit's expert coaches</p>
