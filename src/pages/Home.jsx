@@ -101,9 +101,9 @@ const Home = () => {
                   placeholder="Search coaches by sport, name, or location..."
                   className="search-input"
                 />
-                <button className="search-btn">
-                  Find Coaches
-                </button>
+                <Link to="/coach/auth" className="search-btn" style={{textDecoration:'none'}}>
+                Find Coaches
+                </Link>
               </div>
             </div>
 
@@ -221,15 +221,15 @@ const Home = () => {
                     </div>
                   </div>
                   
-                  <button className="view-profile-btn">
-                    View Profile
-                  </button>
+                  <Link to="/coach/auth" className="search-btn" style={{textDecoration:'none',borderRadius:'10px',padding:'18px 18px',alignItems:'center',justifyContent:'center'}}>
+                  View Profile
+                  </Link>
                 </div>
               </div>
             ))}
           </div>
           <div className="section-actions">
-            <Link to="/coaches" className="btn-primary">
+            <Link to="/coach/auth" className="btn-primary">
               View All Coaches
               <ArrowRight className="btn-icon" />
             </Link>
@@ -247,7 +247,7 @@ const Home = () => {
               <Link to="/register" className="btn-primary large">
                 Find Your Coach
               </Link>
-              <Link to="/coach-register" className="btn-secondary large">
+              <Link to="/coach/auth" className="btn-secondary large">
                 Become a Coach
               </Link>
             </div>

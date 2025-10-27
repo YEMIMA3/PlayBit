@@ -22,9 +22,8 @@ import Stadium from "../pages/coach/stadium";
 // import StudentProgress from "../pages/student/Progress";
 // import StudentTournaments from "../pages/student/Tournaments";
 
-// // 🔐 Auth Pages
-// import Login from "../pages/auth/Login";
-// import Signup from "../pages/auth/Signup";
+import CoachAuth from "../authentication/coach/auth";
+import DocumentVerification from "../authentication/coach/verification";
 
 export default function AppRoutes() {
   return (
@@ -33,8 +32,8 @@ export default function AppRoutes() {
       <Route path="/" element={<Home />} />
 
       {/* Auth */}
-      {/* <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} /> */}
+      <Route path="/coach/auth" element={<CoachAuth />} />
+      <Route path="/coach/verification" element={<DocumentVerification />} />
 
       {/* Coach */}
       <Route path="/coach/dashboard" element={<CoachDashboard />} />
