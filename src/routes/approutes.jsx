@@ -11,6 +11,8 @@ import CoachRequests from "../pages/coach/coachrequest";
 import CoachGroups from "../pages/coach/group";
 import PerformanceTracking from "../pages/coach/tracking";
 import CoachTournaments from "../pages/coach/tournaments";
+import SchedulePage from "../pages/coach/schedule";
+import Stadium from "../pages/coach/stadium";
 
 // // 🎓 Student Pages
 // import StudentDashboard from "../pages/student/Dashboard";
@@ -41,6 +43,8 @@ export default function AppRoutes() {
       <Route path="/coach/profile" element={<CoachProfile />} />
       <Route path="/coach/groups" element={<CoachGroups />} />
       <Route path="/coach/progress" element={<PerformanceTracking />} />
+      <Route path="/coach/schedule" element={<SchedulePage />} />
+      <Route path="/coach/stadium" element={<Stadium />} />
 
       {/* Student */}
       {/* <Route path="/student/dashboard" element={<StudentDashboard />} />

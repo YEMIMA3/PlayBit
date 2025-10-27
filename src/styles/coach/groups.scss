@@ -1,5 +1,7 @@
+// coach/groups.scss
+
 .groups-page {
-  padding: 2rem;
+  padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
 
@@ -7,665 +9,792 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
-
+    margin-bottom: 30px;
+    
     h1 {
-      margin: 0;
-      font-size: 2.2rem;
       color: #333;
+      margin: 0;
     }
     
     p {
       color: #666;
-      margin: 0.2rem 0 0;
-      font-size: 1.1rem;
-    }
-
-    .create-btn {
-      background: #00b894;
-      color: white;
-      padding: 0.8rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-
-      &:hover {
-        background: #00a085;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 184, 148, 0.3);
-      }
+      margin: 5px 0 0 0;
     }
   }
+}
 
-  .groups-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1.5rem;
-
-    .group-card {
-      background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      border: 1px solid #e0e0e0;
-
-      &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-      }
-
-      .image-wrapper {
-        position: relative;
-        height: 180px;
-        overflow: hidden;
-
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        }
-
-        &:hover img {
-          transform: scale(1.05);
-        }
-
-        .overlay {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          background: linear-gradient(transparent, rgba(0,0,0,0.8));
-          color: white;
-          padding: 1rem;
-          
-          h3 {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.3rem;
-            font-weight: 600;
-          }
-
-          .badge {
-            background: rgba(255,255,255,0.2);
-            padding: 0.3rem 0.6rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            margin-right: 0.5rem;
-            backdrop-filter: blur(10px);
-          }
-        }
-      }
-
-      .group-info {
-        padding: 1.2rem;
-
-        .stats {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 0.8rem;
-          
-          p {
-            margin: 0;
-            font-weight: 600;
-            color: #333;
-          }
-        }
-
-        .schedule, .location {
-          margin: 0.3rem 0;
-          color: #666;
-          font-size: 0.9rem;
-        }
-
-        .members-preview {
-          display: flex;
-          align-items: center;
-          margin-top: 1rem;
-          gap: 0.5rem;
-
-          .member-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-          }
-
-          .more-members {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #e0e0e0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #666;
-          }
-        }
-      }
-    }
+.create-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  
+  &:hover {
+    background: #0056b3;
   }
+}
 
-  /* Modal Styles */
-  .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
+// Groups Grid
+.groups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.group-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+}
+
+.image-wrapper {
+  position: relative;
+  height: 200px;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  color: white;
+  padding: 20px;
+  
+  h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.4em;
+  }
+}
+
+.badge {
+  background: rgba(255,255,255,0.2);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  margin-right: 8px;
+}
+
+.group-info {
+  padding: 20px;
+  
+  .stats {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .schedule, .location {
+    color: #666;
+    margin: 5px 0;
+    font-size: 0.9em;
+  }
+}
+
+.members-preview {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  
+  .member-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: -8px;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .more-members {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    display: flex;
     align-items: center;
-    z-index: 1000;
-    padding: 1rem;
+    justify-content: center;
+    font-size: 0.8em;
+    font-weight: 600;
+    color: #666;
+    border: 2px solid white;
+  }
+}
 
-    .modal {
-      background: #fff;
-      border-radius: 12px;
-      padding: 2rem;
-      max-width: 500px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-      position: relative;
+// Modals
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
 
-      &.large {
-        max-width: 800px;
-        max-height: 95vh;
+.modal {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  
+  &.large {
+    max-width: 800px;
+  }
+  
+  h2 {
+    margin: 0 0 20px 0;
+    color: #333;
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  
+  h2 {
+    margin: 0;
+  }
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    color: #333;
+  }
+}
+
+// Forms
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 20px;
+  
+  input, select {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+  }
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.save-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  
+  &:hover:not(:disabled) {
+    background: #0056b3;
+  }
+  
+  &:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+  }
+}
+
+.cancel-btn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  
+  &:hover {
+    background: #545b62;
+  }
+}
+
+// Members Selection
+.members-selection {
+  h3 {
+    margin-bottom: 15px;
+    color: #333;
+  }
+}
+
+.athletes-list {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.athlete-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  
+  &:hover {
+    border-color: #007bff;
+    background: #f8f9ff;
+  }
+  
+  &.selected {
+    border-color: #007bff;
+    background: #e7f1ff;
+  }
+  
+  &.in-group {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+  
+  .athlete-info {
+    flex: 1;
+    
+    h4 {
+      margin: 0;
+      color: #333;
+    }
+    
+    p {
+      margin: 2px 0 0 0;
+      color: #666;
+      font-size: 0.9em;
+    }
+  }
+}
+
+.status-badge {
+  background: #28a745;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8em;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+// Group Info Bar
+.group-info-bar {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  
+  .info-item {
+    background: #f8f9fa;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    color: #666;
+  }
+}
+
+.edit-group-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  
+  .edit-input {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9em;
+    
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+  }
+}
+
+.save-small-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  
+  &:hover {
+    background: #218838;
+  }
+}
+
+.cancel-small-btn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  
+  &:hover {
+    background: #545b62;
+  }
+}
+
+.edit-info-btn {
+  background: #ffc107;
+  color: #212529;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  
+  &:hover {
+    background: #e0a800;
+  }
+}
+
+.add-members-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+  
+  &:hover {
+    background: #218838;
+  }
+}
+
+// Tabs Container
+.tabs-container {
+  margin-top: 20px;
+}
+
+.tabs-header {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  
+  &:hover {
+    color: #007bff;
+    background: #f8f9fa;
+  }
+  
+  &.active {
+    color: #007bff;
+    border-bottom-color: #007bff;
+    background: #f8f9fa;
+  }
+}
+
+.tab-content {
+  min-height: 400px;
+}
+
+.tab-panel {
+  display: none;
+  
+  &.active {
+    display: block;
+  }
+}
+
+// Members List
+.members-section {
+  h3 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+}
+
+.members-list {
+  .member-card {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    
+    .avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 15px;
+    }
+    
+    .member-info {
+      flex: 1;
+      
+      h4 {
+        margin: 0;
+        color: #333;
       }
+      
+      p {
+        margin: 2px 0 0 0;
+        color: #666;
+      }
+      
+      .join-date {
+        font-size: 0.8em;
+        color: #999;
+      }
+    }
+  }
+}
 
-      .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
+.remove-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+  
+  &:hover {
+    background: #c82333;
+  }
+}
 
-        h2 {
-          margin: 0;
+.no-members, .no-announcements, .no-attendance {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 40px;
+}
+
+// Announcements
+.announcement-editor {
+  margin-bottom: 30px;
+  
+  textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    resize: vertical;
+    margin-bottom: 10px;
+    font-family: inherit;
+    
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+  }
+  
+  button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    
+    &:hover {
+      background: #0056b3;
+    }
+  }
+}
+
+.announcement-list {
+  .announcement-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    
+    p {
+      margin: 0 0 5px 0;
+      color: #333;
+    }
+    
+    span {
+      font-size: 0.8em;
+      color: #666;
+    }
+  }
+}
+
+// Attendance Styles
+.attendance-section {
+  .new-attendance {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    
+    h3 {
+      margin: 0 0 15px 0;
+      color: #333;
+    }
+    
+    .attendance-form {
+      display: flex;
+      gap: 10px;
+      align-items: end;
+      
+      input {
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        flex: 1;
+        font-size: 14px;
+        
+        &:focus {
+          outline: none;
+          border-color: #007bff;
+        }
+      }
+      
+      button {
+        padding: 10px 20px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        white-space: nowrap;
+        
+        &:hover {
+          background: #0056b3;
+        }
+      }
+    }
+  }
+}
+
+.attendance-records {
+  margin-bottom: 30px;
+  
+  h3 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+}
+
+.attendance-session {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  
+  .session-header {
+    background: #f8f9fa;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    h4 {
+      margin: 0;
+      color: #333;
+    }
+    
+    .session-date {
+      color: #666;
+      font-size: 0.9em;
+    }
+  }
+}
+
+.attendance-grid {
+  padding: 20px;
+  
+  .attendance-member {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 15px;
+    }
+    
+    .member-name {
+      flex: 1;
+      font-weight: 500;
+      color: #333;
+    }
+  }
+}
+
+.attendance-buttons {
+  display: flex;
+  gap: 8px;
+  
+  .status-btn {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    font-size: 0.8em;
+    transition: all 0.2s;
+    
+    &.present {
+      border-color: #28a745;
+      color: #28a745;
+      
+      &.active {
+        background: #28a745;
+        color: white;
+      }
+    }
+    
+    &.absent {
+      border-color: #dc3545;
+      color: #dc3545;
+      
+      &.active {
+        background: #dc3545;
+        color: white;
+      }
+    }
+    
+    &.late {
+      border-color: #ffc107;
+      color: #856404;
+      
+      &.active {
+        background: #ffc107;
+        color: #856404;
+      }
+    }
+    
+    &:hover:not(.active) {
+      opacity: 0.8;
+    }
+  }
+}
+
+.attendance-summary {
+  h3 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .summary-grid {
+    display: grid;
+    gap: 15px;
+    
+    .member-summary {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      
+      .avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 20px;
+      }
+      
+      .summary-info {
+        flex: 1;
+        
+        h4 {
+          margin: 0 0 12px 0;
           color: #333;
         }
-      }
-
-      .close-btn {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        border: none;
-        background: transparent;
-        font-size: 1.5rem;
-        cursor: pointer;
-        color: #666;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        &:hover {
-          background: #f5f5f5;
-        }
-      }
-
-      .group-info-bar {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.8rem;
-        margin-bottom: 2rem;
-        padding: 1rem;
-        background: #f8f9fa;
-        border-radius: 8px;
-
-        .info-item {
-          background: white;
-          padding: 0.4rem 0.8rem;
-          border-radius: 20px;
-          font-size: 0.9rem;
-          color: #666;
-          border: 1px solid #e0e0e0;
-        }
-
-        .add-members-btn {
-          background: #00b894;
-          color: white;
-          border: none;
-          padding: 0.4rem 1rem;
-          border-radius: 20px;
-          cursor: pointer;
-          font-size: 0.9rem;
-          margin-left: auto;
-
-          &:hover {
-            background: #00a085;
-          }
-        }
-      }
-
-      .form-grid {
-        display: grid;
-        gap: 1rem;
-        margin: 1.5rem 0;
-
-        input, select, textarea {
-          padding: 0.8rem;
-          border-radius: 8px;
-          border: 2px solid #e0e0e0;
-          width: 100%;
-          font-size: 1rem;
-          transition: border-color 0.3s ease;
-
-          &:focus {
-            outline: none;
-            border-color: #00b894;
-          }
-        }
-      }
-
-      .modal-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 1rem;
-        margin-top: 1.5rem;
-
-        .save-btn {
-          background: #00b894;
-          color: white;
-          border: none;
-          padding: 0.8rem 1.5rem;
-          border-radius: 8px;
-          cursor: pointer;
-          font-weight: 600;
-          transition: all 0.3s ease;
-
-          &:hover:not(:disabled) {
-            background: #00a085;
-            transform: translateY(-1px);
-          }
-
-          &:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-          }
-        }
         
-        .cancel-btn {
-          border: 2px solid #e0e0e0;
-          background: transparent;
-          padding: 0.8rem 1.5rem;
-          border-radius: 8px;
-          cursor: pointer;
-          font-weight: 600;
-          transition: all 0.3s ease;
-
-          &:hover {
-            border-color: #999;
-            background: #f5f5f5;
-          }
-        }
-      }
-
-      /* Members Selection */
-      .members-selection {
-        .athletes-list {
-          max-height: 400px;
-          overflow-y: auto;
-          margin: 1rem 0;
-
-          .athlete-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            margin-bottom: 0.8rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-
-            &:hover:not(.in-group) {
-              border-color: #00b894;
-              background: #f8fff8;
-            }
-
-            &.selected {
-              border-color: #00b894;
-              background: #f0fff4;
-            }
-
-            &.in-group {
-              background: #f5f5f5;
-              cursor: not-allowed;
-              opacity: 0.6;
-            }
-
-            .avatar {
-              width: 50px;
-              height: 50px;
-              border-radius: 50%;
-              object-fit: cover;
-            }
-
-            .athlete-info {
-              flex: 1;
-
-              h4 {
-                margin: 0 0 0.2rem 0;
-                color: #333;
-              }
-
-              p {
-                margin: 0;
-                color: #666;
-                font-size: 0.9rem;
-              }
-            }
-
-            .status-badge {
-              background: #e0e0e0;
-              padding: 0.3rem 0.6rem;
-              border-radius: 12px;
-              font-size: 0.8rem;
-              color: #666;
-            }
-
-            .checkbox {
-              width: 20px;
-              height: 20px;
-              cursor: pointer;
-            }
-          }
-        }
-      }
-
-      /* Tabs */
-      .tabs {
-        display: flex;
-        flex-direction: column;
-
-        input[type="radio"] {
-          display: none;
-        }
-
-        label {
-          padding: 1rem 1.5rem;
-          cursor: pointer;
-          font-weight: 600;
-          color: #666;
-          border-bottom: 3px solid transparent;
-          transition: all 0.3s ease;
-
-          &:hover {
-            color: #333;
-            background: #f8f9fa;
-          }
-        }
-
-        input[type="radio"]:checked + label {
-          color: #00b894;
-          border-bottom-color: #00b894;
-          background: #f8fff8;
-        }
-
-        .tab-content {
-          display: none;
-          padding: 1.5rem 0;
-        }
-
-        #members:checked ~ #members-content,
-        #announcements:checked ~ #announcements-content,
-        #diet:checked ~ #diet-content,
-        #training:checked ~ #training-content,
-        #chat:checked ~ #chat-content {
-          display: block;
-        }
-
-        /* Members Tab */
-        .members-section {
-          .members-list {
-            .member-card {
-              display: flex;
-              align-items: center;
-              gap: 1rem;
-              padding: 1rem;
-              border: 1px solid #e0e0e0;
-              border-radius: 8px;
-              margin-bottom: 0.8rem;
-              transition: all 0.3s ease;
-
-              &:hover {
-                border-color: #00b894;
-                background: #f8fff8;
-              }
-
-              .avatar {
-                width: 60px;
-                height: 60px;
-                border-radius: 50%;
-                object-fit: cover;
-              }
-
-              .member-info {
-                flex: 1;
-
-                h4 {
-                  margin: 0 0 0.2rem 0;
-                  color: #333;
-                }
-
-                p {
-                  margin: 0 0 0.2rem 0;
-                  color: #666;
-                  font-size: 0.9rem;
-                }
-
-                .join-date {
-                  font-size: 0.8rem;
-                  color: #999;
-                }
-              }
-
-              .remove-btn {
-                background: #dc3545;
-                color: white;
-                border: none;
-                padding: 0.5rem 1rem;
-                border-radius: 6px;
-                cursor: pointer;
-                font-size: 0.9rem;
-                transition: all 0.3s ease;
-
-                &:hover {
-                  background: #c82333;
-                }
-              }
-            }
-          }
-
-          .no-members {
-            text-align: center;
-            color: #666;
-            font-style: italic;
-            padding: 2rem;
-          }
-        }
-
-        /* Announcements Tab */
-        .announcement-editor {
-          margin-bottom: 2rem;
-
-          textarea {
-            width: 100%;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            font-size: 1rem;
-            resize: vertical;
-
-            &:focus {
-              outline: none;
-              border-color: #00b894;
-            }
-          }
-
-          button {
-            background: #00b894;
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-
-            &:hover {
-              background: #00a085;
-            }
-          }
-        }
-
-        .announcement-list {
-          .announcement-item {
-            border: 1px solid #e0e0e0;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            background: #f8f9fa;
-
-            p {
-              margin: 0 0 0.5rem 0;
-              color: #333;
-            }
-
-            span {
-              font-size: 0.8rem;
-              color: #666;
-            }
-          }
-
-          .no-announcements {
-            text-align: center;
-            color: #666;
-            font-style: italic;
-            padding: 2rem;
-          }
-        }
-
-        /* Diet & Training Tabs */
-        textarea {
-          width: 100%;
-          border: 2px solid #e0e0e0;
-          border-radius: 8px;
-          padding: 1rem;
-          margin-bottom: 1rem;
-          font-size: 1rem;
-          resize: vertical;
-          min-height: 200px;
-
-          &:focus {
-            outline: none;
-            border-color: #00b894;
-          }
-        }
-
-        button {
-          background: #00b894;
-          color: white;
-          border: none;
-          padding: 0.8rem 1.5rem;
-          border-radius: 8px;
-          cursor: pointer;
-          font-weight: 600;
-
-          &:hover {
-            background: #00a085;
-          }
-        }
-
-        /* Chat Tab */
-        .chat-box {
-          height: 300px;
-          border: 2px solid #e0e0e0;
-          border-radius: 8px;
-          padding: 1rem;
-          margin-bottom: 1rem;
-          overflow-y: auto;
-          background: #f8f9fa;
-
-          .chat-message {
-            margin-bottom: 1rem;
-
-            &.coach {
-              text-align: right;
-
-              .message-content {
-                background: #00b894;
-                color: white;
-                display: inline-block;
-                padding: 0.8rem 1rem;
-                border-radius: 18px 18px 4px 18px;
-                max-width: 70%;
-
-                .message-time {
-                  font-size: 0.7rem;
-                  opacity: 0.8;
-                }
-              }
-            }
-
-            &.athlete {
-              .message-content {
-                background: white;
-                color: #333;
-                display: inline-block;
-                padding: 0.8rem 1rem;
-                border-radius: 18px 18px 18px 4px;
-                max-width: 70%;
-                border: 1px solid #e0e0e0;
-
-                .message-time {
-                  font-size: 0.7rem;
-                  color: #666;
-                }
-              }
-            }
-          }
-        }
-
-        .chat-input {
+        .stats {
           display: flex;
-          gap: 0.5rem;
-
-          input {
-            flex: 1;
-            padding: 0.8rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-
-            &:focus {
-              outline: none;
-              border-color: #00b894;
-            }
-          }
-
-          button {
-            background: #00b894;
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-
-            &:hover {
-              background: #00a085;
-            }
+          gap: 20px;
+          margin-bottom: 12px;
+          font-size: 0.9em;
+          color: #666;
+          
+          span {
+            display: inline-block;
           }
         }
       }
@@ -673,42 +802,205 @@
   }
 }
 
-/* Responsive Design */
+.attendance-rate {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  .rate-bar {
+    flex: 1;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    
+    .rate-fill {
+      height: 100%;
+      background: #28a745;
+      transition: width 0.3s ease;
+      border-radius: 4px;
+    }
+  }
+  
+  span {
+    font-weight: 600;
+    font-size: 0.9em;
+    min-width: 40px;
+    color: #333;
+  }
+}
+
+// Diet and Training Tabs
+.tab-panel textarea {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  resize: vertical;
+  margin-bottom: 15px;
+  font-family: inherit;
+  line-height: 1.5;
+  
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+}
+
+// Chat Tab
+.chat-box {
+  height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background: #fafafa;
+}
+
+.chat-message {
+  margin-bottom: 15px;
+  
+  &.coach {
+    text-align: right;
+    
+    .message-content {
+      background: #007bff;
+      color: white;
+      margin-left: auto;
+    }
+  }
+  
+  &.athlete {
+    .message-content {
+      background: white;
+      color: #333;
+    }
+  }
+  
+  .message-content {
+    display: inline-block;
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 18px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    
+    p {
+      margin: 0 0 5px 0;
+    }
+    
+    .message-time {
+      font-size: 0.7em;
+      opacity: 0.7;
+    }
+  }
+}
+
+.chat-input {
+  display: flex;
+  gap: 10px;
+  
+  input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+  }
+  
+  button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    
+    &:hover {
+      background: #0056b3;
+    }
+  }
+}
+
+// Responsive Design
 @media (max-width: 768px) {
   .groups-page {
-    padding: 1rem;
-
-    .header {
-      flex-direction: column;
-      gap: 1rem;
-      align-items: flex-start;
+    padding: 10px;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .groups-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal {
+    margin: 10px;
+    padding: 20px;
+  }
+  
+  .group-info-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .edit-group-info {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    
+    .edit-input {
+      width: 100%;
     }
-
-    .groups-grid {
-      grid-template-columns: 1fr;
+  }
+  
+  .tabs-header {
+    flex-direction: column;
+    
+    .tab-button {
+      width: 100%;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
     }
-
-    .modal-backdrop {
-      padding: 0.5rem;
-
-      .modal {
-        padding: 1.5rem;
-
-        .group-info-bar {
-          flex-direction: column;
-          align-items: flex-start;
-
-          .add-members-btn {
-            margin-left: 0;
-            margin-top: 0.5rem;
-          }
-        }
-
-        .tabs label {
-          padding: 0.8rem 1rem;
-          font-size: 0.9rem;
-        }
-      }
+  }
+  
+  .attendance-form {
+    flex-direction: column;
+    
+    input, button {
+      width: 100%;
     }
+  }
+  
+  .attendance-buttons {
+    flex-direction: column;
+  }
+  
+  .attendance-member {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    
+    .attendance-buttons {
+      width: 100%;
+    }
+  }
+  
+  .member-summary .stats {
+    flex-direction: column;
+    gap: 5px !important;
   }
 }

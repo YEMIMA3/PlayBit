@@ -118,7 +118,13 @@ export default function CoachDashboard() {
       icon: Calendar,
       link: "/coach/schedule",
       gradient: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-    },
+    },{
+      title: "Venue",
+      description:"Search Near By Stadiums for practice.",
+      icon:MapPin,
+      link:"/coach/stadium",
+      gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+    }
   ];
 
   const upcomingSessions = [
@@ -357,3 +363,4 @@ export default function CoachDashboard() {
     </div>
   );
 }
+

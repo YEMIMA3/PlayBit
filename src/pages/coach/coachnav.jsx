@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import "../../styles/coach/coachnav.scss";
 
 const CoachNav = () => {
   const [activeItem, setActiveItem] = useState('dashboard');
   const [scrolled, setScrolled] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const dropdownRef = useRef(null);
 
   const navItems = [
     { 
@@ -14,13 +16,6 @@ const CoachNav = () => {
       path: '/coach/dashboard', 
       icon: '📊', 
       label: 'Dashboard',
-      badge: null
-    },
-    { 
-      key: 'profile', 
-      path: '/coach/profile', 
-      icon: '👤', 
-      label: 'Profile',
       badge: null
     },
     { 
@@ -50,6 +45,20 @@ const CoachNav = () => {
       icon: '🏆', 
       label: 'Tournaments',
       badge: 1
+    },
+    { 
+      key: 'schedule', 
+      path: '/coach/schedule', 
+      icon: '🗓️', 
+      label: 'Schedule',
+      badge: 1
+    },
+    {
+      key:'venue',
+      path:'/coach/stadium',
+      icon:'📍',
+      label:'Venue',
+      badge:1
     }
   ];
 
@@ -72,10 +81,47 @@ const CoachNav = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const handleNavClick = (path, key, e) => {
     e.preventDefault();
     setActiveItem(key);
-    navigate(path); // React Router navigation
+    navigate(path);
+  };
+
+  const handleProfileClick = () => {
+    setShowDropdown(!showDropdown);
+  };
+
+  const handleDropdownItemClick = (action) => {
+    setShowDropdown(false);
+    switch (action) {
+      case 'profile':
+        navigate('/coach/profile');
+        break;
+      case 'notifications':
+        navigate('/coach/notifications');
+        break;
+      case 'signout':
+        // Handle sign out logic here
+        console.log('Signing out...');
+        navigate('/login');
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -104,12 +150,61 @@ const CoachNav = () => {
       </div>
       
       <div className="nav-right">
-        <div className="user-profile">
+        <div 
+          className="user-profile"
+          onClick={handleProfileClick}
+          ref={dropdownRef}
+        >
           <div className="user-avatar">CM</div>
           <div className="user-info">
             <div className="user-name">Coach Mike</div>
             <div className="user-role">Professional Coach</div>
           </div>
+          <span className={`dropdown-arrow ${showDropdown ? 'open' : ''}`}>▼</span>
+
+          {/* Dropdown Menu */}
+          {showDropdown && (
+            <div className="dropdown-menu">
+              <div className="dropdown-header">
+                <div className="user-avatar-large">CM</div>
+                <div className="user-details">
+                  <div className="user-name">Coach Mike</div>
+                  <div className="user-email">coach.mike@example.com</div>
+                </div>
+              </div>
+              
+              <div className="dropdown-divider"></div>
+              
+              <div className="dropdown-items">
+                <div 
+                  className="dropdown-item"
+                  onClick={() => handleDropdownItemClick('profile')}
+                >
+                  <span className="item-icon">👤</span>
+                  <span>My Profile</span>
+                </div>
+                
+                <div 
+                  className="dropdown-item"
+                  onClick={() => handleDropdownItemClick('notifications')}
+                >
+                  <span className="item-icon">🔔</span>
+                  <span>Notifications</span>
+                </div>
+                
+                
+                <div className="dropdown-divider"></div>
+                
+                <div 
+                  className="dropdown-item signout"
+                  onClick={() => handleDropdownItemClick('signout')}
+                >
+                  <span className="item-icon">🚪</span>
+                  <span>Sign Out</span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -212,6 +212,46 @@
           font-size: 0.95rem;
         }
       }
+
+      // Enhanced Action Buttons for List View
+      .tournament-actions {
+        display: flex;
+        gap: 0.75rem;
+        
+        button {
+          padding: 0.6rem 1.2rem;
+          border: none;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          white-space: nowrap;
+        }
+        
+        .btn-view-details {
+          background: linear-gradient(135deg, #007bff, #0056b3);
+          color: white;
+          box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+          
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+          }
+        }
+        
+        .btn-share {
+          background: white;
+          color: #007bff;
+          border: 2px solid #007bff;
+          
+          &:hover {
+            background: #007bff;
+            color: white;
+            transform: translateY(-2px);
+          }
+        }
+      }
     }
 
     .tournament-description {
@@ -321,6 +361,12 @@
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
 
     .calendar-date {
       background: #007bff;
@@ -384,6 +430,48 @@
           color: #007bff;
           font-weight: 600;
           font-size: 0.9rem;
+        }
+      }
+    }
+
+    // Enhanced Action Buttons for Calendar View
+    .card-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      min-width: 120px;
+      
+      button {
+        padding: 0.6rem 1rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+      }
+      
+      .btn-view-details {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
+        
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+        }
+      }
+      
+      .btn-share {
+        background: white;
+        color: #007bff;
+        border: 2px solid #007bff;
+        
+        &:hover {
+          background: #007bff;
+          color: white;
+          transform: translateY(-1px);
         }
       }
     }
@@ -469,6 +557,197 @@
       font-size: 1rem;
     }
   }
+
+  /* Modal Styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+  }
+
+  .tournament-modal {
+    background: white;
+    border-radius: 16px;
+    padding: 0;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: linear-gradient(135deg, #f8fafc, #ffffff);
+    
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #1f2937;
+      font-weight: 700;
+    }
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #6b7280;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: #f3f4f6;
+      color: #374151;
+    }
+  }
+
+  .modal-content {
+    padding: 2rem;
+  }
+
+  .tournament-info {
+    .info-row {
+      display: flex;
+      margin-bottom: 1.25rem;
+      padding: 0.75rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      
+      label {
+        font-weight: 600;
+        color: #374151;
+        min-width: 150px;
+        font-size: 0.95rem;
+      }
+      
+      span {
+        color: #6b7280;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .description-section,
+  .athletes-section {
+    margin-top: 2rem;
+    
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e5e7eb;
+    }
+  }
+
+  .description-section p {
+    color: #555;
+    line-height: 1.7;
+    font-size: 1rem;
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #007bff;
+  }
+
+  .athletes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    
+    .athlete-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background: #e5e7eb;
+        transform: translateX(5px);
+      }
+      
+      img {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      span {
+        font-weight: 600;
+        color: #374151;
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    
+    button {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-share {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+      }
+    }
+    
+    .btn-close {
+      background: white;
+      color: #374151;
+      border: 2px solid #e5e7eb;
+      
+      &:hover {
+        background: #f3f4f6;
+        border-color: #d1d5db;
+        transform: translateY(-2px);
+      }
+    }
+  }
 }
 
 // Responsive Design
@@ -504,6 +783,16 @@
         .date-badge {
           align-self: flex-start;
         }
+
+        .tournament-actions {
+          width: 100%;
+          justify-content: stretch;
+          
+          button {
+            flex: 1;
+            text-align: center;
+          }
+        }
       }
 
       .tournament-footer {
@@ -520,6 +809,15 @@
       .calendar-date {
         align-self: flex-start;
       }
+
+      .card-actions {
+        flex-direction: row;
+        min-width: auto;
+        
+        button {
+          flex: 1;
+        }
+      }
     }
 
     .announcement-card {
@@ -531,5 +829,278 @@
         align-items: flex-start;
       }
     }
+
+    .modal-actions {
+      flex-direction: column;
+    }
+
+    .tournament-info .info-row {
+      flex-direction: column;
+      gap: 0.5rem;
+      
+      label {
+        min-width: auto;
+      }
+    }
   }
+  // Seats and Availability Styles
+.tournament-meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 0.5rem;
+  
+  .registered-count {
+    color: #666;
+    font-size: 0.9rem;
+  }
+  
+  .availability-status {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.05);
+    
+    &.full {
+      background: rgba(220, 53, 69, 0.1);
+    }
+    
+    &.limited {
+      background: rgba(255, 193, 7, 0.1);
+    }
+    
+    &.available {
+      background: rgba(40, 167, 69, 0.1);
+    }
+  }
+}
+
+.seats-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: flex-end;
+  
+  .seats-left {
+    color: #007bff;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+}
+
+.availability-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: flex-end;
+  
+  .seats-left {
+    color: #007bff;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  
+  .availability-status {
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+}
+
+// Modal Seats Styles
+.seats-left-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  
+  &.full {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+  }
+  
+  &.limited {
+    background: rgba(255, 193, 7, 0.1);
+    color: #856404;
+  }
+  
+  &.available {
+    background: rgba(40, 167, 69, 0.1);
+    color: #155724;
+  }
+}
+
+.seats-progress {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border-left: 4px solid #007bff;
+  
+  h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: 600;
+  }
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+  
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+}
+
+.progress-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .tournament-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .seats-info {
+    align-items: flex-start;
+  }
+  
+  .availability-info {
+    align-items: flex-start;
+  }
+}
+// Registration Fee Styles
+.fee-badge {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.registration-fee {
+  color: #28a745;
+  font-weight: 600;
+  font-size: 0.85rem;
+  background: rgba(40, 167, 69, 0.1);
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+}
+
+.fee-amount {
+  font-weight: 600;
+  font-size: 1rem;
+  
+  &.free {
+    color: #28a745;
+    background: rgba(40, 167, 69, 0.1);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  
+  &:not(.free) {
+    color: #007bff;
+    background: rgba(0, 123, 255, 0.1);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+  }
+}
+
+// Update tournament meta for better spacing
+.tournament-meta {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+  
+  .registered-count {
+    color: #666;
+    font-size: 0.9rem;
+  }
+  
+  .fee-badge {
+    margin-right: 0.5rem;
+  }
+  
+  .availability-status {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.05);
+    
+    &.full {
+      background: rgba(220, 53, 69, 0.1);
+    }
+    
+    &.limited {
+      background: rgba(255, 193, 7, 0.1);
+    }
+    
+    &.available {
+      background: rgba(40, 167, 69, 0.1);
+    }
+  }
+}
+
+// Update availability info for calendar view
+.availability-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: flex-end;
+  
+  .seats-left {
+    color: #007bff;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  
+  .registration-fee {
+    align-self: flex-end;
+  }
+  
+  .availability-status {
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .tournament-meta {
+    gap: 0.5rem;
+    
+    .fee-badge {
+      margin-right: 0;
+    }
+  }
+  
+  .availability-info {
+    align-items: flex-start;
+    
+    .registration-fee {
+      align-self: flex-start;
+    }
+  }
+}
 }

@@ -1,196 +1,257 @@
-import React, { useState, useRef } from "react";
-import { Search, ChevronLeft, ChevronRight } from "lucide-react";
+import React from 'react';
+import { 
+  Search, 
+  Users, 
+  Trophy, 
+  Star, 
+  MapPin, 
+  Calendar,
+  Shield,
+  Video,
+  MessageCircle,
+  ArrowRight
+} from 'lucide-react';
 import "../styles/home.scss";
-import "../styles/common/buttons.scss";
-
-// Images
-import heroBackground from "../assets/bg1.jpg";
-
-// Tournament images
-import tournament1 from "../assets/tournaments/tournament1.jpeg";
-import tournament2 from "../assets/tournaments/tournament1.jpeg";
-import tournament3 from "../assets/tournaments/tournament1.jpeg";
-
-// Coach images
-import coach1 from "../assets/coaches/coach1.jpg";
-
-// Sports image (placeholder)
-import baseballImg from "../assets/sports/baseball.jpeg";
-
-// === Featured Sports ===
-const featuredSports = [
-  { name: "Soccer", icon: "⚽", image: baseballImg },
-  { name: "Basketball", icon: "🏀", image: baseballImg },
-  { name: "Tennis", icon: "🎾", image: baseballImg },
-  { name: "Baseball", icon: "⚾", image: baseballImg },
-];
-
-// === Coaches ===
-const coaches = [
-  { name: "John Martinez", sport: "Fitness & Strength", rating: 4.9, experience: "8 years", image: coach1 },
-  { name: "Sarah Johnson", sport: "Basketball", rating: 4.8, experience: "6 years", image: coach1 },
-  { name: "Michael Chen", sport: "Tennis", rating: 5.0, experience: "10 years", image: coach1 },
-  { name: "David Thompson", sport: "Swimming", rating: 4.7, experience: "12 years", image: coach1 },
-  { name: "Robert Wilson", sport: "Soccer", rating: 4.9, experience: "9 years", image: coach1 },
-  { name: "Emma Davis", sport: "Yoga & Wellness", rating: 5.0, experience: "7 years", image: coach1 },
-];
-
-// === Tournaments ===
-const tournaments = [
-  { name: "City Championship Cup", sport: "Multi-Sport", date: "Dec 15-20, 2025", location: "Central Stadium", image: tournament1 },
-  { name: "National Basketball League", sport: "Basketball", date: "Jan 5-12, 2026", location: "Sports Arena", image: tournament2 },
-  { name: "Grand Tennis Masters", sport: "Tennis", date: "Feb 18-25, 2026", location: "Tennis Center", image: tournament3 },
-];
-
-// === Why Choose ===
-const whyChooseFeatures = [
-  { title: "Expert Coaches", description: "Connect with certified and experienced coaches across 50+ sports" },
-  { title: "Personalized Training", description: "Get customized training plans and diet recommendations" },
-  { title: "Track Progress", description: "Monitor your performance with detailed analytics and graphs" },
-  { title: "Flexible Scheduling", description: "Book sessions that fit your schedule with easy rescheduling" },
-  { title: "Community Groups", description: "Join training groups and connect with fellow athletes" },
-  { title: "Video Analysis", description: "Review your technique with coach feedback and video playback" },
-];
+import { Link } from 'react-router-dom';
 
 const Home = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const sports = [
+    { name: "Tennis", icon: "🎾", coaches: 245 },
+    { name: "Football", icon: "⚽", coaches: 189 },
+    { name: "Basketball", icon: "🏀", coaches: 167 },
+    { name: "Swimming", icon: "🏊", coaches: 98 },
+    { name: "Cricket", icon: "🏏", coaches: 134 },
+    { name: "Badminton", icon: "🏸", coaches: 76 }
+  ];
 
-  const tournamentsRef = useRef(null);
-  const coachesRef = useRef(null);
+  const features = [
+    {
+      icon: <Search className="feature-icon" />,
+      title: "Find Perfect Coaches",
+      description: "Browse verified coaches with detailed profiles, ratings, and specialties"
+    },
+    {
+      icon: <MapPin className="feature-icon" />,
+      title: "Location Based Search",
+      description: "Discover coaches near you with our advanced location filtering"
+    },
+    {
+      icon: <Calendar className="feature-icon" />,
+      title: "Tournament Updates",
+      description: "Stay updated with ongoing and upcoming sports tournaments"
+    },
+    {
+      icon: <Shield className="feature-icon" />,
+      title: "Verified Professionals",
+      description: "All coaches are thoroughly verified for credentials and experience"
+    }
+  ];
 
-  const scrollLeft = (ref) => ref.current.scrollBy({ left: -320, behavior: "smooth" });
-  const scrollRight = (ref) => ref.current.scrollBy({ left: 320, behavior: "smooth" });
+
+  const featuredCoaches = [
+    {
+      name: "Sarah Johnson",
+      sport: "Tennis",
+      experience: "8 years",
+      rating: 4.9,
+      students: 120,
+      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+      specialty: "Serve Technique & Strategy"
+    },
+    {
+      name: "Mike Chen",
+      sport: "Basketball",
+      experience: "12 years",
+      rating: 4.8,
+      students: 95,
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+      specialty: "Shooting & Defense"
+    },
+    {
+      name: "Emma Davis",
+      sport: "Swimming",
+      experience: "6 years",
+      rating: 4.7,
+      students: 78,
+      image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
+      specialty: "Freestyle & Butterfly"
+    }
+  ];
 
   return (
-    <div className="home">
-      {/* 🌟 Hero Section */}
-      <section className="hero" style={{ backgroundImage: `url(${heroBackground})` }}>
-        <div className="hero__overlay"></div>
-        <div className="hero__content">
-          <h1 className="hero__title">Find the Right Coach, Train Smarter</h1>
-          <p className="hero__subtitle" style={{fontSize:"25px",lineHeight:"35px"}}>
-            Connect with professional coaches across multiple sports and take your skills to the next level
-          </p>
-
-          <div className="hero__search">
-            <div className="search-wrapper">
-              <input
-                type="text"
-                placeholder="Search by sport, coach name, or location..."
-                className="hero__input"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <button className="btn btn-hero btn-lg">
-                <Search size={20} style={{ marginRight: "0.5rem" }} />
-                Search
-              </button>
-            </div>
-          </div>
-
-          <div className="hero__cta">
-            <button className="btn btn-hero btn-xl">Find a Coach</button>
-            <button className="btn btn-outline btn-xl">Join as Coach</button>
-          </div>
-        </div>
-      </section>
-
-      {/* 🏅 Featured Sports */}
-      <section className="featured-sports-section">
-        <h2 style={{fontSize:"45px",fontWeight:"bold",textAlign:"center",color:"black"}}>Featured Sports</h2>
-        <div className="sports-grid">
-          {featuredSports.map((sport, i) => (
-            <div key={i} className="sport-card">
-              <div className="sport-image">
-                <img src={sport.image} alt={sport.name} />
-                <div className="overlay">
-                  <div className="sport-info">
-                    <div className="sport-icon">{sport.icon}</div>
-                    <h3>{sport.name}</h3>
-                  </div>
-                </div>
+    <div className="home-page">
+      {/* Hero Section */}
+      <section className="hero">
+        <div className="container">
+          <div className="hero-content">
+            <h1 className="hero-title">
+              Find Your Perfect 
+              <span className="hero-highlight"> Sports Coach</span>
+            </h1>
+            <p className="hero-description">
+              Connect with certified professional coaches across 50+ sports. 
+              Improve your skills, achieve your goals, and transform your game with expert guidance.
+            </p>
+            
+            <div className="hero-search">
+              <div className="search-box">
+                <Search className="search-icon" />
+                <input 
+                  type="text" 
+                  placeholder="Search coaches by sport, name, or location..."
+                  className="search-input"
+                />
+                <button className="search-btn">
+                  Find Coaches
+                </button>
               </div>
             </div>
-          ))}
+
+          </div>
         </div>
       </section>
 
-      {/* 🏆 Live Tournaments Grid */}
-<section className="live-tournaments">
-  <h2 style={{fontSize:"45px",fontWeight:"bold",textAlign:"center",color:"black"}}>Live Tournaments</h2>
-  <div className="tournaments-grid">
-    {tournaments.map((t, i) => (
-      <div key={i} className="tournament-card">
-        <div className="tournament-image">
-          <img src={t.image} alt={t.name} />
-          <span className="sport-badge">{t.sport}</span>
-        </div>
-        <div className="tournament-info">
-          <h3>{t.name}</h3>
-          <p>📅 {t.date}</p>
-          <p>📍 {t.location}</p>
-          <button className="btn">View Details</button>
-        </div>
-      </div>
-    ))}
-  </div>
-</section>
-
-      {/* 👩‍🏫 Featured Coaches Carousel */}
-      <section className="featured-coaches-carousel">
-        <h2 style={{fontSize:"45px",fontWeight:"bold",textAlign:"center",color:"black"}}>Featured Coaches</h2>
-        <div className="carousel">
-          <button className="carousel-btn left" onClick={() => scrollLeft(coachesRef)}>
-            <ChevronLeft size={20} />
-          </button>
-
-          <div className="horizontal-scroll" ref={coachesRef}>
-            {coaches.map((coach, i) => (
-              <div key={i} className="coach-card">
-                <div className="coach-image">
-                  <img src={coach.image} alt={coach.name} />
-                  <span className="rating-badge" style={{color:"black"}}>⭐ {coach.rating}</span>
+      {/* Sports Categories */}
+      <section className="sports-section">
+        <div className="container">
+          <div className="section-header">
+            <h2>Popular Sports Categories</h2>
+            <p>Choose from a wide range of sports and find specialized coaches</p>
+          </div>
+          <div className="sports-grid">
+            {sports.map((sport, index) => (
+              <Link to={`/sport/${sport.name.toLowerCase()}`} key={index} className="sport-card">
+                <div className="sport-icon">{sport.icon}</div>
+                <h3 className="sport-name">{sport.name}</h3>
+                <p className="sport-coaches">{sport.coaches} coaches available</p>
+                <div className="sport-arrow">
+                  <ArrowRight size={16} />
                 </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="how-it-works">
+        <div className="container">
+          <div className="section-header">
+            <h2>How PlayBit Works</h2>
+            <p>Get started in three simple steps</p>
+          </div>
+          <div className="steps">
+            <div className="step">
+              <div className="step-number">1</div>
+              <div className="step-content">
+                <Users className="step-icon" />
+                <h3>Create Your Profile</h3>
+                <p>Sign up and tell us about your sports interests and goals</p>
+              </div>
+            </div>
+            <div className="step">
+              <div className="step-number">2</div>
+              <div className="step-content">
+                <Search className="step-icon" />
+                <h3>Find Your Coach</h3>
+                <p>Browse verified coaches and filter by sport, location, and expertise</p>
+              </div>
+            </div>
+            <div className="step">
+              <div className="step-number">3</div>
+              <div className="step-content">
+                <MessageCircle className="step-icon" />
+                <h3>Start Training</h3>
+                <p>Connect with your coach and begin your sports journey</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="features">
+        <div className="container">
+          <div className="section-header">
+            <h2>Why Choose PlayBit</h2>
+            <p>Experience the best platform for sports coaching</p>
+          </div>
+          <div className="features-grid">
+            {features.map((feature, index) => (
+              <div key={index} className="feature-card">
+                <div className="feature-icon-wrapper">
+                  {feature.icon}
+                </div>
+                <h3>{feature.title}</h3>
+                <p>{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Coaches */}
+      <section className="coaches-section">
+        <div className="container">
+          <div className="section-header">
+            <h2>Featured Coaches</h2>
+            <p>Meet some of our top-rated professional coaches</p>
+          </div>
+          <div className="coaches-grid">
+            {featuredCoaches.map((coach, index) => (
+              <div key={index} className="coach-card">
+                <img src={coach.image} alt={coach.name} className="coach-image" />
                 <div className="coach-info">
-                  <h3>{coach.name}</h3>
-                  <p>{coach.sport}</p>
-                  <p>{coach.experience} experience</p>
-                  <button className="btn">View Profile</button>
+                  <h3 className="coach-name">{coach.name}</h3>
+                  <p className="coach-sport">{coach.sport}</p>
+                  <p className="coach-specialty">{coach.specialty}</p>
+                  
+                  <div className="coach-stats">
+                    <div className="coach-stat">
+                      <Star className="stat-icon" />
+                      <span>{coach.rating} Rating</span>
+                    </div>
+                    <div className="coach-stat">
+                      <Users className="stat-icon" />
+                      <span>{coach.students} Students</span>
+                    </div>
+                    <div className="coach-stat">
+                      <Trophy className="stat-icon" />
+                      <span>{coach.experience}</span>
+                    </div>
+                  </div>
+                  
+                  <button className="view-profile-btn">
+                    View Profile
+                  </button>
                 </div>
               </div>
             ))}
           </div>
-
-          <button className="carousel-btn right" onClick={() => scrollRight(coachesRef)}>
-            <ChevronRight size={20} />
-          </button>
-        </div>
-      </section>
-
-      {/* 💡 Why Choose Section */}
-      <section className="why-choose" >
-        <div className="container">
-          <h2 style={{fontSize:"45px",fontWeight:"bold",textAlign:"center",color:"black"}}>Why Choose PlayBit</h2>
-          <div className="features-scroll">
-            <div className="features-track">
-              {[...whyChooseFeatures, ...whyChooseFeatures].map((f, i) => (
-                <div key={i} className="feature-card">
-                  <div className="feature-icon"><span>✨</span></div>
-                  <h3>{f.title}</h3>
-                  <p>{f.description}</p>
-                </div>
-              ))}
-            </div>
+          <div className="section-actions">
+            <Link to="/coaches" className="btn-primary">
+              View All Coaches
+              <ArrowRight className="btn-icon" />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* 🚀 Footer CTA */}
-      <section className="footer-cta" style={{marginBottom:"50px"}}>
+      {/* CTA Section */}
+      <section className="cta-section">
         <div className="container">
-          <h2>Ready to Start Your Journey?</h2>
-          <p>Join thousands of athletes already training with PlayBit's expert coaches</p>
-          <button className="btn btn-secondary btn-xl">Get Started Now</button>
+          <div className="cta-content">
+            <h2>Ready to Start Your Sports Journey?</h2>
+            <p>Join thousands of athletes who have found their perfect coach on PlayBit</p>
+            <div className="cta-actions">
+              <Link to="/register" className="btn-primary large">
+                Find Your Coach
+              </Link>
+              <Link to="/coach-register" className="btn-secondary large">
+                Become a Coach
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </div>
