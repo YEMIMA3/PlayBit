@@ -140,227 +140,225 @@ export default function CoachDashboard() {
   ];
 
   return (
-    <div>
-    <CoachNav />
-    <div className="coach-dashboard">
-      {/* Welcome Header */}
-      
-      <div className="welcome-header">
-        <div className="welcome-text">
-          <h1>Welcome back, Coach {coachData.name.split(' ')[0]}! 👋</h1>
-          <p>Here's what's happening with your coaching today</p>
+    <div className="coach-dashboard-wrapper">
+      <CoachNav />
+      <div className="coach-dashboard">
+        {/* Welcome Header */}
+        <div className="welcome-header">
+          <div className="welcome-text">
+            <h1>Welcome back, Coach {coachData.name.split(' ')[0]}! 👋</h1>
+            <p>Here's what's happening with your coaching today</p>
+          </div>
+          <div className="header-stats">
+            <div className="stat-item">
+              <Star className="icon" size={20} />
+              <span>{coachData.rating} Rating</span>
+            </div>
+            <div className="stat-item">
+              <Target className="icon" size={20} />
+              <span>{coachData.successRate} Success</span>
+            </div>
+            <div className="stat-item">
+              <BarChart3 className="icon" size={20} />
+              <span>{coachData.studentsTrained} Trained</span>
+            </div>
+          </div>
         </div>
-        <div className="header-stats">
-          <div className="stat-item">
-            <Star className="icon" size={20} />
-            <span>{coachData.rating} Rating</span>
-          </div>
-          <div className="stat-item">
-            <Target className="icon" size={20} />
-            <span>{coachData.successRate} Success</span>
-          </div>
-          <div className="stat-item">
-            <BarChart3 className="icon" size={20} />
-            <span>{coachData.studentsTrained} Trained</span>
-          </div>
-        </div>
-      </div>
 
-      <div className="dashboard-grid">
-        {/* Left Column */}
-        <div className="left-column">
-          {/* Profile Card */}
-          <div className="profile-card">
-            <div className="profile-header">
-              <div className="avatar-section">
-                <img
-                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop"
-                  alt="Coach"
-                  className="profile-avatar"
-                />
-                <div className="online-status"></div>
+        <div className="dashboard-grid">
+          {/* Left Column */}
+          <div className="left-column">
+            {/* Profile Card */}
+            <div className="profile-card">
+              <div className="profile-header">
+                <div className="avatar-section">
+                  <img
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop"
+                    alt="Coach"
+                    className="profile-avatar"
+                  />
+                  <div className="online-status"></div>
+                </div>
+                <div className="profile-main">
+                  <div className="profile-title">
+                    <h2>{coachData.name}</h2>
+                    <div className="rating">
+                      <Star fill="currentColor" size={16} />
+                      <span>{coachData.rating}</span>
+                    </div>
+                  </div>
+                  <div className="sports-list">
+                    {coachData.sports.map((sport) => (
+                      <span key={sport} className="sport-badge">
+                        {sport}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="bio">{coachData.bio}</p>
+                </div>
+                <Link to="/coach/profile" className="edit-profile-btn">
+                  <Edit3 size={16} />
+                  Edit Profile
+                </Link>
               </div>
-              <div className="profile-main">
-                <div className="profile-title">
-                  <h2>{coachData.name}</h2>
-                  <div className="rating">
-                    <Star fill="currentColor" size={16} />
-                    <span>{coachData.rating}</span>
+
+              <div className="profile-details">
+                <div className="detail-item">
+                  <Award className="icon" size={18} />
+                  <div>
+                    <span className="label">Experience</span>
+                    <span className="value">{coachData.experience}</span>
                   </div>
                 </div>
-                <div className="sports-list">
-                  {coachData.sports.map((sport) => (
-                    <span key={sport} className="sport-badge">
-                      {sport}
-                    </span>
+                <div className="detail-item">
+                  <MapPin className="icon" size={18} />
+                  <div>
+                    <span className="label">Location</span>
+                    <span className="value">{coachData.location}</span>
+                  </div>
+                </div>
+                <div className="detail-item">
+                  <Mail className="icon" size={18} />
+                  <div>
+                    <span className="label">Email</span>
+                    <span className="value">{coachData.email}</span>
+                  </div>
+                </div>
+                <div className="detail-item">
+                  <Phone className="icon" size={18} />
+                  <div>
+                    <span className="label">Phone</span>
+                    <span className="value">{coachData.phone}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="certifications-section">
+                <h4>Certifications</h4>
+                <div className="certifications-list">
+                  {coachData.certifications.map((cert) => (
+                    <div key={cert} className="certification-item">
+                      <Shield size={14} />
+                      {cert}
+                    </div>
                   ))}
                 </div>
-                <p className="bio">{coachData.bio}</p>
-              </div>
-              <Link to="/coach/profile" className="edit-profile-btn">
-                <Edit3 size={16} />
-                Edit Profile
-              </Link>
-            </div>
-
-            <div className="profile-details">
-              <div className="detail-item">
-                <Award className="icon" size={18} />
-                <div>
-                  <span className="label">Experience</span>
-                  <span className="value">{coachData.experience}</span>
-                </div>
-              </div>
-              <div className="detail-item">
-                <MapPin className="icon" size={18} />
-                <div>
-                  <span className="label">Location</span>
-                  <span className="value">{coachData.location}</span>
-                </div>
-              </div>
-              <div className="detail-item">
-                <Mail className="icon" size={18} />
-                <div>
-                  <span className="label">Email</span>
-                  <span className="value">{coachData.email}</span>
-                </div>
-              </div>
-              <div className="detail-item">
-                <Phone className="icon" size={18} />
-                <div>
-                  <span className="label">Phone</span>
-                  <span className="value">{coachData.phone}</span>
-                </div>
               </div>
             </div>
 
-            <div className="certifications-section">
-              <h4>Certifications</h4>
-              <div className="certifications-list">
-                {coachData.certifications.map((cert) => (
-                  <div key={cert} className="certification-item">
-                    <Shield size={14} />
-                    {cert}
+            {/* Upcoming Sessions */}
+            <div className="sessions-card">
+              <div className="card-header">
+                <h3>Upcoming Sessions</h3>
+                <Link to="/coach/schedule" className="view-all">
+                  View All <ChevronRight size={16} />
+                </Link>
+              </div>
+              <div className="sessions-list">
+                {upcomingSessions.map((session) => (
+                  <div key={session.id} className="session-item">
+                    <div className="session-info">
+                      <h4>{session.title}</h4>
+                      <div className="session-meta">
+                        <Clock size={14} />
+                        <span>{session.time}</span>
+                        <span className="divider">•</span>
+                        <span>{session.location}</span>
+                      </div>
+                    </div>
+                    <div className={`session-type ${session.type.toLowerCase()}`}>
+                      {session.type}
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Upcoming Sessions */}
-          <div className="sessions-card">
-            <div className="card-header">
-              <h3>Upcoming Sessions</h3>
-              <Link to="/coach/schedule" className="view-all">
-                View All <ChevronRight size={16} />
-              </Link>
-            </div>
-            <div className="sessions-list">
-              {upcomingSessions.map((session) => (
-                <div key={session.id} className="session-item">
-                  <div className="session-info">
-                    <h4>{session.title}</h4>
-                    <div className="session-meta">
-                      <Clock size={14} />
-                      <span>{session.time}</span>
-                      <span className="divider">•</span>
-                      <span>{session.location}</span>
-                    </div>
-                  </div>
-                  <div className={`session-type ${session.type.toLowerCase()}`}>
-                    {session.type}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column */}
-        <div className="right-column">
-          {/* Stats Grid */}
-          <div className="stats-grid">
-            {stats.map((stat) => {
-              const Icon = stat.icon;
-              return (
-                <div key={stat.label} className="stat-card">
-                  <div className="stat-content">
-                    <div className="stat-main">
-                      <p className="value">{stat.value}</p>
-                      <p className="label">{stat.label}</p>
-                    </div>
-                    <div className="stat-trend">
-                      <span className="trend-value">{stat.trend}</span>
-                      <p className="trend-description">{stat.description}</p>
-                    </div>
-                  </div>
-                  <div className="stat-icon" style={{ backgroundColor: stat.color }}>
-                    <Icon color="#fff" size={24} />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Quick Actions */}
-          <div className="actions-card">
-            <div className="card-header">
-              <h3>Quick Actions</h3>
-              <p>Manage your coaching activities</p>
-            </div>
-            <div className="actions-grid">
-              {actionCards.map((card) => {
-                const Icon = card.icon;
+          {/* Right Column */}
+          <div className="right-column">
+            {/* Stats Grid */}
+            <div className="stats-grid">
+              {stats.map((stat) => {
+                const Icon = stat.icon;
                 return (
-                  <Link to={card.link} key={card.title} className="action-card">
-                    <div className="action-header">
-                      <div className="icon-wrapper" style={{ background: card.gradient }}>
-                        <Icon color="#fff" size={20} />
+                  <div key={stat.label} className="stat-card">
+                    <div className="stat-content">
+                      <div className="stat-main">
+                        <p className="value">{stat.value}</p>
+                        <p className="label">{stat.label}</p>
                       </div>
-                      {card.badge && (
-                        <span className={`action-badge ${card.urgent ? 'urgent' : ''}`}>
-                          {card.badge}
-                        </span>
-                      )}
+                      <div className="stat-trend">
+                        <span className="trend-value">{stat.trend}</span>
+                        <p className="trend-description">{stat.description}</p>
+                      </div>
                     </div>
-                    <div className="action-content">
-                      <h4>{card.title}</h4>
-                      <p>{card.description}</p>
+                    <div className="stat-icon" style={{ backgroundColor: stat.color }}>
+                      <Icon color="#fff" size={24} />
                     </div>
-                    <div className="action-arrow">
-                      <ChevronRight size={16} />
-                    </div>
-                  </Link>
+                  </div>
                 );
               })}
             </div>
-          </div>
 
-          {/* Recent Achievements */}
-          <div className="achievements-card">
-            <div className="card-header">
-              <h3>Recent Achievements</h3>
-              <Award className="icon" size={20} />
+            {/* Quick Actions */}
+            <div className="actions-card">
+              <div className="card-header">
+                <h3>Quick Actions</h3>
+                <p>Manage your coaching activities</p>
+              </div>
+              <div className="actions-grid">
+                {actionCards.map((card) => {
+                  const Icon = card.icon;
+                  return (
+                    <Link to={card.link} key={card.title} className="action-card">
+                      <div className="action-header">
+                        <div className="icon-wrapper" style={{ background: card.gradient }}>
+                          <Icon color="#fff" size={20} />
+                        </div>
+                        {card.badge && (
+                          <span className={`action-badge ${card.urgent ? 'urgent' : ''}`}>
+                            {card.badge}
+                          </span>
+                        )}
+                      </div>
+                      <div className="action-content">
+                        <h4>{card.title}</h4>
+                        <p>{card.description}</p>
+                      </div>
+                      <div className="action-arrow">
+                        <ChevronRight size={16} />
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
-            <div className="achievements-list">
-              {recentAchievements.map((achievement) => (
-                <div key={achievement.id} className="achievement-item">
-                  <div className="achievement-icon">
-                    <Trophy size={16} />
+
+            {/* Recent Achievements */}
+            <div className="achievements-card">
+              <div className="card-header">
+                <h3>Recent Achievements</h3>
+                <Award className="icon" size={20} />
+              </div>
+              <div className="achievements-list">
+                {recentAchievements.map((achievement) => (
+                  <div key={achievement.id} className="achievement-item">
+                    <div className="achievement-icon">
+                      <Trophy size={16} />
+                    </div>
+                    <div className="achievement-content">
+                      <h4>{achievement.title}</h4>
+                      <p>{achievement.description}</p>
+                      <span className="achievement-date">{achievement.date}</span>
+                    </div>
                   </div>
-                  <div className="achievement-content">
-                    <h4>{achievement.title}</h4>
-                    <p>{achievement.description}</p>
-                    <span className="achievement-date">{achievement.date}</span>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    </div>
   );
 }
-

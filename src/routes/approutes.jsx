@@ -16,7 +16,8 @@ import Stadium from "../pages/coach/stadium";
 
 // // 🎓 Student Pages
 // import StudentDashboard from "../pages/student/Dashboard";
-// import StudentProfile from "../pages/student/Profile";
+import AthleteProfile from "../pages/athlete/athleteprofile";
+import AthleteAnnouncements from "../pages/athlete/athleteannounc";
 // import EnrollRequests from "../pages/student/EnrollRequests";
 // import StudentGroups from "../pages/student/Groups";
 // import StudentProgress from "../pages/student/Progress";
@@ -45,13 +46,14 @@ export default function AppRoutes() {
       <Route path="/coach/schedule" element={<SchedulePage />} />
       <Route path="/coach/stadium" element={<Stadium />} />
 
-      {/* Student */}
-      {/* <Route path="/student/dashboard" element={<StudentDashboard />} />
-      <Route path="/student/profile" element={<StudentProfile />} />
-      <Route path="/student/enroll-requests" element={<EnrollRequests />} />
-      <Route path="/student/groups" element={<StudentGroups />} />
-      <Route path="/student/progress" element={<StudentProgress />} />
-      <Route path="/student/tournaments" element={<StudentTournaments />} /> */}
+      {/* Athlete */}
+      <Route path="/athlete/profile" element={<AthleteProfile />} />
+      <Route path="/athlete/announcements" element={<AthleteAnnouncements />} />
+      {/* <Route path="/athlete/dashboard" element={<AthleteDashboard />} />
+      <Route path="/athlete/enroll-requests" element={<EnrollRequests />} />
+      <Route path="/athlete/groups" element={<AthleteGroups />} />
+      <Route path="/athlete/progress" element={<AthleteProgress />} />
+      <Route path="/athlete/tournaments" element={<AthleteTournaments />} /> */}
     </Routes>
   );
 }

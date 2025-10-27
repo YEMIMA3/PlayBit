@@ -10,17 +10,15 @@ import {
   LogOut,
   Settings,
   Menu,
-  X,
-  Calendar,
-  ClipboardList
+  X
 } from 'lucide-react';
-import '../../styles/coach/coachnav.scss';
+import '../../styles/athlete/athletenav.scss';
 
-const CoachNav = () => {
+const AthleteNav = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [activeItem, setActiveItem] = useState('dashboard');
-  const [unreadNotifications, setUnreadNotifications] = useState(4);
+  const [activeItem, setActiveItem] = useState('profile');
+  const [unreadNotifications, setUnreadNotifications] = useState(3);
   const location = useLocation();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
@@ -28,53 +26,46 @@ const CoachNav = () => {
 
   const menuItems = [
     { 
-      key: 'dashboard', 
-      path: '/coach/dashboard', 
-      icon: BarChart3, 
-      label: 'Dashboard',
+      key: 'profile', 
+      path: '/athlete/profile', 
+      icon: User, 
+      label: 'Profile',
       badge: null
     },
     { 
-      key: 'requests', 
-      path: '/coach/requests', 
-      icon: ClipboardList, 
-      label: 'Requests',
+      key: 'announcements', 
+      path: '/athlete/announcements', 
+      icon: Bell, 
+      label: 'Announcements',
       badge: 3
     },
     { 
-      key: 'groups', 
-      path: '/coach/groups', 
-      icon: Users, 
-      label: 'Groups',
-      badge: null
-    },
-    { 
       key: 'progress', 
-      path: '/coach/progress', 
+      path: '/athlete/progress', 
       icon: BarChart3, 
       label: 'Progress',
       badge: null
     },
     { 
       key: 'tournaments', 
-      path: '/coach/tournaments', 
+      path: '/athlete/tournaments', 
       icon: Trophy, 
       label: 'Tournaments',
-      badge: 1
+      badge: 2
     },
     { 
-      key: 'schedule', 
-      path: '/coach/schedule', 
-      icon: Calendar, 
-      label: 'Schedule',
-      badge: 1
+      key: 'coaches', 
+      path: '/athlete/coaches', 
+      icon: Users, 
+      label: 'Find Coaches',
+      badge: null
     },
-    {
-      key: 'venue',
-      path: '/coach/stadium',
-      icon: MapPin,
-      label: 'Venue',
-      badge: 1
+    { 
+      key: 'stadiums', 
+      path: '/athlete/stadiums', 
+      icon: MapPin, 
+      label: 'Stadiums',
+      badge: null
     }
   ];
 
@@ -119,14 +110,14 @@ const CoachNav = () => {
     setShowDropdown(false);
     switch (action) {
       case 'profile':
-        navigate('/coach/profile');
+        navigate('/athlete/profile');
         break;
       case 'notifications':
-        navigate('/coach/notifications');
+        navigate('/athlete/announcements');
         setUnreadNotifications(0);
         break;
       case 'settings':
-        navigate('/coach/settings');
+        navigate('/athlete/settings');
         break;
       case 'signout':
         console.log('Signing out...');
@@ -144,7 +135,7 @@ const CoachNav = () => {
   return (
     <>
       {/* Main Navbar */}
-      <div className="coach-nav">
+      <div className="athlete-nav">
         {/* Left Section - Menu Button and Platform Name */}
         <div className="nav-left">
           <button 
@@ -154,23 +145,13 @@ const CoachNav = () => {
             {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
           <div className="platform-brand">
-            <span className="logo-icon">🏆</span>
-            <span className="platform-name">Coach Platform</span>
+            <span className="logo-icon">⚡</span>
+            <span className="platform-name">Athlete Platform</span>
           </div>
         </div>
         
         {/* Right Section - User Profile Dropdown */}
         <div className="nav-right">
-          <div 
-            className="notification-icon"
-            onClick={() => navigate('/coach/notifications')}
-          >
-            <Bell size={20} />
-            {unreadNotifications > 0 && (
-              <span className="notification-badge">{unreadNotifications}</span>
-            )}
-          </div>
-
           <div 
             className="user-profile"
             onClick={handleProfileClick}
@@ -180,8 +161,8 @@ const CoachNav = () => {
               <User size={20} />
             </div>
             <div className="user-info">
-              <div className="user-name">Coach Mike</div>
-              <div className="user-role">Professional Coach</div>
+              <div className="user-name">Alex Johnson</div>
+              <div className="user-role">Basketball • Intermediate</div>
             </div>
             <span className={`dropdown-arrow ${showDropdown ? 'open' : ''}`}>▼</span>
 
@@ -193,9 +174,8 @@ const CoachNav = () => {
                     <User size={24} />
                   </div>
                   <div className="user-details">
-                    <div className="user-name">Coach Mike</div>
-                    <div className="user-email">coach.mike@example.com</div>
-                    <div className="user-sport">Professional Coach</div>
+                    <div className="user-name">Alex Johnson</div>
+                    <div className="user-email">alex.johnson@example.com</div>
                   </div>
                 </div>
                 
@@ -256,8 +236,8 @@ const CoachNav = () => {
               <User size={24} />
             </div>
             <div className="user-details-sidebar">
-              <div className="user-name">Coach Mike</div>
-              <div className="user-sport">Professional Coach</div>
+              <div className="user-name">Alex Johnson</div>
+              <div className="user-sport">Basketball • Intermediate</div>
             </div>
           </div>
 
@@ -284,16 +264,11 @@ const CoachNav = () => {
 
           <div className="sidebar-progress">
             <div className="progress-info">
-              <span>Coach Rating</span>
-              <span>4.8/5</span>
+              <span>Profile Completion</span>
+              <span>70%</span>
             </div>
             <div className="progress-bar">
-              <div className="progress-fill" style={{ width: '96%' }}></div>
-            </div>
-            <div className="progress-stats">
-              <span>12 Active Athletes</span>
-              <span>•</span>
-              <span>45 Sessions</span>
+              <div className="progress-fill" style={{ width: '70%' }}></div>
             </div>
           </div>
         </div>
@@ -310,4 +285,4 @@ const CoachNav = () => {
   );
 };
 
-export default CoachNav;
+export default AthleteNav;

@@ -1,4 +1,4 @@
-.coach-nav {
+.athlete-nav {
   position: fixed;
   top: 0;
   left: 0;
@@ -50,7 +50,7 @@
 
     .logo-icon {
       font-size: 1.5rem;
-      background: linear-gradient(135deg, #f59e0b, #d97706);
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -60,7 +60,7 @@
       font-size: 1.5rem;
       font-weight: 700;
       color: #1e293b;
-      background: linear-gradient(135deg, #f59e0b, #d97706);
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -73,41 +73,6 @@
 }
 
 .nav-right {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-
-  .notification-icon {
-    position: relative;
-    padding: 0.5rem;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: #64748b;
-
-    &:hover {
-      background: rgba(59, 130, 246, 0.1);
-      color: #3b82f6;
-      transform: scale(1.1);
-    }
-
-    .notification-badge {
-      position: absolute;
-      top: 0;
-      right: 0;
-      background: #ef4444;
-      color: white;
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.7rem;
-      font-weight: 600;
-    }
-  }
-
   .user-profile {
     display: flex;
     align-items: center;
@@ -129,7 +94,7 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #f59e0b, #d97706);
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -179,13 +144,13 @@
 
       .dropdown-header {
         padding: 1.5rem;
-        background: linear-gradient(135deg, #fefce8, #fef3c7);
+        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
 
         .user-avatar-large {
           width: 50px;
           height: 50px;
           border-radius: 50%;
-          background: linear-gradient(135deg, #f59e0b, #d97706);
+          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -203,13 +168,6 @@
           .user-email {
             font-size: 0.875rem;
             color: #64748b;
-            margin-bottom: 0.25rem;
-          }
-
-          .user-sport {
-            font-size: 0.75rem;
-            color: #f59e0b;
-            font-weight: 500;
           }
         }
       }
@@ -322,7 +280,7 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: linear-gradient(135deg, #fefce8, #fef3c7);
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
   border-radius: 12px;
   border: 1px solid #e2e8f0;
 
@@ -330,7 +288,7 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -370,8 +328,8 @@
     text-align: left;
 
     &:hover {
-      background: rgba(245, 158, 11, 0.1);
-      color: #f59e0b;
+      background: rgba(59, 130, 246, 0.1);
+      color: #3b82f6;
       transform: translateY(-2px);
 
       .sidebar-icon {
@@ -380,9 +338,9 @@
     }
 
     &.active {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
       color: white;
-      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 
       .sidebar-icon {
         color: white;
@@ -415,7 +373,7 @@
 
 .sidebar-progress {
   padding: 1.5rem;
-  background: linear-gradient(135deg, #fefce8, #fef3c7);
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
   border-radius: 12px;
   border: 1px solid #e2e8f0;
 
@@ -431,7 +389,7 @@
       color: #64748b;
 
       &:last-child {
-        color: #f59e0b;
+        color: #3b82f6;
         font-weight: 600;
       }
     }
@@ -443,27 +401,12 @@
     background: #e2e8f0;
     border-radius: 4px;
     overflow: hidden;
-    margin-bottom: 0.75rem;
 
     .progress-fill {
       height: 100%;
-      background: linear-gradient(135deg, #f59e0b, #d97706);
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
       border-radius: 4px;
       transition: width 0.3s ease;
-    }
-  }
-
-  .progress-stats {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
-    color: #64748b;
-
-    span {
-      &:nth-child(2) {
-        color: #d1d5db;
-      }
     }
   }
 }
@@ -498,7 +441,7 @@
 }
 
 // Ensure content doesn't overlap with navbar
-.coach-content {
+.athlete-content {
   margin-top: 70px;
   min-height: calc(100vh - 70px);
   padding: 2rem;
