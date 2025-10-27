@@ -1,0 +1,185 @@
+// Athlete Layout Styles
+.athlete-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f8fafc;
+  
+  @media (max-width: 768px) {
+    .layout-content {
+      margin-left: 0;
+    }
+  }
+  
+  @media (min-width: 769px) {
+    .athlete-sidebar {
+      position: relative;
+      transform: translateX(0) !important;
+    }
+    
+    .layout-content {
+      margin-left: 280px;
+      flex: 1;
+    }
+  }
+}
+
+.layout-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.layout-header {
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    
+    .menu-toggle {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 8px;
+      
+      &:hover {
+        background: #f1f5f9;
+        color: #374151;
+      }
+      
+      @media (min-width: 769px) {
+        display: none;
+      }
+    }
+    
+    .breadcrumb {
+      font-weight: 600;
+      color: #374151;
+      
+      span {
+        color: #3b82f6;
+      }
+    }
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    
+    .notification-btn {
+      position: relative;
+      background: transparent;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 8px;
+      
+      &:hover {
+        background: #f1f5f9;
+        color: #374151;
+      }
+      
+      .notification-badge {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        font-size: 0.7rem;
+        padding: 0.1rem 0.4rem;
+        border-radius: 10px;
+        font-weight: 600;
+        min-width: 18px;
+        text-align: center;
+      }
+    }
+    
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem;
+      border-radius: 10px;
+      cursor: pointer;
+      
+      &:hover {
+        background: #f1f5f9;
+      }
+      
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+      
+      .user-details {
+        display: flex;
+        flex-direction: column;
+        
+        .user-name {
+          font-weight: 600;
+          color: #1e293b;
+          font-size: 0.9rem;
+        }
+        
+        .user-role {
+          font-size: 0.8rem;
+          color: #64748b;
+        }
+      }
+    }
+  }
+}
+
+.layout-main {
+  flex: 1;
+  padding: 2rem;
+  
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+// Update existing page styles to work with layout
+.athlete-profile-page,
+.athlete-announcements-page {
+  .profile-header,
+  .announcements-header {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+    margin-bottom: 2rem;
+    
+    .header-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(59, 130, 246, 0.1);
+      border: 1px solid #e2e8f0;
+    }
+  }
+}

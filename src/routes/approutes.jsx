@@ -12,17 +12,14 @@ import CoachGroups from "../pages/coach/group";
 import PerformanceTracking from "../pages/coach/tracking";
 import CoachTournaments from "../pages/coach/tournaments";
 
-// // 🎓 Student Pages
-// import StudentDashboard from "../pages/student/Dashboard";
-// import StudentProfile from "../pages/student/Profile";
-// import EnrollRequests from "../pages/student/EnrollRequests";
-// import StudentGroups from "../pages/student/Groups";
-// import StudentProgress from "../pages/student/Progress";
-// import StudentTournaments from "../pages/student/Tournaments";
+// 🔐 Coach Auth Pages
+import CoachAuth from "../pages/coach/auth/CoachAuth";
+import DocumentVerification from "../pages/coach/auth/DocumentVerification";
 
-// // 🔐 Auth Pages
-// import Login from "../pages/auth/Login";
-// import Signup from "../pages/auth/Signup";
+// 🎓 Athlete Pages & Layout
+import AthleteLayout from "../components/athlete/AthleteLayout";
+import AthleteProfile from "../pages/athlete/AthleteProfile";
+import AthleteAnnouncements from "../pages/athlete/AthleteAnnouncements";
 
 export default function AppRoutes() {
   return (
@@ -30,11 +27,11 @@ export default function AppRoutes() {
       {/* Home */}
       <Route path="/" element={<Home />} />
 
-      {/* Auth */}
-      {/* <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} /> */}
+      {/* 🔐 Coach Authentication */}
+      <Route path="/coach/auth" element={<CoachAuth />} />
+      <Route path="/coach/auth/verify" element={<DocumentVerification />} />
 
-      {/* Coach */}
+      {/* Coach Dashboard & Management */}
       <Route path="/coach/dashboard" element={<CoachDashboard />} />
       <Route path="/coach/requests" element={<CoachRequests />} />
       <Route path="/coach/tournaments" element={<CoachTournaments />} />
@@ -42,13 +39,15 @@ export default function AppRoutes() {
       <Route path="/coach/groups" element={<CoachGroups />} />
       <Route path="/coach/progress" element={<PerformanceTracking />} />
 
-      {/* Student */}
-      {/* <Route path="/student/dashboard" element={<StudentDashboard />} />
-      <Route path="/student/profile" element={<StudentProfile />} />
-      <Route path="/student/enroll-requests" element={<EnrollRequests />} />
-      <Route path="/student/groups" element={<StudentGroups />} />
-      <Route path="/student/progress" element={<StudentProgress />} />
-      <Route path="/student/tournaments" element={<StudentTournaments />} /> */}
+      {/* 🎓 Athlete Routes with Layout */}
+      <Route path="/athlete" element={<AthleteLayout />}>
+        <Route index element={<AthleteProfile />} /> {/* Default route */}
+        <Route path="profile" element={<AthleteProfile />} />
+        <Route path="announcements" element={<AthleteAnnouncements />} />
+      </Route>
+
+      {/* Fallback route */}
+      <Route path="*" element={<div>Page not found</div>} />
     </Routes>
   );
 }
