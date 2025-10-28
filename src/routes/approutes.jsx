@@ -21,6 +21,9 @@ import AthleteLayout from "../components/athlete/AthleteLayout";
 import AthleteProfile from "../pages/athlete/AthleteProfile";
 import AthleteAnnouncements from "../pages/athlete/AthleteAnnouncements";
 
+// 🔐 Admin Auth Only (Dashboard removed)
+import AdminAuth from '../pages/admin/auth/AdminAuth';
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -38,6 +41,9 @@ export default function AppRoutes() {
       <Route path="/coach/profile" element={<CoachProfile />} />
       <Route path="/coach/groups" element={<CoachGroups />} />
       <Route path="/coach/progress" element={<PerformanceTracking />} />
+
+      {/* 🔐 Admin Authentication Only */}
+      <Route path="/admin/auth" element={<AdminAuth />} />
 
       {/* 🎓 Athlete Routes with Layout */}
       <Route path="/athlete" element={<AthleteLayout />}>
