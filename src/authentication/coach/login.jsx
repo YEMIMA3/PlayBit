@@ -8,37 +8,45 @@ const CoachLogin = () => {
     email: '',
     password: ''
   });
-
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [name]: value
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    // Simulate API call
+
     try {
-      console.log('Coach Login Attempt:', formData);
+      const response = await fetch('http://localhost:3000/api/auth/coach/login', { // ✅ Fixed port
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password
+        }),
+      });
+
+      const data = await response.json();
       
-      // Simulate authentication delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // For demo purposes, always succeed and redirect
-      // In real app, you'd check credentials and get token
-      console.log('Login successful! Redirecting to dashboard...');
-      
-      // Redirect to coach dashboard
-      navigate('/coach/dashboard');
-      
+      if (data.success) {
+        // ✅ FIXED: Access token directly from data, not data.data
+        localStorage.setItem('coach_token', data.token); // ✅ Fixed key name
+        localStorage.setItem('coach_data', JSON.stringify(data.coach));
+        navigate('/coach/dashboard');
+      } else {
+        throw new Error(data.message || 'Login failed');
+      }
     } catch (error) {
-      console.error('Login failed:', error);
-      // You can add error handling here (show toast, etc.)
+      console.error('Login error:', error);
+      alert(`Login failed: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -91,16 +99,10 @@ const CoachLogin = () => {
               Logging in...
             </div>
           ) : (
-            'Login to Coach Portal'
+            'Login to Coach Account'
           )}
         </motion.button>
 
-        <p className="login-redirect">
-          Don't have an account? <span onClick={() => window.location.reload()} style={{cursor: 'pointer', color: '#3b82f6', fontWeight: '600'}}>Sign up here</span>
-        </p>
-
-        {/* Demo Credentials Hint */}
-        
       </motion.form>
     </div>
   );

@@ -32,7 +32,9 @@ const CoachAuth = () => {
           >
             Coach <span className="coach-accent-text">Portal</span>
           </motion.h1>
-          <p className="coach-auth-subtitle">Train Champions. Build Legacy.</p>
+          <p className="coach-auth-subtitle">
+            {isLogin ? 'Welcome back to your coaching dashboard' : 'Join our platform and start coaching today'}
+          </p>
         </div>
 
         {/* Toggle Switch */}
@@ -64,10 +66,27 @@ const CoachAuth = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.3 }}
+            className="form-wrapper"
           >
             {isLogin ? <CoachLogin /> : <CoachSignup />}
           </motion.div>
         </AnimatePresence>
+
+        {/* Additional Info */}
+        <motion.div 
+          className="coach-auth-info"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <h3>Why Join as a Coach?</h3>
+          <ul>
+            <li>✓ Reach more athletes</li>
+            <li>✓ Manage your schedule</li>
+            <li>✓ Build your coaching brand</li>
+            <li>✓ Get paid securely</li>
+          </ul>
+        </motion.div>
       </motion.div>
     </div>
   );

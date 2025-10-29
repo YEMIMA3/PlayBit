@@ -10,6 +10,8 @@ const CoachSignup = () => {
     password: '',
     sport: '',
     experience: '',
+    phone: '',
+    location: '',
     isCertified: false
   });
 
@@ -34,14 +36,47 @@ const CoachSignup = () => {
     }
 
     setIsLoading(true);
-    console.log('Coach Signup:', formData);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Redirect to document verification
-    navigate('/coach/auth/verify');
-    setIsLoading(false);
+
+    try {
+      // ✅ FIXED: Single API call to your actual backend endpoint
+      const response = await fetch('http://localhost:3000/api/auth/coach/register', { // ✅ Fixed port and endpoint
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          phone: formData.phone,
+          location: formData.location,
+          sport: formData.sport,
+          experience: formData.experience,
+          isCertified: formData.isCertified
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        // ✅ FIXED: Store token and coach data
+        localStorage.setItem('coach_token', data.token);
+        localStorage.setItem('coach_data', JSON.stringify(data.coach));
+        
+        console.log('Coach registration successful:', data);
+        
+        // Redirect to coach profile page
+        navigate('/coach/profile');
+      } else {
+        throw new Error(data.message || 'Registration failed');
+      }
+      
+    } catch (error) {
+      console.error('Signup error:', error);
+      alert(`Signup failed: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -88,6 +123,33 @@ const CoachSignup = () => {
             required
             placeholder="Create a strong password"
             disabled={isLoading}
+            minLength="6"
+          />
+        </motion.div>
+
+        <motion.div className="form-group" whileFocus={{ scale: 1.02 }}>
+          <label>Phone Number *</label>
+          <input
+            type="tel"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+            placeholder="+1 (555) 123-4567"
+            disabled={isLoading}
+          />
+        </motion.div>
+
+        <motion.div className="form-group" whileFocus={{ scale: 1.02 }}>
+          <label>Location *</label>
+          <input
+            type="text"
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+            required
+            placeholder="City, State"
+            disabled={isLoading}
           />
         </motion.div>
 
@@ -116,6 +178,7 @@ const CoachSignup = () => {
             onChange={handleChange}
             required
             min="0"
+            max="50"
             placeholder="e.g., 5"
             disabled={isLoading}
           />
@@ -135,7 +198,7 @@ const CoachSignup = () => {
               disabled={isLoading}
             />
             <span className="checkmark"></span>
-            I am a certified coach and will provide proof
+            I am a certified coach and agree to provide proof when requested
           </label>
         </motion.div>
 
@@ -149,12 +212,13 @@ const CoachSignup = () => {
           {isLoading ? (
             <div className="loading-spinner">
               <div className="spinner"></div>
-              Processing...
+              Creating Your Profile...
             </div>
           ) : (
-            formData.isCertified ? 'Continue to Verification →' : 'Please Accept Certification'
+            formData.isCertified ? 'Complete Signup & Create Profile' : 'Please Accept Certification'
           )}
         </motion.button>
+
       </motion.form>
     </div>
   );
