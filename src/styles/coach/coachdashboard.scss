@@ -661,4 +661,138 @@
       align-items: center;
     }
   }
+  // Add these styles to your existing coachdashboard.scss
+
+.loading-container, .error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  
+  .spinner {
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+  }
+}
+
+.error-container {
+  color: #dc3545;
+  
+  h3 {
+    margin: 16px 0 8px 0;
+    color: #dc3545;
+  }
+  
+  p {
+    color: #6c757d;
+    margin-bottom: 20px;
+  }
+}
+
+.retry-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  
+  &:hover {
+    background: #0056b3;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// Profile card enhancements
+.profile-card {
+  .achievements-preview {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+    
+    h4 {
+      margin-bottom: 12px;
+      color: #495057;
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
+  
+  .achievements-list-mini {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .achievement-item-mini {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 13px;
+    
+    svg {
+      color: #f59e0b;
+      flex-shrink: 0;
+    }
+    
+    span {
+      color: #495057;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+// Responsive improvements
+@media (max-width: 768px) {
+  .welcome-header {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+  
+  .header-stats {
+    justify-content: center;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  
+  .avatar-section {
+    align-self: center;
+  }
+  
+  .sports-list {
+    justify-content: center;
+  }
+}
+
+// Empty state styles
+.sport-badge:empty::before {
+  content: "Add Sports";
+}
+
+.bio:empty::before {
+  content: "Complete your profile to showcase your coaching expertise to athletes.";
+  color: #6c757d;
+  font-style: italic;
+}
 }

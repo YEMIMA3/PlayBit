@@ -1,0 +1,490 @@
+// Variables
+$primary-color: #3b82f6;
+$secondary-color: #64748b;
+$success-color: #10b981;
+$warning-color: #f59e0b;
+$danger-color: #ef4444;
+$background-color: #f8fafc;
+$card-background: #ffffff;
+$border-color: #e2e8f0;
+$text-primary: #1e293b;
+$text-secondary: #64748b;
+
+// Mixins
+@mixin card-shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Main Container with Navbar
+.athlete-profile-container {
+  min-height: 100vh;
+  background-color: $background-color;
+   margin-top: 50px;
+
+}
+
+.progress-tracker-page {
+  padding: 2rem;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  // Header
+  .header {
+    margin-bottom: 2rem;
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: $text-primary;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: $text-secondary;
+    }
+  }
+
+  // Metrics Grid
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    .metric-card {
+      background: $card-background;
+      border-radius: 12px;
+      padding: 1.5rem;
+      @include card-shadow;
+      border: 1px solid $border-color;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .metric-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        h3 {
+          font-size: 1rem;
+          font-weight: 600;
+          color: $text-secondary;
+          margin: 0;
+        }
+
+        svg {
+          color: $primary-color;
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      .metric-card-content {
+        .metric-value {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          margin-bottom: 0.5rem;
+
+          .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: $text-primary;
+          }
+
+          .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+
+            &.positive {
+              background: #dcfce7;
+              color: #166534;
+            }
+
+            &.negative {
+              background: #fecaca;
+              color: #dc2626;
+            }
+          }
+        }
+
+        p {
+          margin: 0;
+          color: $text-secondary;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+
+  // Tabs
+  .tabs-container {
+    .tabs-list {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      background: $card-background;
+      padding: 0.5rem;
+      border-radius: 12px;
+      @include card-shadow;
+
+      .tab-trigger {
+        flex: 1;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        background: transparent;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: $text-secondary;
+
+        &:hover {
+          background: rgba(59, 130, 246, 0.1);
+          color: $primary-color;
+        }
+
+        &.active {
+          background: $primary-color;
+          color: white;
+        }
+      }
+    }
+
+    .tab-content {
+      animation: fadeIn 0.3s ease-in;
+    }
+  }
+
+  // Chart Card
+  .chart-card {
+    background: $card-background;
+    border-radius: 12px;
+    @include card-shadow;
+    border: 1px solid $border-color;
+    margin-bottom: 2rem;
+
+    .chart-card-header {
+      padding: 1.5rem 1.5rem 0;
+
+      h2 {
+        margin: 0;
+        color: $text-primary;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+    }
+
+    .chart-card-content {
+      padding: 1.5rem;
+    }
+  }
+
+  // Content Grid
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // Breakdown Card
+  .breakdown-card {
+    background: $card-background;
+    border-radius: 12px;
+    @include card-shadow;
+    border: 1px solid $border-color;
+
+    .breakdown-card-header {
+      padding: 1.5rem 1.5rem 0;
+
+      h2 {
+        margin: 0;
+        color: $text-primary;
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+    }
+
+    .breakdown-content {
+      padding: 1.5rem;
+
+      .progress-item {
+        margin-bottom: 1.5rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .progress-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0.5rem;
+
+          span {
+            font-weight: 500;
+            color: $text-primary;
+
+            &:last-child {
+              color: $text-secondary;
+              font-size: 0.9rem;
+            }
+          }
+        }
+
+        .progress-bar {
+          height: 8px;
+          background: $border-color;
+          border-radius: 4px;
+          overflow: hidden;
+
+          .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+
+            &.blue {
+              background: $primary-color;
+            }
+
+            &.green {
+              background: $success-color;
+            }
+
+            &.amber {
+              background: $warning-color;
+            }
+
+            &.purple {
+              background: #8b5cf6;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Notes Card
+  .notes-card {
+    background: $card-background;
+    border-radius: 12px;
+    @include card-shadow;
+    border: 1px solid $border-color;
+
+    .notes-card-header {
+      padding: 1.5rem 1.5rem 0;
+
+      h2 {
+        margin: 0;
+        color: $text-primary;
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+    }
+
+    .notes-content {
+      padding: 1.5rem;
+
+      .note-item {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        border-left: 4px solid;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        h3 {
+          margin: 0 0 0.5rem 0;
+          font-size: 1rem;
+          font-weight: 600;
+        }
+
+        p {
+          margin: 0 0 0.5rem 0;
+          color: $text-secondary;
+          line-height: 1.5;
+
+          &:last-child {
+            font-size: 0.875rem;
+            font-style: italic;
+            color: $text-secondary;
+            margin-bottom: 0;
+          }
+        }
+
+        &.blue {
+          border-left-color: $primary-color;
+          background: rgba(59, 130, 246, 0.05);
+        }
+
+        &.green {
+          border-left-color: $success-color;
+          background: rgba(16, 185, 129, 0.05);
+        }
+      }
+    }
+  }
+
+  // Skills Grid
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+
+    .skill-item {
+      background: $card-background;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid $border-color;
+      text-align: center;
+
+      p {
+        margin: 0 0 0.5rem 0;
+        font-weight: 600;
+        color: $text-primary;
+      }
+
+      .skill-value {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25rem;
+
+        span {
+          &:first-child {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: $primary-color;
+          }
+
+          &:last-child {
+            color: $text-secondary;
+            font-size: 0.875rem;
+          }
+        }
+      }
+    }
+  }
+
+  // Compliance Note
+  .compliance-note {
+    background: rgba(16, 185, 129, 0.05);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+
+    p {
+      margin: 0 0 0.5rem 0;
+      color: $text-primary;
+
+      &:first-child {
+        font-weight: 600;
+        color: $success-color;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+        color: $text-secondary;
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  // Animation Classes
+  .fade-in {
+    animation: fadeIn 0.5s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .progress-tracker-page {
+    padding: 1rem;
+   
+    .header {
+      h1 {
+        font-size: 2rem;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+    }
+
+    .metrics-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tabs-container {
+      .tabs-list {
+        flex-direction: column;
+
+        .tab-trigger {
+          text-align: center;
+        }
+      }
+    }
+
+    .content-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .skills-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .progress-tracker-page {
+    .skills-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .metric-card {
+      .metric-card-content {
+        .metric-value {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+        }
+      }
+    }
+  }
+}

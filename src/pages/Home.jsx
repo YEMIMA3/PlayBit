@@ -9,7 +9,8 @@ import {
   Shield,
   Video,
   MessageCircle,
-  ArrowRight
+  ArrowRight,
+  Settings
 } from 'lucide-react';
 import "../styles/home.scss";
 import { Link } from 'react-router-dom';
@@ -47,7 +48,6 @@ const Home = () => {
     }
   ];
 
-
   const featuredCoaches = [
     {
       name: "Sarah Johnson",
@@ -80,6 +80,24 @@ const Home = () => {
 
   return (
     <div className="home-page">
+      {/* Header with Admin Login Button */}
+      <header className="home-header">
+        <div className="container">
+          <div className="header-content">
+            <div className="logo">
+              <h2>PlayBit</h2>
+            </div>
+            <div className="header-actions">
+              <Link to="/admin/auth" className="admin-login-btn">
+               <Settings size={18} />
+                     Admin Login
+              </Link>
+
+            </div>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
@@ -102,11 +120,10 @@ const Home = () => {
                   className="search-input"
                 />
                 <Link to="/coach/auth" className="search-btn" style={{textDecoration:'none'}}>
-                Find Coaches
+                  Find Coaches
                 </Link>
               </div>
             </div>
-
           </div>
         </div>
       </section>
@@ -222,7 +239,7 @@ const Home = () => {
                   </div>
                   
                   <Link to="/coach/auth" className="search-btn" style={{textDecoration:'none',borderRadius:'10px',padding:'18px 18px',alignItems:'center',justifyContent:'center'}}>
-                  View Profile
+                    View Profile
                   </Link>
                 </div>
               </div>

@@ -1,0 +1,455 @@
+// Variables
+$primary-color: #3b82f6;
+$secondary-color: #64748b;
+$success-color: #10b981;
+$warning-color: #f59e0b;
+$danger-color: #ef4444;
+$background-color: #f8fafc;
+$card-background: #ffffff;
+$border-color: #e2e8f0;
+$text-primary: #1e293b;
+$text-secondary: #64748b;
+
+// Mixins
+@mixin card-shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Main Container
+.athlete-profile-container {
+  min-height: 100vh;
+  background-color: $background-color;
+}
+
+.athlete-dashboard {
+  padding: 2rem;
+  margin-top: 50px;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  // Header
+  .header {
+    margin-bottom: 2rem;
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: $text-primary;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: $text-secondary;
+    }
+  }
+
+  // Stats Grid
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    .card {
+      background: $card-background;
+      border-radius: 12px;
+      padding: 1.5rem;
+      @include card-shadow;
+      border: 1px solid $border-color;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        h3 {
+          font-size: 1rem;
+          font-weight: 600;
+          color: $text-secondary;
+          margin: 0;
+        }
+
+        svg {
+          color: $primary-color;
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      .card-content {
+        .coach-info {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+
+          .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+
+          .coach-details {
+            p {
+              margin: 0;
+              &:first-child {
+                font-weight: 600;
+                color: $text-primary;
+                font-size: 1.1rem;
+              }
+              &:last-child {
+                color: $text-secondary;
+                font-size: 0.9rem;
+              }
+            }
+          }
+        }
+
+        .stat-number {
+          font-size: 2rem;
+          font-weight: 700;
+          color: $text-primary;
+          margin: 0 0 0.25rem 0;
+        }
+
+        .stat-label {
+          color: $text-secondary;
+          font-size: 0.9rem;
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  // Chart Grid
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+    }
+
+    .card {
+      background: $card-background;
+      border-radius: 12px;
+      padding: 1.5rem;
+      @include card-shadow;
+      border: 1px solid $border-color;
+
+      .card-header {
+        margin-bottom: 1.5rem;
+
+        h3 {
+          font-size: 1.25rem;
+          font-weight: 600;
+          color: $text-primary;
+          margin: 0;
+        }
+      }
+
+      .card-content {
+        .tournaments-list {
+          .tournament-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid $border-color;
+
+            &:last-child {
+              border-bottom: none;
+            }
+
+            .tournament-info {
+              flex: 1;
+
+              .tournament-name {
+                font-weight: 600;
+                color: $text-primary;
+                margin: 0 0 0.5rem 0;
+                line-height: 1.4;
+              }
+
+              .tournament-meta {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                flex-wrap: wrap;
+
+                span {
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                  font-size: 0.875rem;
+                  color: $text-secondary;
+
+                  svg {
+                    width: 14px;
+                    height: 14px;
+                  }
+
+                  &.badge {
+                    background: $primary-color;
+                    color: white;
+                    padding: 0.25rem 0.75rem;
+                    border-radius: 20px;
+                    font-size: 0.75rem;
+                    font-weight: 500;
+                  }
+                }
+              }
+            }
+
+            .button {
+              background: $primary-color;
+              color: white;
+              border: none;
+              padding: 0.5rem 1rem;
+              border-radius: 8px;
+              font-weight: 500;
+              cursor: pointer;
+              transition: all 0.3s ease;
+              white-space: nowrap;
+
+              &:hover {
+                background: #2563eb;
+                transform: translateY(-1px);
+              }
+
+              &:active {
+                transform: translateY(0);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Announcements Card
+  .announcements-card {
+    background: $card-background;
+    border-radius: 12px;
+    padding: 1.5rem;
+    @include card-shadow;
+    border: 1px solid $border-color;
+
+    .card-header {
+      margin-bottom: 1.5rem;
+
+      h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: $text-primary;
+        margin: 0;
+      }
+    }
+
+    .card-content {
+      .announcements-list {
+        .announcement-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1rem 0;
+          border-bottom: 1px solid $border-color;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          .announcement-content {
+            flex: 1;
+
+            h4 {
+              font-weight: 600;
+              color: $text-primary;
+              margin: 0 0 0.5rem 0;
+              line-height: 1.4;
+            }
+
+            p {
+              color: $text-secondary;
+              font-size: 0.875rem;
+              margin: 0;
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+            }
+          }
+
+          button {
+            background: transparent;
+            color: $primary-color;
+            border: 1px solid $primary-color;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+
+            &:hover {
+              background: $primary-color;
+              color: white;
+              transform: translateY(-1px);
+            }
+
+            &:active {
+              transform: translateY(0);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Loading States
+  .loading {
+    @include flex-center;
+    height: 200px;
+    color: $text-secondary;
+    font-size: 1.1rem;
+  }
+
+  // Empty States
+  .empty-state {
+    @include flex-center;
+    flex-direction: column;
+    height: 200px;
+    color: $text-secondary;
+    text-align: center;
+
+    svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 1rem;
+      color: $border-color;
+    }
+
+    p {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+  }
+
+  // Animation Classes
+  .fade-in {
+    animation: fadeIn 0.5s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .slide-in {
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .athlete-dashboard {
+    padding: 1rem;
+
+    .header {
+      h1 {
+        font-size: 2rem;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .chart-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .tournament-item,
+    .announcement-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+
+      .button,
+      button {
+        align-self: flex-end;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .athlete-dashboard {
+    .header {
+      h1 {
+        font-size: 1.75rem;
+      }
+    }
+
+    .card {
+      padding: 1rem;
+    }
+
+    .stats-grid .card .card-content .stat-number {
+      font-size: 1.5rem;
+    }
+
+    .tournament-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem !important;
+    }
+  }
+}

@@ -1,0 +1,507 @@
+// Variables
+$primary-color: #3b82f6;
+$secondary-color: #64748b;
+$success-color: #10b981;
+$warning-color: #f59e0b;
+$danger-color: #ef4444;
+$background-color: #f8fafc;
+$card-background: #ffffff;
+$border-color: #e2e8f0;
+$text-primary: #1e293b;
+$text-secondary: #64748b;
+
+// Mixins
+@mixin card-shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Main Container
+.athlete-profile-container {
+  min-height: 100vh;
+  background-color: $background-color;
+}
+
+.find-coaches-page {
+  padding: 2rem;
+  margin-top: 50px;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  // Header
+  .header {
+    margin-bottom: 2rem;
+    text-align: center;
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: $text-primary;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: $text-secondary;
+    }
+  }
+
+  // Filter Card
+  .filter-card {
+    background: $card-background;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    @include card-shadow;
+    border: 1px solid $border-color;
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 1rem;
+      align-items: center;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    }
+
+    .search-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      .search-icon {
+        position: absolute;
+        left: 1rem;
+        color: $text-secondary;
+        width: 20px;
+        height: 20px;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 3rem;
+        border: 1px solid $border-color;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        &::placeholder {
+          color: $text-secondary;
+        }
+      }
+    }
+
+    select {
+      padding: 0.75rem 1rem;
+      border: 1px solid $border-color;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+    }
+  }
+
+  // Coaches Grid
+  .coaches-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // Coach Card
+  .coach-card {
+    background: $card-background;
+    border-radius: 12px;
+    overflow: hidden;
+    @include card-shadow;
+    border: 1px solid $border-color;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .coach-card-header {
+      background: linear-gradient(135deg, $primary-color, #1d4ed8);
+      padding: 1.5rem;
+      color: white;
+
+      .coach-header-content {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        .avatar {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          overflow: hidden;
+          border: 3px solid rgba(255, 255, 255, 0.3);
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        .coach-info {
+          h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+          }
+
+          .sport-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+
+    .coach-card-content {
+      padding: 1.5rem;
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+
+        .stat {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.875rem;
+          color: $text-secondary;
+
+          svg {
+            width: 16px;
+            height: 16px;
+            color: $primary-color;
+          }
+
+          .star-icon {
+            color: #f59e0b;
+          }
+        }
+      }
+
+      .view-profile-btn {
+        width: 100%;
+        background: $primary-color;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: #2563eb;
+          transform: translateY(-1px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+
+  // Empty State
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: $text-secondary;
+
+    p {
+      font-size: 1.1rem;
+      margin: 0;
+    }
+  }
+
+  // Modal
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+  }
+
+  .modal-content {
+    background: white;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    @include card-shadow;
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 1.5rem 1.5rem 0;
+      border-bottom: 1px solid $border-color;
+      margin-bottom: 1.5rem;
+
+      .modal-title {
+        h2 {
+          margin: 0 0 0.25rem 0;
+          color: $text-primary;
+        }
+
+        p {
+          margin: 0;
+          color: $text-secondary;
+        }
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        color: $text-secondary;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: $border-color;
+          color: $text-primary;
+        }
+      }
+    }
+
+    .profile-section {
+      padding: 0 1.5rem 1.5rem;
+
+      .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+
+        .avatar.large {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          overflow: hidden;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        .profile-info {
+          h2 {
+            margin: 0 0 0.5rem 0;
+            color: $text-primary;
+          }
+
+          .sport-badge {
+            background: $primary-color;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+          }
+
+          .meta-info {
+            display: flex;
+            gap: 1rem;
+
+            span {
+              display: flex;
+              align-items: center;
+              gap: 0.25rem;
+              font-size: 0.875rem;
+              color: $text-secondary;
+
+              .star-icon {
+                color: #f59e0b;
+              }
+            }
+          }
+        }
+      }
+
+      .section-block {
+        margin-bottom: 1.5rem;
+
+        h3 {
+          margin: 0 0 0.5rem 0;
+          color: $text-primary;
+          font-size: 1.1rem;
+        }
+
+        p {
+          margin: 0;
+          color: $text-secondary;
+          line-height: 1.6;
+        }
+
+        .certifications-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+
+          .cert-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f0f9ff;
+            color: $primary-color;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            border: 1px solid #bae6fd;
+          }
+        }
+      }
+
+      .action-button {
+        width: 100%;
+        background: $success-color;
+        color: white;
+        border: none;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+
+        &:hover {
+          background: #059669;
+          transform: translateY(-1px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+
+        &.primary {
+          background: $primary-color;
+
+          &:hover {
+            background: #2563eb;
+          }
+        }
+      }
+    }
+  }
+
+  // Animation Classes
+  .fade-in {
+    animation: fadeIn 0.5s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .find-coaches-page {
+    padding: 1rem;
+
+    .header {
+      h1 {
+        font-size: 2rem;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+    }
+
+    .coach-card {
+      .coach-card-header {
+        .coach-header-content {
+          flex-direction: column;
+          text-align: center;
+
+          .coach-info {
+            h3 {
+              font-size: 1.1rem;
+            }
+          }
+        }
+      }
+    }
+
+    .modal-content {
+      .profile-section {
+        .profile-header {
+          flex-direction: column;
+          text-align: center;
+
+          .profile-info {
+            .meta-info {
+              justify-content: center;
+            }
+          }
+        }
+      }
+    }
+  }
+}

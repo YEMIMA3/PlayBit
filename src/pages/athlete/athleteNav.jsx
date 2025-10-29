@@ -27,9 +27,9 @@ const AthleteNav = () => {
   const menuItems = [
     { 
       key: 'profile', 
-      path: '/athlete/profile', 
+      path: '/athlete/dashboard', 
       icon: User, 
-      label: 'Profile',
+      label: 'Dashboard',
       badge: null
     },
     { 
@@ -38,6 +38,13 @@ const AthleteNav = () => {
       icon: Bell, 
       label: 'Announcements',
       badge: 3
+    },
+    { 
+      key: 'groups', 
+      path: '/athlete/groups', 
+      icon: Bell, 
+      label: 'Groups',
+      badge: null
     },
     { 
       key: 'progress', 
@@ -55,7 +62,7 @@ const AthleteNav = () => {
     },
     { 
       key: 'coaches', 
-      path: '/athlete/coaches', 
+      path: '/athlete/findcoaches', 
       icon: Users, 
       label: 'Find Coaches',
       badge: null

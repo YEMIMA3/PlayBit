@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   User,
@@ -18,25 +18,31 @@ import {
   Edit3,
   ChevronRight,
   Clock,
-  Shield
+  Shield,
+  Loader,
+  AlertCircle
 } from "lucide-react";
 import "../../styles/coach/coachdashboard.scss";
 import CoachNav from './coachnav';
+import { getCoachProfile } from "../../api/coachProfile";
 
 export default function CoachDashboard() {
-  const coachData = {
-    name: "Sarah Johnson",
-    email: "sarah.johnson@coachplatform.com",
-    phone: "+1 (555) 123-4567",
-    location: "Los Angeles, CA",
-    sports: ["Tennis", "Badminton"],
-    experience: "12 years",
-    certifications: ["USPTA Certified", "Sports Psychology", "CPR Certified"],
-    bio: "Passionate tennis coach with over a decade of experience in developing young talent. Specialized in tournament preparation and mental conditioning.",
-    rating: 4.9,
-    studentsTrained: 150,
-    successRate: "92%"
-  };
+  const [coachData, setCoachData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    location: "",
+    sports: [],
+    experience: "",
+    certifications: [],
+    bio: "",
+    profileImage: "",
+    hourlyRate: "",
+    availability: "",
+    achievements: []
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const stats = [
     { 
@@ -118,11 +124,12 @@ export default function CoachDashboard() {
       icon: Calendar,
       link: "/coach/schedule",
       gradient: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-    },{
+    },
+    {
       title: "Venue",
-      description:"Search Near By Stadiums for practice.",
-      icon:MapPin,
-      link:"/coach/stadium",
+      description: "Search Near By Stadiums for practice.",
+      icon: MapPin,
+      link: "/coach/stadium",
       gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
     }
   ];
@@ -139,6 +146,68 @@ export default function CoachDashboard() {
     { id: 3, title: "Group Milestone", description: "Beginner group reached 95% attendance", date: "2 weeks ago" },
   ];
 
+  // Load coach profile data
+  useEffect(() => {
+    fetchCoachProfile();
+  }, []);
+
+  const fetchCoachProfile = async () => {
+    try {
+      setLoading(true);
+      const response = await getCoachProfile();
+      
+      if (response.success && response.profile) {
+        setCoachData(response.profile);
+      } else {
+        setError(response.message || 'Failed to load profile data');
+      }
+    } catch (error) {
+      console.error('Error fetching coach profile:', error);
+      setError(error.message || 'Failed to load dashboard data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Calculate derived stats from profile data
+  const calculateStats = () => {
+    const studentsTrained = coachData.achievements?.length * 15 + 50 || 150;
+    const successRate = "92%";
+    const rating = 4.9;
+
+    return { studentsTrained, successRate, rating };
+  };
+
+  const { studentsTrained, successRate, rating } = calculateStats();
+
+  if (loading) {
+    return (
+      <div className="coach-dashboard-wrapper">
+        <CoachNav />
+        <div className="loading-container">
+          <Loader size={32} className="spinner" />
+          <p>Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="coach-dashboard-wrapper">
+        <CoachNav />
+        <div className="error-container">
+          <AlertCircle size={48} />
+          <h3>Error Loading Dashboard</h3>
+          <p>{error}</p>
+          <button onClick={fetchCoachProfile} className="retry-btn">
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="coach-dashboard-wrapper">
       <CoachNav />
@@ -146,21 +215,21 @@ export default function CoachDashboard() {
         {/* Welcome Header */}
         <div className="welcome-header">
           <div className="welcome-text">
-            <h1>Welcome back, Coach {coachData.name.split(' ')[0]}! 👋</h1>
+            <h1>Welcome back, Coach {coachData.name?.split(' ')[0] || 'Coach'}! 👋</h1>
             <p>Here's what's happening with your coaching today</p>
           </div>
           <div className="header-stats">
             <div className="stat-item">
               <Star className="icon" size={20} />
-              <span>{coachData.rating} Rating</span>
+              <span>{rating} Rating</span>
             </div>
             <div className="stat-item">
               <Target className="icon" size={20} />
-              <span>{coachData.successRate} Success</span>
+              <span>{successRate} Success</span>
             </div>
             <div className="stat-item">
               <BarChart3 className="icon" size={20} />
-              <span>{coachData.studentsTrained} Trained</span>
+              <span>{studentsTrained}+ Trained</span>
             </div>
           </div>
         </div>
@@ -173,7 +242,7 @@ export default function CoachDashboard() {
               <div className="profile-header">
                 <div className="avatar-section">
                   <img
-                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop"
+                    src={coachData.profileImage || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop"}
                     alt="Coach"
                     className="profile-avatar"
                   />
@@ -181,24 +250,30 @@ export default function CoachDashboard() {
                 </div>
                 <div className="profile-main">
                   <div className="profile-title">
-                    <h2>{coachData.name}</h2>
+                    <h2>{coachData.name || "Your Name"}</h2>
                     <div className="rating">
                       <Star fill="currentColor" size={16} />
-                      <span>{coachData.rating}</span>
+                      <span>{rating}</span>
                     </div>
                   </div>
                   <div className="sports-list">
-                    {coachData.sports.map((sport) => (
-                      <span key={sport} className="sport-badge">
-                        {sport}
-                      </span>
-                    ))}
+                    {coachData.sports && coachData.sports.length > 0 ? (
+                      coachData.sports.map((sport) => (
+                        <span key={sport} className="sport-badge">
+                          {sport}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="sport-badge">Add Sports</span>
+                    )}
                   </div>
-                  <p className="bio">{coachData.bio}</p>
+                  <p className="bio">
+                    {coachData.bio || "Complete your profile to showcase your coaching expertise to athletes."}
+                  </p>
                 </div>
                 <Link to="/coach/profile" className="edit-profile-btn">
                   <Edit3 size={16} />
-                  Edit Profile
+                  {coachData.name ? "Edit Profile" : "Complete Profile"}
                 </Link>
               </div>
 
@@ -207,43 +282,77 @@ export default function CoachDashboard() {
                   <Award className="icon" size={18} />
                   <div>
                     <span className="label">Experience</span>
-                    <span className="value">{coachData.experience}</span>
+                    <span className="value">{coachData.experience || "Not specified"}</span>
                   </div>
                 </div>
                 <div className="detail-item">
                   <MapPin className="icon" size={18} />
                   <div>
                     <span className="label">Location</span>
-                    <span className="value">{coachData.location}</span>
+                    <span className="value">{coachData.location || "Not specified"}</span>
                   </div>
                 </div>
                 <div className="detail-item">
                   <Mail className="icon" size={18} />
                   <div>
                     <span className="label">Email</span>
-                    <span className="value">{coachData.email}</span>
+                    <span className="value">{coachData.email || "Not specified"}</span>
                   </div>
                 </div>
                 <div className="detail-item">
                   <Phone className="icon" size={18} />
                   <div>
                     <span className="label">Phone</span>
-                    <span className="value">{coachData.phone}</span>
+                    <span className="value">{coachData.phone || "Not specified"}</span>
                   </div>
                 </div>
+                {coachData.hourlyRate && (
+                  <div className="detail-item">
+                    <TrendingUp className="icon" size={18} />
+                    <div>
+                      <span className="label">Hourly Rate</span>
+                      <span className="value">{coachData.hourlyRate}</span>
+                    </div>
+                  </div>
+                )}
+                {coachData.availability && (
+                  <div className="detail-item">
+                    <Calendar className="icon" size={18} />
+                    <div>
+                      <span className="label">Availability</span>
+                      <span className="value">{coachData.availability}</span>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              <div className="certifications-section">
-                <h4>Certifications</h4>
-                <div className="certifications-list">
-                  {coachData.certifications.map((cert) => (
-                    <div key={cert} className="certification-item">
-                      <Shield size={14} />
-                      {cert}
-                    </div>
-                  ))}
+              {coachData.certifications && coachData.certifications.length > 0 && (
+                <div className="certifications-section">
+                  <h4>Certifications</h4>
+                  <div className="certifications-list">
+                    {coachData.certifications.map((cert, index) => (
+                      <div key={index} className="certification-item">
+                        <Shield size={14} />
+                        {typeof cert === 'object' ? cert.name : cert}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {coachData.achievements && coachData.achievements.length > 0 && (
+                <div className="achievements-preview">
+                  <h4>Recent Achievements</h4>
+                  <div className="achievements-list-mini">
+                    {coachData.achievements.slice(0, 2).map((achievement, index) => (
+                      <div key={index} className="achievement-item-mini">
+                        <Trophy size={14} />
+                        <span>{typeof achievement === 'object' ? achievement.title : achievement}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Upcoming Sessions */}
@@ -342,18 +451,33 @@ export default function CoachDashboard() {
                 <Award className="icon" size={20} />
               </div>
               <div className="achievements-list">
-                {recentAchievements.map((achievement) => (
-                  <div key={achievement.id} className="achievement-item">
-                    <div className="achievement-icon">
-                      <Trophy size={16} />
+                {coachData.achievements && coachData.achievements.length > 0 ? (
+                  coachData.achievements.slice(0, 3).map((achievement, index) => (
+                    <div key={index} className="achievement-item">
+                      <div className="achievement-icon">
+                        <Trophy size={16} />
+                      </div>
+                      <div className="achievement-content">
+                        <h4>{typeof achievement === 'object' ? achievement.title : achievement}</h4>
+                        <p>{typeof achievement === 'object' ? achievement.description : "Great achievement!"}</p>
+                        <span className="achievement-date">Recently added</span>
+                      </div>
                     </div>
-                    <div className="achievement-content">
-                      <h4>{achievement.title}</h4>
-                      <p>{achievement.description}</p>
-                      <span className="achievement-date">{achievement.date}</span>
+                  ))
+                ) : (
+                  recentAchievements.map((achievement) => (
+                    <div key={achievement.id} className="achievement-item">
+                      <div className="achievement-icon">
+                        <Trophy size={16} />
+                      </div>
+                      <div className="achievement-content">
+                        <h4>{achievement.title}</h4>
+                        <p>{achievement.description}</p>
+                        <span className="achievement-date">{achievement.date}</span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           </div>
