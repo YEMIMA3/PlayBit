@@ -25,6 +25,8 @@ import AthleteAnnouncements from "../pages/athlete/athleteannounc";
 
 import CoachAuth from "../authentication/coach/auth";
 import DocumentVerification from "../authentication/coach/verification";
+import AthleteSignup from "../authentication/student/signup";
+import AthleteLogin from "../authentication/student/login";
 
 export default function AppRoutes() {
   return (
@@ -47,6 +49,8 @@ export default function AppRoutes() {
       <Route path="/coach/stadium" element={<Stadium />} />
 
       {/* Athlete */}
+      <Route path="/athlete/signup" element={<AthleteSignup />} />
+      <Route path="/athlete/login" element={<AthleteLogin />} />
       <Route path="/athlete/profile" element={<AthleteProfile />} />
       <Route path="/athlete/announcements" element={<AthleteAnnouncements />} />
       {/* <Route path="/athlete/dashboard" element={<AthleteDashboard />} />
