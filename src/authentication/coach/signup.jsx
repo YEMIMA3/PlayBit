@@ -204,7 +204,7 @@ const CoachSignup = () => {
 
         <motion.button 
           type="submit" 
-          className="signup-btn"
+          className="signup-btn" style={{backgroundColor:"#1976d2",color: "white",width: "100%",padding: "14px 20px",border: "none",borderRadius: "4px",cursor: "pointer",fontSize: "16px",boxShadow: "0 4px 10px rgba(25, 118, 210, 0.3)"}}
           disabled={!formData.isCertified || isLoading}
           whileHover={(!isLoading && formData.isCertified) ? { scale: 1.05 } : {}}
           whileTap={(!isLoading && formData.isCertified) ? { scale: 0.95 } : {}}

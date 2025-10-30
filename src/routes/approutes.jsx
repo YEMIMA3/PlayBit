@@ -18,6 +18,9 @@ import CoachTournaments from "../pages/coach/tournaments";
 import SchedulePage from "../pages/coach/schedule";
 import Stadium from "../pages/coach/stadium";
 
+//Athlete Authentication
+import AthleteAuth from "../authentication/athlete/auth";
+
 // 🎓 Student Pages
 import AthleteProfile from "../pages/athlete/athleteprofile";
 import AthleteAnnouncements from "../pages/athlete/athleteannounc";
@@ -56,6 +59,7 @@ export default function AppRoutes() {
       <Route path="/coach/stadium" element={<Stadium />} />
 
       {/* Athlete Routes */}
+      <Route path="/athlete/auth" element={<AthleteAuth />} />
       <Route path="/athlete/profile" element={<AthleteProfile />} />
       <Route path="/athlete/dashboard" element={<AthleteDashboard />} />
       <Route path="/athlete/progress" element={<ProgressTracker />} />
