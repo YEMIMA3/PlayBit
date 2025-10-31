@@ -21,8 +21,12 @@ import AthleteLayout from "../components/athlete/AthleteLayout";
 import AthleteProfile from "../pages/athlete/AthleteProfile";
 import AthleteAnnouncements from "../pages/athlete/AthleteAnnouncements";
 
-// 🔐 Admin Auth Only (Dashboard removed)
+// 🔐 Admin Pages
 import AdminAuth from '../pages/admin/auth/AdminAuth';
+import AdminLayout from '../components/admin/AdminLayout';
+import AdminTournaments from '../components/admin/AdminTournaments';
+import AdminCoaches from '../components/admin/AdminCoaches';
+import AdminStudents from '../components/admin/AdminStudents';
 
 export default function AppRoutes() {
   return (
@@ -42,8 +46,19 @@ export default function AppRoutes() {
       <Route path="/coach/groups" element={<CoachGroups />} />
       <Route path="/coach/progress" element={<PerformanceTracking />} />
 
-      {/* 🔐 Admin Authentication Only */}
+      {/* 🔐 Admin Routes */}
       <Route path="/admin/auth" element={<AdminAuth />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route path="dashboard" element={<div>Admin Dashboard - Coming Soon</div>} />
+        <Route path="tournaments" element={<AdminTournaments />} />
+        <Route path="coaches" element={<AdminCoaches />} />
+        <Route path="students" element={<AdminStudents />} />
+        <Route path="coach-verification" element={<div>Coach Verification - Coming Soon</div>} />
+        <Route path="analytics" element={<div>Analytics - Coming Soon</div>} />
+        <Route path="security" element={<div>Security - Coming Soon</div>} />
+        {/* Default admin route */}
+        <Route index element={<AdminTournaments />} />
+      </Route>
 
       {/* 🎓 Athlete Routes with Layout */}
       <Route path="/athlete" element={<AthleteLayout />}>
