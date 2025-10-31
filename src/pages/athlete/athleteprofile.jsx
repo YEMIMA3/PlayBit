@@ -1,51 +1,84 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { User, Camera, Upload, Award, Save, Edit3 } from 'lucide-react';
+import { User, Camera, Upload, Award, Save, Edit3, Loader, AlertCircle } from 'lucide-react';
 import '../../styles/athlete/athleteprofile.scss';
-import AthleteNav from './athleteNav'; 
+import AthleteNav from './AthleteNav';
+import { getAthleteProfile, updateAthleteProfile } from '../../api/athleteProfile';
 
 const AthleteProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   const [profileData, setProfileData] = useState({
-    name: 'Alex Johnson',
-    email: 'alex.johnson@example.com',
-    sport: 'Basketball',
+    name: '',
+    email: '',
+    sport: '',
     level: 'Intermediate',
-    bio: 'Passionate basketball player with 3 years of competitive experience. Looking to improve skills and connect with professional coaches.',
-    phone: '+1 (555) 123-4567',
-    location: 'New York, USA',
-    dateOfBirth: '1998-05-15',
-    height: '6\'2"',
-    weight: '185 lbs'
+    bio: '',
+    phone: '',
+    location: '',
+    dateOfBirth: '',
+    height: '',
+    weight: '',
+    profileImage: ''
   });
 
-  const [profileImage, setProfileImage] = useState(null);
   const [achievements, setAchievements] = useState([]);
+  const [message, setMessage] = useState({ type: '', text: '' });
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        alert('Please select an image smaller than 5MB');
-        return;
+  // Fetch athlete profile on component mount
+  useEffect(() => {
+    fetchAthleteProfile();
+  }, []);
+
+  const fetchAthleteProfile = async () => {
+    try {
+      setIsLoading(true);
+      const response = await getAthleteProfile();
+
+      if (response.success && response.profile) {
+        const profile = response.profile;
+        setProfileData({
+          name: profile.name || '',
+          email: profile.email || '',
+          sport: profile.sport || '',
+          level: profile.level || 'Intermediate',
+          bio: profile.bio || '',
+          phone: profile.phone || '',
+          location: profile.location || '',
+          dateOfBirth: profile.dateOfBirth || '',
+          height: profile.height || '',
+          weight: profile.weight || '',
+          profileImage: profile.profileImage || ''
+        });
+        setAchievements(profile.achievements || []);
+        console.log('✅ Athlete profile loaded:', profile.name);
+      } else {
+        throw new Error(response.message || 'Failed to fetch profile');
       }
-      const imageUrl = URL.createObjectURL(file);
-      setProfileImage(imageUrl);
+    } catch (error) {
+      console.error('❌ Error fetching athlete profile:', error);
+      setMessage({ type: 'error', text: 'Failed to load profile data' });
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleCertificateUpload = (e, type) => {
-    const files = Array.from(e.target.files);
-    const newAchievements = files.map(file => ({
-      id: Date.now() + Math.random(),
-      type,
-      file,
-      name: file.name,
-      uploadDate: new Date().toLocaleDateString(),
-      size: (file.size / (1024 * 1024)).toFixed(2) + ' MB'
-    }));
-    
-    setAchievements(prev => [...prev, ...newAchievements]);
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setMessage({ type: 'error', text: 'Please select an image smaller than 5MB' });
+        return;
+      }
+
+      // Create a local URL for preview
+      const imageUrl = URL.createObjectURL(file);
+      setProfileData(prev => ({ ...prev, profileImage: imageUrl }));
+
+      // In production, you'd upload to your backend here
+      console.log('Uploading image:', file.name);
+    }
   };
 
   const handleInputChange = (field, value) => {
@@ -55,25 +88,64 @@ const AthleteProfile = () => {
     }));
   };
 
-  const handleSaveProfile = () => {
-    console.log('Saving profile:', profileData);
-    console.log('Achievements:', achievements);
-    setIsEditing(false);
-    alert('Profile updated successfully!');
-  };
+  const handleSaveProfile = async () => {
+    setIsSaving(true);
+    setMessage({ type: '', text: '' });
 
-  const removeAchievement = (id) => {
-    setAchievements(prev => prev.filter(achievement => achievement.id !== id));
+    try {
+      const response = await updateAthleteProfile(profileData);
+
+      if (response.success) {
+        setMessage({ type: 'success', text: 'Profile updated successfully!' });
+        setIsEditing(false);
+        
+        // Update local storage with new data
+        const athleteData = JSON.parse(localStorage.getItem('athlete_data') || '{}');
+        localStorage.setItem('athlete_data', JSON.stringify({
+          ...athleteData,
+          name: profileData.name,
+          sport: profileData.sport,
+          level: profileData.level
+        }));
+
+        console.log('✅ Profile updated successfully');
+      } else {
+        throw new Error(response.message || 'Failed to update profile');
+      }
+    } catch (error) {
+      console.error('❌ Error saving profile:', error);
+      setMessage({ type: 'error', text: error.message });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const sports = ['Basketball', 'Football', 'Tennis', 'Swimming', 'Athletics', 'Cricket', 'Boxing', 'Martial Arts'];
   const levels = ['Beginner', 'Intermediate', 'Advanced', 'Professional'];
+
+  if (isLoading) {
+    return (
+      <div className="athlete-profile-container">
+        <AthleteNav />
+        <div className="loading-container">
+          <Loader size={32} className="spinner" />
+          <p>Loading your profile...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="athlete-profile-container">
       <AthleteNav />
       <div className="athlete-content">
         <div className="athlete-profile-page">
+          {message.text && (
+            <div className={`global-message ${message.type}`}>
+              {message.text}
+            </div>
+          )}
+
           <motion.div 
             className="profile-header"
             initial={{ y: -50, opacity: 0 }}
@@ -87,22 +159,24 @@ const AthleteProfile = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    {profileImage ? (
-                      <img src={profileImage} alt="Profile" className="profile-image" />
+                    {profileData.profileImage ? (
+                      <img src={profileData.profileImage} alt="Profile" className="profile-image" />
                     ) : (
                       <div className="default-avatar">
                         <User size={48} />
                       </div>
                     )}
-                    <label className="camera-button">
-                      <Camera size={20} />
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        style={{ display: 'none' }}
-                      />
-                    </label>
+                    {isEditing && (
+                      <label className="camera-button">
+                        <Camera size={20} />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          style={{ display: 'none' }}
+                        />
+                      </label>
+                    )}
                   </motion.div>
                   <p className="upload-hint">Click camera to upload profile picture</p>
                 </div>
@@ -112,10 +186,10 @@ const AthleteProfile = () => {
                   <div className="profile-stats">
                     <div className="stat">
                       <span className="stat-value">{achievements.length}</span>
-                      <span className="stat-label">Certificates</span>
+                      <span className="stat-label">Achievements</span>
                     </div>
                     <div className="stat">
-                      <span className="stat-value">3</span>
+                      <span className="stat-value">{profileData.experience || '0'}</span>
                       <span className="stat-label">Years</span>
                     </div>
                   </div>
@@ -127,6 +201,7 @@ const AthleteProfile = () => {
                 onClick={() => setIsEditing(!isEditing)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                disabled={isSaving}
               >
                 {isEditing ? <Save size={18} /> : <Edit3 size={18} />}
                 {isEditing ? 'Save Changes' : 'Edit Profile'}
@@ -160,7 +235,7 @@ const AthleteProfile = () => {
                     type="email"
                     value={profileData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    disabled={!isEditing}
+                    disabled={true} // Email shouldn't be editable
                     placeholder="your.email@example.com"
                   />
                 </div>
@@ -194,6 +269,7 @@ const AthleteProfile = () => {
                     onChange={(e) => handleInputChange('sport', e.target.value)}
                     disabled={!isEditing}
                   >
+                    <option value="">Select Sport</option>
                     {sports.map(sport => (
                       <option key={sport} value={sport}>{sport}</option>
                     ))}
@@ -258,112 +334,6 @@ const AthleteProfile = () => {
               </div>
             </motion.div>
 
-            <motion.div 
-              className="profile-section glass-card"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <h2>Certifications & Achievements</h2>
-              <p className="section-description">
-                Upload your certificates to showcase your journey and build credibility with coaches.
-              </p>
-
-              <div className="upload-areas">
-                <motion.div 
-                  className="upload-area winning"
-                  whileHover={{ y: -5 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <div className="upload-icon">
-                    <Award size={40} />
-                    <span className="trophy">🏆</span>
-                  </div>
-                  <h3>Winning Certificates</h3>
-                  <p>Upload certificates from competitions you've won</p>
-                  <label className="upload-button">
-                    <Upload size={18} />
-                    Upload Winning Certificates
-                    <input 
-                      type="file" 
-                      multiple 
-                      accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" 
-                      onChange={(e) => handleCertificateUpload(e, 'winning')}
-                      style={{ display: 'none' }} 
-                    />
-                  </label>
-                </motion.div>
-
-                <motion.div 
-                  className="upload-area participation"
-                  whileHover={{ y: -5 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <div className="upload-icon">
-                    <Award size={40} />
-                    <span className="medal">🎖️</span>
-                  </div>
-                  <h3>Participation Certificates</h3>
-                  <p>Upload certificates from events you've participated in</p>
-                  <label className="upload-button">
-                    <Upload size={18} />
-                    Upload Participation Certificates
-                    <input 
-                      type="file" 
-                      multiple 
-                      accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" 
-                      onChange={(e) => handleCertificateUpload(e, 'participation')}
-                      style={{ display: 'none' }} 
-                    />
-                  </label>
-                </motion.div>
-              </div>
-
-              {achievements.length > 0 && (
-                <motion.div 
-                  className="achievements-list"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.6 }}
-                >
-                  <h3>Uploaded Certificates ({achievements.length})</h3>
-                  <div className="achievements-grid">
-                    {achievements.map((achievement, index) => (
-                      <motion.div
-                        key={achievement.id}
-                        className="achievement-card"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: index * 0.1 }}
-                        whileHover={{ y: -2 }}
-                      >
-                        <div className={`card-header ${achievement.type}`}>
-                          <Award size={18} />
-                          <span className="type-badge">
-                            {achievement.type === 'winning' ? '🏆 Winning' : '🎖️ Participation'}
-                          </span>
-                        </div>
-                        <div className="card-content">
-                          <h4>{achievement.name}</h4>
-                          <p>Uploaded: {achievement.uploadDate}</p>
-                          <p className="file-size">{achievement.size}</p>
-                        </div>
-                        <div className="card-actions">
-                          <button className="view-btn">View</button>
-                          <button 
-                            className="delete-btn"
-                            onClick={() => removeAchievement(achievement.id)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </motion.div>
-
             {isEditing && (
               <motion.div 
                 className="action-buttons"
@@ -376,15 +346,24 @@ const AthleteProfile = () => {
                   onClick={handleSaveProfile}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  disabled={isSaving}
                 >
-                  <Save size={18} />
-                  Save All Changes
+                  {isSaving ? (
+                    <div className="loading-spinner small"></div>
+                  ) : (
+                    <Save size={18} />
+                  )}
+                  {isSaving ? 'Saving...' : 'Save All Changes'}
                 </motion.button>
                 <motion.button
                   className="cancel-button"
-                  onClick={() => setIsEditing(false)}
+                  onClick={() => {
+                    setIsEditing(false);
+                    fetchAthleteProfile(); // Reload original data
+                  }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  disabled={isSaving}
                 >
                   Cancel
                 </motion.button>

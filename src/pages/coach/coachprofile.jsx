@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { 
   Camera, Upload, Award, MapPin, Mail, Phone, Calendar,
   Plus, X, FileText, Shield, Star, TrendingUp, Users,
-  Loader, AlertCircle, CheckCircle
+  Loader, AlertCircle, CheckCircle, Trophy
 } from "lucide-react";
 import "../../styles/coach/profile.scss";
 import CoachNav from './coachnav';
@@ -26,6 +26,7 @@ export default function CoachProfile() {
 
   const [newSport, setNewSport] = useState("");
   const [newCertification, setNewCertification] = useState("");
+  const [newAchievement, setNewAchievement] = useState("");
   const [activeTab, setActiveTab] = useState("basic");
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -50,6 +51,9 @@ export default function CoachProfile() {
       
       if (response.success && response.profile) {
         setProfile(response.profile);
+        console.log('✅ Profile data loaded:', response.profile.name);
+      } else {
+        setMessage({ type: 'error', text: response.message || 'Failed to load profile' });
       }
     } catch (error) {
       setMessage({ type: 'error', text: error.message || 'Failed to load profile' });
@@ -92,18 +96,40 @@ export default function CoachProfile() {
     });
   };
 
+  // Add achievement function
+  const addAchievement = () => {
+    if (newAchievement.trim()) {
+      setProfile({
+        ...profile,
+        achievements: [...profile.achievements, newAchievement.trim()],
+      });
+      setNewAchievement("");
+    }
+  };
+
+  // Remove achievement function
+  const removeAchievement = (achievement) => {
+    setProfile({
+      ...profile,
+      achievements: profile.achievements.filter((a) => a !== achievement),
+    });
+  };
+
   const handleSave = async () => {
     try {
       setLoading(true);
+      console.log('🔄 Saving profile data:', profile);
+      
       const response = await updateCoachProfile(profile);
 
       if (response.success) {
         setMessage({ type: 'success', text: response.message || 'Profile updated successfully!' });
         setIsEditing(false);
-        // Update with any changes from backend
-        if (response.profile) {
-          setProfile(response.profile);
-        }
+        
+        // Refresh the data to get any backend modifications
+        await fetchProfile();
+        
+        console.log('✅ Profile updated successfully');
       } else {
         setMessage({ type: 'error', text: response.message || 'Failed to update profile' });
       }
@@ -441,6 +467,7 @@ export default function CoachProfile() {
                         value={profile.hourlyRate}
                         onChange={(e) => setProfile({ ...profile, hourlyRate: e.target.value })}
                         disabled={!isEditing}
+                        placeholder="e.g., $50/hour"
                       />
                     </div>
                     <div className="form-group">
@@ -450,6 +477,7 @@ export default function CoachProfile() {
                         value={profile.experience}
                         onChange={(e) => setProfile({ ...profile, experience: e.target.value })}
                         disabled={!isEditing}
+                        placeholder="e.g., 5 years"
                       />
                     </div>
                   </div>
@@ -465,16 +493,39 @@ export default function CoachProfile() {
                     />
                   </div>
 
+                  {/* Achievements Section - Updated with input field */}
                   <div className="form-group">
                     <label>Key Achievements</label>
-                    <div className="achievements-list">
-                      {profile.achievements.map((achievement, index) => (
-                        <div key={index} className="achievement-item">
-                          <Shield size={16} />
-                          <span>{achievement}</span>
-                        </div>
+                    <div className="tags-container">
+                      {profile.achievements.map((achievement) => (
+                        <span className="tag achievement-tag" key={achievement}>
+                          <Trophy size={14} />
+                          {achievement}
+                          {isEditing && (
+                            <button 
+                              onClick={() => removeAchievement(achievement)} 
+                              className="remove-tag"
+                            >
+                              <X size={14} />
+                            </button>
+                          )}
+                        </span>
                       ))}
                     </div>
+                    {isEditing && (
+                      <div className="add-input">
+                        <input
+                          type="text"
+                          placeholder="Add an achievement (e.g., 'State Championship 2023', 'Coach of the Year')"
+                          value={newAchievement}
+                          onChange={(e) => setNewAchievement(e.target.value)}
+                          onKeyDown={(e) => e.key === "Enter" && addAchievement()}
+                        />
+                        <button onClick={addAchievement} className="add-btn">
+                          <Plus size={16} />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

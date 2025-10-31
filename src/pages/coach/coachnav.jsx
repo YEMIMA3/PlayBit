@@ -15,12 +15,22 @@ import {
   ClipboardList
 } from 'lucide-react';
 import '../../styles/coach/coachnav.scss';
+import { getCoachProfile } from '../../api/coachProfile';
 
 const CoachNav = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeItem, setActiveItem] = useState('dashboard');
   const [unreadNotifications, setUnreadNotifications] = useState(4);
+  const [coachData, setCoachData] = useState({
+    name: '',
+    email: '',
+    sports: [],
+    experience: '',
+    profileImage: ''
+  });
+  const [loading, setLoading] = useState(true);
+  
   const location = useLocation();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
@@ -78,6 +88,29 @@ const CoachNav = () => {
     }
   ];
 
+  // Load coach profile data
+  useEffect(() => {
+    fetchCoachProfile();
+  }, []);
+
+  const fetchCoachProfile = async () => {
+    try {
+      setLoading(true);
+      const response = await getCoachProfile();
+      
+      if (response.success && response.profile) {
+        setCoachData(response.profile);
+        console.log('✅ Coach data loaded for nav:', response.profile.name);
+      } else {
+        console.error('❌ Failed to load coach profile for nav');
+      }
+    } catch (error) {
+      console.error('❌ Error fetching coach profile for nav:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Update active item based on current route
   useEffect(() => {
     const currentPath = location.pathname;
@@ -129,17 +162,99 @@ const CoachNav = () => {
         navigate('/coach/settings');
         break;
       case 'signout':
-        console.log('Signing out...');
-        navigate('/login');
+        handleSignOut();
         break;
       default:
         break;
     }
   };
 
+  const handleSignOut = () => {
+    console.log('Signing out...');
+    localStorage.removeItem('coach_token');
+    navigate('/coach/auth');
+  };
+
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
+  // Helper functions to get coach information
+  const getCoachName = () => {
+    return coachData.name || 'Coach';
+  };
+
+  const getCoachFirstName = () => {
+    return coachData.name?.split(' ')[0] || 'Coach';
+  };
+
+  const getCoachSport = () => {
+    if (coachData.sports && coachData.sports.length > 0) {
+      return `${coachData.sports[0]} Coach`;
+    }
+    return coachData.experience ? 'Professional Coach' : 'Coach';
+  };
+
+  const getCoachEmail = () => {
+    return coachData.email || 'coach@example.com';
+  };
+
+  const getCoachAvatar = () => {
+    return coachData.profileImage || null;
+  };
+
+  // Calculate dynamic stats based on coach data
+  const getCoachStats = () => {
+    const achievements = coachData.achievements?.length || 0;
+    const sports = coachData.sports?.length || 0;
+    const certifications = coachData.certifications?.length || 0;
+    
+    return {
+      activeAthletes: Math.min(achievements * 5, 50),
+      sessions: Math.min(sports * 10 + certifications * 5, 100),
+      rating: calculateCoachRating()
+    };
+  };
+
+  const calculateCoachRating = () => {
+    let rating = 4.0; // Base rating
+    
+    // Increase rating based on profile completeness
+    if (coachData.experience) rating += 0.5;
+    if (coachData.certifications?.length > 0) rating += 0.2 * coachData.certifications.length;
+    if (coachData.achievements?.length > 0) rating += 0.1 * coachData.achievements.length;
+    if (coachData.sports?.length > 1) rating += 0.2;
+    
+    return Math.min(rating, 5.0).toFixed(1);
+  };
+
+  const stats = getCoachStats();
+
+  if (loading) {
+    return (
+      <div className="coach-nav">
+        <div className="nav-left">
+          <button className="menu-toggle">
+            <Menu size={24} />
+          </button>
+          <div className="platform-brand">
+            <span className="logo-icon">🏆</span>
+            <span className="platform-name">Coach Platform</span>
+          </div>
+        </div>
+        <div className="nav-right">
+          <div className="user-profile">
+            <div className="user-avatar">
+              <User size={20} />
+            </div>
+            <div className="user-info">
+              <div className="user-name">Loading...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -177,11 +292,19 @@ const CoachNav = () => {
             ref={dropdownRef}
           >
             <div className="user-avatar">
-              <User size={20} />
+              {getCoachAvatar() ? (
+                <img 
+                  src={getCoachAvatar()} 
+                  alt={getCoachName()} 
+                  className="avatar-image"
+                />
+              ) : (
+                <User size={20} />
+              )}
             </div>
             <div className="user-info">
-              <div className="user-name">Coach Mike</div>
-              <div className="user-role">Professional Coach</div>
+              <div className="user-name">{getCoachFirstName()}</div>
+              <div className="user-role">{getCoachSport()}</div>
             </div>
             <span className={`dropdown-arrow ${showDropdown ? 'open' : ''}`}>▼</span>
 
@@ -190,12 +313,20 @@ const CoachNav = () => {
               <div className="dropdown-menu">
                 <div className="dropdown-header">
                   <div className="user-avatar-large">
-                    <User size={24} />
+                    {getCoachAvatar() ? (
+                      <img 
+                        src={getCoachAvatar()} 
+                        alt={getCoachName()} 
+                        className="avatar-image-large"
+                      />
+                    ) : (
+                      <User size={24} />
+                    )}
                   </div>
                   <div className="user-details">
-                    <div className="user-name">Coach Mike</div>
-                    <div className="user-email">coach.mike@example.com</div>
-                    <div className="user-sport">Professional Coach</div>
+                    <div className="user-name">{getCoachName()}</div>
+                    <div className="user-email">{getCoachEmail()}</div>
+                    <div className="user-sport">{getCoachSport()}</div>
                   </div>
                 </div>
                 
@@ -253,11 +384,19 @@ const CoachNav = () => {
         <div className="sidebar-content">
           <div className="sidebar-user-info">
             <div className="user-avatar-sidebar">
-              <User size={24} />
+              {getCoachAvatar() ? (
+                <img 
+                  src={getCoachAvatar()} 
+                  alt={getCoachName()} 
+                  className="avatar-image-sidebar"
+                />
+              ) : (
+                <User size={24} />
+              )}
             </div>
             <div className="user-details-sidebar">
-              <div className="user-name">Coach Mike</div>
-              <div className="user-sport">Professional Coach</div>
+              <div className="user-name">{getCoachName()}</div>
+              <div className="user-sport">{getCoachSport()}</div>
             </div>
           </div>
 
@@ -285,15 +424,18 @@ const CoachNav = () => {
           <div className="sidebar-progress">
             <div className="progress-info">
               <span>Coach Rating</span>
-              <span>4.8/5</span>
+              <span>{stats.rating}/5</span>
             </div>
             <div className="progress-bar">
-              <div className="progress-fill" style={{ width: '96%' }}></div>
+              <div 
+                className="progress-fill" 
+                style={{ width: `${(stats.rating / 5) * 100}%` }}
+              ></div>
             </div>
             <div className="progress-stats">
-              <span>12 Active Athletes</span>
+              <span>{stats.activeAthletes} Active Athletes</span>
               <span>•</span>
-              <span>45 Sessions</span>
+              <span>{stats.sessions} Sessions</span>
             </div>
           </div>
         </div>

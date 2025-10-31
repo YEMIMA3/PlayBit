@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Calendar, Clock, Users, Award, Trophy } from 'lucide-react';
+import { Calendar, Clock, Users, Award, Trophy, Loader, AlertCircle } from 'lucide-react';
 import "../../styles/athlete/dashboard.scss";
 import AthleteNav from './AthleteNav';
+import { getAthleteProfile } from '../../api/athleteProfile';
 
 const progressData = [
   { week: 'Week 1', score: 65 },
@@ -26,6 +27,81 @@ const announcements = [
 ];
 
 export default function AthleteDashboard() {
+  const [athleteData, setAthleteData] = useState({
+    name: '',
+    email: '',
+    sport: '',
+    level: '',
+    profileImage: '',
+    achievements: []
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  // Load athlete profile data
+  useEffect(() => {
+    fetchAthleteProfile();
+  }, []);
+
+  const fetchAthleteProfile = async () => {
+    try {
+      setLoading(true);
+      const response = await getAthleteProfile();
+      
+      if (response.success && response.profile) {
+        setAthleteData(response.profile);
+        console.log('✅ Athlete data loaded for dashboard:', response.profile.name);
+      } else {
+        setError(response.message || 'Failed to load profile data');
+      }
+    } catch (error) {
+      console.error('❌ Error fetching athlete profile:', error);
+      setError(error.message || 'Failed to load dashboard data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Calculate dynamic stats based on athlete data
+  const getAthleteStats = () => {
+    return {
+      pendingRequests: 2,
+      upcomingTournaments: 5,
+      performanceScore: 85,
+      activeCoach: athleteData.coachName || 'Not assigned'
+    };
+  };
+
+  const stats = getAthleteStats();
+
+  if (loading) {
+    return (
+      <div className="athlete-profile-container">
+        <AthleteNav />
+        <div className="loading-container">
+          <Loader size={32} className="spinner" />
+          <p>Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="athlete-profile-container">
+        <AthleteNav />
+        <div className="error-container">
+          <AlertCircle size={48} />
+          <h3>Error Loading Dashboard</h3>
+          <p>{error}</p>
+          <button onClick={fetchAthleteProfile} className="retry-btn">
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="athlete-profile-container">
       <AthleteNav />
@@ -33,8 +109,8 @@ export default function AthleteDashboard() {
         <div className="container">
           {/* Header */}
           <div className="header">
-            <h1>Dashboard</h1>
-            <p>Welcome back! Here's your overview</p>
+            <h1>Welcome back, {athleteData.name?.split(' ')[0] || 'Athlete'}!</h1>
+            <p>Here's your performance overview</p>
           </div>
 
           {/* Stats Cards */}
@@ -47,11 +123,11 @@ export default function AthleteDashboard() {
               <div className="card-content">
                 <div className="coach-info">
                   <div className="avatar">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coach1" alt="Coach Michael" />
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coach1" alt="Coach" />
                   </div>
                   <div className="coach-details">
-                    <p>Coach Michael</p>
-                    <p>Basketball</p>
+                    <p>{stats.activeCoach}</p>
+                    <p>{athleteData.sport || 'General'}</p>
                   </div>
                 </div>
               </div>
@@ -63,7 +139,7 @@ export default function AthleteDashboard() {
                 <Clock />
               </div>
               <div className="card-content">
-                <p className="stat-number">2</p>
+                <p className="stat-number">{stats.pendingRequests}</p>
                 <p className="stat-label">Awaiting response</p>
               </div>
             </div>
@@ -74,7 +150,7 @@ export default function AthleteDashboard() {
                 <Trophy />
               </div>
               <div className="card-content">
-                <p className="stat-number">5</p>
+                <p className="stat-number">{stats.upcomingTournaments}</p>
                 <p className="stat-label">Upcoming events</p>
               </div>
             </div>
@@ -85,7 +161,7 @@ export default function AthleteDashboard() {
                 <Award />
               </div>
               <div className="card-content">
-                <p className="stat-number">85%</p>
+                <p className="stat-number">{stats.performanceScore}%</p>
                 <p className="stat-label">Current score</p>
               </div>
             </div>

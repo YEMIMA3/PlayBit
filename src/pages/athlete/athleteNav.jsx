@@ -128,7 +128,7 @@ const AthleteNav = () => {
         break;
       case 'signout':
         console.log('Signing out...');
-        navigate('/login');
+        navigate('/athlete/auth');
         break;
       default:
         break;

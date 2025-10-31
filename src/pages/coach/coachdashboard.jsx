@@ -20,7 +20,8 @@ import {
   Clock,
   Shield,
   Loader,
-  AlertCircle
+  AlertCircle,
+  RefreshCw
 } from "lucide-react";
 import "../../styles/coach/coachdashboard.scss";
 import CoachNav from './coachnav';
@@ -43,11 +44,12 @@ export default function CoachDashboard() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [lastUpdate, setLastUpdate] = useState(Date.now());
 
   const stats = [
     { 
       label: "Active Students", 
-      value: "32", 
+      value: "0", 
       icon: UserCheck, 
       color: "#3b82f6",
       trend: "+12%",
@@ -55,7 +57,7 @@ export default function CoachDashboard() {
     },
     { 
       label: "Active Groups", 
-      value: "5", 
+      value: "0", 
       icon: Users, 
       color: "#a855f7",
       trend: "+2",
@@ -63,7 +65,7 @@ export default function CoachDashboard() {
     },
     { 
       label: "Tournaments", 
-      value: "8", 
+      value: "0", 
       icon: Trophy, 
       color: "#f59e0b",
       trend: "Active",
@@ -71,7 +73,7 @@ export default function CoachDashboard() {
     },
     { 
       label: "Announcements", 
-      value: "24", 
+      value: "0", 
       icon: MessageSquare, 
       color: "#10b981",
       trend: "+5 new",
@@ -149,24 +151,33 @@ export default function CoachDashboard() {
   // Load coach profile data
   useEffect(() => {
     fetchCoachProfile();
-  }, []);
+  }, [lastUpdate]);
 
   const fetchCoachProfile = async () => {
     try {
       setLoading(true);
+      setError("");
+      console.log('🔄 Fetching coach profile data...');
+      
       const response = await getCoachProfile();
       
       if (response.success && response.profile) {
         setCoachData(response.profile);
+        console.log('✅ Coach data loaded successfully:', response.profile.name);
       } else {
         setError(response.message || 'Failed to load profile data');
       }
     } catch (error) {
-      console.error('Error fetching coach profile:', error);
+      console.error('❌ Error fetching coach profile:', error);
       setError(error.message || 'Failed to load dashboard data');
     } finally {
       setLoading(false);
     }
+  };
+
+  const refreshData = () => {
+    console.log('🔄 Manually refreshing coach data...');
+    setLastUpdate(Date.now());
   };
 
   // Calculate derived stats from profile data
@@ -200,9 +211,21 @@ export default function CoachDashboard() {
           <AlertCircle size={48} />
           <h3>Error Loading Dashboard</h3>
           <p>{error}</p>
-          <button onClick={fetchCoachProfile} className="retry-btn">
-            Try Again
-          </button>
+          <div className="error-actions">
+            <button onClick={refreshData} className="retry-btn">
+              <RefreshCw size={16} />
+              Try Again
+            </button>
+            <button 
+              onClick={() => {
+                localStorage.removeItem('coach_token');
+                window.location.href = '/coach/login';
+              }} 
+              className="logout-btn"
+            >
+              Back to Login
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -217,6 +240,10 @@ export default function CoachDashboard() {
           <div className="welcome-text">
             <h1>Welcome back, Coach {coachData.name?.split(' ')[0] || 'Coach'}! 👋</h1>
             <p>Here's what's happening with your coaching today</p>
+            <button onClick={refreshData} className="refresh-btn">
+              <RefreshCw size={16} />
+              Refresh Data
+            </button>
           </div>
           <div className="header-stats">
             <div className="stat-item">
@@ -258,8 +285,8 @@ export default function CoachDashboard() {
                   </div>
                   <div className="sports-list">
                     {coachData.sports && coachData.sports.length > 0 ? (
-                      coachData.sports.map((sport) => (
-                        <span key={sport} className="sport-badge">
+                      coachData.sports.map((sport, index) => (
+                        <span key={index} className="sport-badge">
                           {sport}
                         </span>
                       ))
@@ -333,7 +360,7 @@ export default function CoachDashboard() {
                     {coachData.certifications.map((cert, index) => (
                       <div key={index} className="certification-item">
                         <Shield size={14} />
-                        {typeof cert === 'object' ? cert.name : cert}
+                        {cert}
                       </div>
                     ))}
                   </div>
@@ -347,7 +374,7 @@ export default function CoachDashboard() {
                     {coachData.achievements.slice(0, 2).map((achievement, index) => (
                       <div key={index} className="achievement-item-mini">
                         <Trophy size={14} />
-                        <span>{typeof achievement === 'object' ? achievement.title : achievement}</span>
+                        <span>{achievement}</span>
                       </div>
                     ))}
                   </div>
@@ -388,10 +415,10 @@ export default function CoachDashboard() {
           <div className="right-column">
             {/* Stats Grid */}
             <div className="stats-grid">
-              {stats.map((stat) => {
+              {stats.map((stat, index) => {
                 const Icon = stat.icon;
                 return (
-                  <div key={stat.label} className="stat-card">
+                  <div key={index} className="stat-card">
                     <div className="stat-content">
                       <div className="stat-main">
                         <p className="value">{stat.value}</p>
@@ -417,10 +444,10 @@ export default function CoachDashboard() {
                 <p>Manage your coaching activities</p>
               </div>
               <div className="actions-grid">
-                {actionCards.map((card) => {
+                {actionCards.map((card, index) => {
                   const Icon = card.icon;
                   return (
-                    <Link to={card.link} key={card.title} className="action-card">
+                    <Link to={card.link} key={index} className="action-card">
                       <div className="action-header">
                         <div className="icon-wrapper" style={{ background: card.gradient }}>
                           <Icon color="#fff" size={20} />
@@ -458,8 +485,8 @@ export default function CoachDashboard() {
                         <Trophy size={16} />
                       </div>
                       <div className="achievement-content">
-                        <h4>{typeof achievement === 'object' ? achievement.title : achievement}</h4>
-                        <p>{typeof achievement === 'object' ? achievement.description : "Great achievement!"}</p>
+                        <h4>{achievement}</h4>
+                        <p>Great achievement in your coaching career!</p>
                         <span className="achievement-date">Recently added</span>
                       </div>
                     </div>

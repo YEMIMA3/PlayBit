@@ -479,7 +479,44 @@
             }
           }
 
+          .achievement-tag {
+            background: #3b82f6; /* Dark gray/black background */
+            color: white; /* White text */
+            border: 1px solid #3b82f6; /* Dark border */
+  
+            /* Add the same styles as other tags but with black theme */
+           display: inline-flex;
+           align-items: center;
+           gap: 0.5rem;
+           padding: 0.5rem 1rem;
+           border-radius: 8px;
+           font-size: 0.875rem;
+           font-weight: 500;
+           margin: 0.25rem;
+
+          .remove-tag {
+           background: transparent;
+           border: none;
+           color: #9ca3af; /* Light gray for X icon */
+           cursor: pointer;
+           padding: 0;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+    
+          &:hover {
+          color: white; /* White on hover */
+          }
+          }
+
+         /* Trophy icon styling */
+          svg {
+            color: #fbbf24; /* Gold color for trophy */
+          }
+        }
+
           .achievements-list {
+            color:black;
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
@@ -489,6 +526,7 @@
               align-items: center;
               gap: 0.75rem;
               padding: 1rem;
+              color: black;
               background: #f0f9ff;
               border-radius: 12px;
               border: 1px solid #bae6fd;

@@ -1,5 +1,5 @@
 .coach-dashboard {
-  margin-top: 70px ;
+  margin-top: 70px;
   margin-left: 55px;
   max-width: 1400px;
   padding: 2rem;
@@ -249,6 +249,47 @@
           font-size: 0.85rem;
           font-weight: 600;
           border: 1px solid #bae6fd;
+        }
+      }
+    }
+
+    .achievements-preview {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e9ecef;
+      
+      h4 {
+        margin-bottom: 12px;
+        color: #495057;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      
+      .achievements-list-mini {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .achievement-item-mini {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: #f8f9fa;
+        border-radius: 6px;
+        font-size: 13px;
+        
+        svg {
+          color: #f59e0b;
+          flex-shrink: 0;
+        }
+        
+        span {
+          color: #495057;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
       }
     }
@@ -607,9 +648,99 @@
       }
     }
   }
+
+  /* Loading and Error States */
+  .loading-container, .error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    
+    .spinner {
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+  }
+
+  .error-container {
+    color: #dc3545;
+    
+    h3 {
+      margin: 16px 0 8px 0;
+      color: #dc3545;
+    }
+    
+    p {
+      color: #6c757d;
+      margin-bottom: 20px;
+    }
+  }
+
+  .refresh-btn {
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    color: #374151;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &:hover {
+      background: #e5e7eb;
+    }
+  }
+
+  .error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+    
+    .retry-btn, .logout-btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .retry-btn {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      
+      &:hover {
+        background: #2563eb;
+      }
+    }
+    
+    .logout-btn {
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #d1d5db;
+      
+      &:hover {
+        background: #e5e7eb;
+      }
+    }
+  }
 }
 
 /* Animations */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.7; }
@@ -660,133 +791,26 @@
       flex-direction: column;
       align-items: center;
     }
-  }
-  // Add these styles to your existing coachdashboard.scss
 
-.loading-container, .error-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  text-align: center;
-  
-  .spinner {
-    animation: spin 1s linear infinite;
-    margin-bottom: 16px;
-  }
-}
-
-.error-container {
-  color: #dc3545;
-  
-  h3 {
-    margin: 16px 0 8px 0;
-    color: #dc3545;
-  }
-  
-  p {
-    color: #6c757d;
-    margin-bottom: 20px;
-  }
-}
-
-.retry-btn {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  
-  &:hover {
-    background: #0056b3;
-  }
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-// Profile card enhancements
-.profile-card {
-  .achievements-preview {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #e9ecef;
-    
-    h4 {
-      margin-bottom: 12px;
-      color: #495057;
-      font-size: 14px;
-      font-weight: 600;
-    }
-  }
-  
-  .achievements-list-mini {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .achievement-item-mini {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: #f8f9fa;
-    border-radius: 6px;
-    font-size: 13px;
-    
-    svg {
-      color: #f59e0b;
-      flex-shrink: 0;
+    .welcome-header {
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
     }
     
-    span {
-      color: #495057;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    .sports-list {
+      justify-content: center;
     }
   }
 }
 
-// Responsive improvements
-@media (max-width: 768px) {
-  .welcome-header {
-    flex-direction: column;
-    gap: 16px;
-    text-align: center;
-  }
-  
-  .header-stats {
-    justify-content: center;
-  }
-  
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  
-  .profile-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 16px;
-  }
-  
-  .avatar-section {
-    align-self: center;
-  }
-  
-  .sports-list {
-    justify-content: center;
-  }
-}
-
-// Empty state styles
-.sport-badge:empty::before {
+/* Empty state styles */
+.sport-badge.placeholder::before {
   content: "Add Sports";
 }
 
@@ -794,5 +818,4 @@
   content: "Complete your profile to showcase your coaching expertise to athletes.";
   color: #6c757d;
   font-style: italic;
-}
 }

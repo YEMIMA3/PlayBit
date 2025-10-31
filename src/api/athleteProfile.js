@@ -2,26 +2,26 @@ import axios from "axios";
 
 // Create axios instance with correct base URL
 const api = axios.create({
-  baseURL: "http://localhost:3000/api/coach",
+  baseURL: "http://localhost:3000/api/athlete",
 });
 
 // Add token to requests automatically
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('coach_token');
+  const token = localStorage.getItem('athlete_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
-// ✅ Get coach profile
-export const getCoachProfile = async () => {
+// ✅ Get athlete profile
+export const getAthleteProfile = async () => {
   try {
     const response = await api.get("/profile");
-    console.log('✅ GET Profile API Response:', response.data);
+    console.log('✅ GET Athlete Profile API Response:', response.data);
     return response.data;
   } catch (error) {
-    console.error('❌ GET Profile API Error:', {
+    console.error('❌ GET Athlete Profile API Error:', {
       status: error.response?.status,
       data: error.response?.data,
       message: error.message
@@ -30,31 +30,31 @@ export const getCoachProfile = async () => {
     // Handle specific error cases
     if (error.response?.status === 401) {
       // Token expired or invalid
-      localStorage.removeItem('coach_token');
-      window.location.href = '/coach/login';
+      localStorage.removeItem('athlete_token');
+      window.location.href = '/athlete/login';
     }
     
     throw error.response?.data || { message: "Failed to fetch profile" };
   }
 };
 
-// ✅ Update coach profile
-export const updateCoachProfile = async (profileData) => {
+// ✅ Update athlete profile
+export const updateAthleteProfile = async (profileData) => {
   try {
-    console.log('🔄 Sending update data:', profileData);
+    console.log('🔄 Sending athlete update data:', profileData);
     const response = await api.put("/profile", profileData);
-    console.log('✅ UPDATE Profile API Response:', response.data);
+    console.log('✅ UPDATE Athlete Profile API Response:', response.data);
     return response.data;
   } catch (error) {
-    console.error('❌ UPDATE Profile API Error:', {
+    console.error('❌ UPDATE Athlete Profile API Error:', {
       status: error.response?.status,
       data: error.response?.data,
       message: error.message
     });
     
     if (error.response?.status === 401) {
-      localStorage.removeItem('coach_token');
-      window.location.href = '/coach/login';
+      localStorage.removeItem('athlete_token');
+      window.location.href = '/athlete/login';
     }
     
     throw error.response?.data || { message: "Failed to update profile" };
