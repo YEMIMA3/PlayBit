@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom'; // ADD THIS IMPORT
+import { useNavigate } from 'react-router-dom';
 import { 
   Search, Plus, Eye, Edit, Trash2, Calendar, 
   Users, Trophy, MapPin, X, Save, Clock, DollarSign,
-  Loader, LogOut // ADD LogOut ICON
+  Loader
 } from 'lucide-react';
-import { tournamentService } from '../../api/admintournament';
+import { tournamentService } from '../../api/admin';
 import '../../styles/admin/tournaments.scss';
+import AdminNav from './adminnav'; // CORRECTED IMPORT
 
 const AdminTournaments = () => {
-  const navigate = useNavigate(); // ADD THIS HOOK
+  const navigate = useNavigate();
   
   // State declarations
   const [searchTerm, setSearchTerm] = useState('');
@@ -27,7 +28,7 @@ const AdminTournaments = () => {
   // Tournaments data from API
   const [tournaments, setTournaments] = useState([]);
 
-  // ADD THIS USEEFFECT FOR AUTH CHECK
+  // Auth check
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
     if (!token) {
@@ -60,13 +61,6 @@ const AdminTournaments = () => {
   useEffect(() => {
     fetchTournaments();
   }, []);
-
-  // ADD THIS LOGOUT FUNCTION
-  const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    localStorage.removeItem('adminData');
-    window.location.href = '/admin/auth';
-  };
 
   // API Functions
   const fetchTournaments = async () => {
@@ -176,7 +170,7 @@ const AdminTournaments = () => {
     setTournamentForm({
       name: tournament.name,
       sport: tournament.sport,
-      date: tournament.date ? tournament.date.split('T')[0] : '', // Format date for input
+      date: tournament.date ? tournament.date.split('T')[0] : '',
       participants: tournament.participants?.toString() || '',
       location: tournament.location,
       prize: tournament.prize,
@@ -255,139 +249,138 @@ const AdminTournaments = () => {
   }
 
   return (
-    <div className="admin-tournaments">
-      {/* Header Section - UPDATED WITH LOGOUT BUTTON */}
-      <motion.div
-        className="admin-page-header"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <div className="header-content">
-          <div className="header-text">
-            <h1>Tournament Management</h1>
-            <p>Manage and monitor all tournaments</p>
-            <div className="tournament-stats">
-              <span>Total: {tournaments.length}</span>
-              <span>Active: {tournaments.filter(t => t.status === 'active').length}</span>
-              <span>Upcoming: {tournaments.filter(t => t.status === 'upcoming').length}</span>
+    <div className="admin-tournaments-page">
+      {/* Admin Navigation Bar */}
+      <AdminNav />
+      
+      <div className="admin-tournaments">
+        {/* Header Section */}
+        <motion.div
+          className="admin-page-header"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="header-content">
+            <div className="header-text">
+              <h1>Tournament Management</h1>
+              <p>Manage and monitor all tournaments</p>
+              <div className="tournament-stats">
+                <span>Total: {tournaments.length}</span>
+                <span>Active: {tournaments.filter(t => t.status === 'active').length}</span>
+                <span>Upcoming: {tournaments.filter(t => t.status === 'upcoming').length}</span>
+              </div>
+            </div>
+            <div className="header-actions">
+              <motion.button
+                className="create-btn"
+                onClick={handleCreateTournament}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Plus size={20} />
+                Create Tournament
+              </motion.button>
+
             </div>
           </div>
-          <div className="header-actions">
-            <motion.button
-              className="create-btn"
-              onClick={handleCreateTournament}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Plus size={20} />
-              Create Tournament
-            </motion.button>
-            {/* ADD LOGOUT BUTTON */}
-            <motion.button
-              className="logout-btn"
-              onClick={handleLogout}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <LogOut size={20} />
-              Logout
-            </motion.button>
+        </motion.div>
+
+        {/* Controls Section */}
+        <motion.div
+          className="controls-section"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <div className="search-filter-container">
+            <div className="search-box">
+              <Search size={20} />
+              <input
+                type="text"
+                placeholder="Search tournaments..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="view-controls">
+              <button
+                className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                onClick={() => setViewMode('grid')}
+              >
+                Grid
+              </button>
+              <button
+                className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
+                onClick={() => setViewMode('list')}
+              >
+                List
+              </button>
+            </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
 
-      {/* Rest of your component remains exactly the same */}
-      {/* Controls Section */}
-      <motion.div
-        className="controls-section"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
-        <div className="search-filter-container">
-          <div className="search-box">
-            <Search size={20} />
-            <input
-              type="text"
-              placeholder="Search tournaments..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+        {/* Loading indicator for operations */}
+        {loading && (
+          <div className="operation-loading">
+            <Loader size={20} className="animate-spin" />
+            <span>Processing...</span>
           </div>
-          <div className="view-controls">
-            <button
-              className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
-              onClick={() => setViewMode('grid')}
-            >
-              Grid
-            </button>
-            <button
-              className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
-              onClick={() => setViewMode('list')}
-            >
-              List
-            </button>
-          </div>
-        </div>
-      </motion.div>
+        )}
 
-      {/* Loading indicator for operations */}
-      {loading && (
-        <div className="operation-loading">
-          <Loader size={20} className="animate-spin" />
-          <span>Processing...</span>
-        </div>
-      )}
+        {/* Tournaments Display Section */}
+        <TournamentsDisplay 
+          viewMode={viewMode}
+          filteredTournaments={filteredTournaments}
+          getStatusColor={getStatusColor}
+          onViewTournament={handleViewTournament}
+          onEditTournament={handleEditTournament}
+          onDeleteClick={handleDeleteClick}
+        />
 
-      {/* Tournaments Display Section */}
-      <TournamentsDisplay 
-        viewMode={viewMode}
-        filteredTournaments={filteredTournaments}
-        getStatusColor={getStatusColor}
-        onViewTournament={handleViewTournament}
-        onEditTournament={handleEditTournament}
-        onDeleteClick={handleDeleteClick}
-      />
+        {/* Empty State */}
+        {filteredTournaments.length === 0 && tournaments.length === 0 && !loading && (
+          <EmptyState onCreateTournament={handleCreateTournament} />
+        )}
 
-      {/* Empty State */}
-      {filteredTournaments.length === 0 && tournaments.length === 0 && !loading && (
-        <EmptyState onCreateTournament={handleCreateTournament} />
-      )}
+        {/* Modals */}
+        <CreateEditModal
+          show={showCreateModal}
+          isEditing={isEditing}
+          tournamentForm={tournamentForm}
+          sports={sports}
+          onClose={handleCloseCreateModal}
+          onFormChange={handleFormChange}
+          onSave={handleSaveTournament}
+        />
 
-      {/* Modals */}
-      <CreateEditModal
-        show={showCreateModal}
-        isEditing={isEditing}
-        tournamentForm={tournamentForm}
-        sports={sports}
-        onClose={handleCloseCreateModal}
-        onFormChange={handleFormChange}
-        onSave={handleSaveTournament}
-      />
+        <ViewModal
+          show={showViewModal}
+          tournament={selectedTournament}
+          getStatusColor={getStatusColor}
+          onClose={() => setShowViewModal(false)}
+          onEdit={() => {
+            setShowViewModal(false);
+            handleEditTournament(selectedTournament);
+          }}
+        />
 
-      <ViewModal
-        show={showViewModal}
-        tournament={selectedTournament}
-        getStatusColor={getStatusColor}
-        onClose={() => setShowViewModal(false)}
-        onEdit={() => {
-          setShowViewModal(false);
-          handleEditTournament(selectedTournament);
-        }}
-      />
-
-      <DeleteModal
-        show={showDeleteModal}
-        tournament={tournamentToDelete}
-        onClose={() => setShowDeleteModal(false)}
-        onConfirm={handleConfirmDelete}
-      />
+        <DeleteModal
+          show={showDeleteModal}
+          tournament={tournamentToDelete}
+          onClose={() => setShowDeleteModal(false)}
+          onConfirm={handleConfirmDelete}
+        />
+      </div>
     </div>
   );
 };
 
+// All your sub-components remain exactly the same...
+// TournamentsDisplay, TournamentsGrid, TournamentCard, TournamentsList, ActionButton, 
+// EmptyState, CreateEditModal, ViewModal, DeleteModal, Modal, CloseButton, Button, 
+// FormField, FormSelect, FormTextarea, DetailCard
 
-// Sub-components
+// Sub-components (keep all your existing sub-components exactly as they were)
 const TournamentsDisplay = ({ 
   viewMode, 
   filteredTournaments, 

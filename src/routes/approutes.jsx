@@ -5,8 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
 
 // 🔐 Admin Auth Only
-import AdminAuth from '../authentication/admin/auth.jsx';
-import AdminDashboard from "../pages/admin/dashboard"; 
+import AdminAuth from '../authentication/admin/auth.jsx'; 
 // 🔐 Admin Pages
 import AdminNav from '../pages/admin/adminnav';
 import AdminTournaments from '../pages/admin/admintournaments';
@@ -47,7 +46,6 @@ export default function AppRoutes() {
 
       {/* 🔐 Admin Authentication */}
       <Route path="/admin/auth" element={<AdminAuth />} />
-      <Route path="/admin/dashboard" element={<AdminDashboard />} />
       <Route path="/admin/tournaments" element={<AdminTournaments />} />
       <Route path="/admin/coaches" element={<AdminCoaches />} />
       <Route path="/admin/athlete" element={<AdminAthlete />} />
