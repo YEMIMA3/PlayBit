@@ -7,6 +7,11 @@ import Home from "../pages/Home";
 // 🔐 Admin Auth Only
 import AdminAuth from '../authentication/admin/auth.jsx';
 import AdminDashboard from "../pages/admin/dashboard"; 
+// 🔐 Admin Pages
+import AdminNav from '../pages/admin/adminnav';
+import AdminTournaments from '../pages/admin/admintournaments';
+import AdminCoaches from '../pages/admin/admincoaches';
+import AdminAthlete from '../pages/admin/adminathlete';
 
 // 🧑‍🏫 Coach Pages
 import CoachDashboard from "../pages/coach/coachdashboard"; 
@@ -43,6 +48,10 @@ export default function AppRoutes() {
       {/* 🔐 Admin Authentication */}
       <Route path="/admin/auth" element={<AdminAuth />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/tournaments" element={<AdminTournaments />} />
+      <Route path="/admin/coaches" element={<AdminCoaches />} />
+      <Route path="/admin/athlete" element={<AdminAthlete />} />
+      <Route path="/admin/nav" element={<AdminNav />} />
 
       {/* Coach Authentication */}
       <Route path="/coach/auth" element={<CoachAuth />} />

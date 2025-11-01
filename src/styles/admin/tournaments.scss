@@ -1,0 +1,900 @@
+// Variables - White & Blue Theme
+$primary-color: #2563eb;
+$primary-light: #dbeafe;
+$primary-lighter: #eff6ff;
+$secondary-color: #64748b;
+$success-color: #059669;
+$danger-color: #dc2626;
+$warning-color: #d97706;
+$background-primary: #ffffff;
+$background-secondary: #f8fafc;
+$background-tertiary: #f1f5f9;
+$border-color: #e2e8f0;
+$border-light: #f1f5f9;
+$text-primary: #0f172a;
+$text-secondary: #475569;
+$text-tertiary: #64748b;
+$shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+// Mixins
+@mixin card-effect {
+  background: $background-primary;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  box-shadow: $shadow;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Admin Tournaments Styles
+.admin-tournaments {
+  padding: 2rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, $primary-lighter 0%, $background-secondary 100%);
+
+  // Header Section
+  .admin-page-header {
+    margin-bottom: 2rem;
+
+    .header-content {
+      @include flex-between;
+      gap: 2rem;
+
+      .header-text {
+        flex: 1;
+
+        h1 {
+          font-size: 2.5rem;
+          font-weight: 700;
+          color: $text-primary;
+          margin-bottom: 0.5rem;
+        }
+
+        p {
+          font-size: 1.1rem;
+          color: $text-secondary;
+          margin-bottom: 1rem;
+        }
+
+        .tournament-stats {
+          display: flex;
+          gap: 1.5rem;
+
+          span {
+            padding: 0.5rem 1rem;
+            background: $primary-lighter;
+            border: 1px solid $primary-light;
+            border-radius: 8px;
+            color: $primary-color;
+            font-weight: 500;
+          }
+        }
+      }
+
+      .create-btn {
+        @include flex-center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: $primary-color;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: $shadow;
+
+        &:hover {
+          background: darken($primary-color, 10%);
+          box-shadow: $shadow-md;
+        }
+      }
+    }
+  }
+
+  // Controls Section
+  .controls-section {
+    margin-bottom: 2rem;
+
+    .search-filter-container {
+      @include flex-between;
+      gap: 1rem;
+
+      .search-box {
+        flex: 1;
+        max-width: 400px;
+        position: relative;
+
+        svg {
+          position: absolute;
+          left: 1rem;
+          top: 50%;
+          transform: translateY(-50%);
+          color: $text-tertiary;
+        }
+
+        input {
+          width: 100%;
+          padding: 0.75rem 1rem 0.75rem 3rem;
+          border: 1px solid $border-color;
+          border-radius: 8px;
+          background: white;
+          font-size: 1rem;
+          transition: all 0.3s ease;
+
+          &:focus {
+            outline: none;
+            border-color: $primary-color;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+          }
+
+          &::placeholder {
+            color: $text-tertiary;
+          }
+        }
+      }
+
+      .view-controls {
+        display: flex;
+        background: white;
+        border: 1px solid $border-color;
+        border-radius: 8px;
+        overflow: hidden;
+
+        .view-btn {
+          padding: 0.75rem 1.5rem;
+          border: none;
+          background: transparent;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          color: $text-secondary;
+
+          &.active {
+            background: $primary-color;
+            color: white;
+          }
+
+          &:hover:not(.active) {
+            background: $background-tertiary;
+          }
+        }
+      }
+    }
+  }
+
+  // Tournaments Container
+  .tournaments-container {
+    // Grid View
+    .tournaments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+
+    // List View
+    .tournaments-list {
+      .list-header {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr auto;
+        gap: 1rem;
+        padding: 1rem 1.5rem;
+        background: $primary-lighter;
+        border: 1px solid $primary-light;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        color: $primary-color;
+      }
+
+      .list-item {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr auto;
+        gap: 1rem;
+        padding: 1.5rem;
+        margin-bottom: 0.75rem;
+        align-items: center;
+        background: white;
+        border: 1px solid $border-color;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          border-color: $primary-color;
+          box-shadow: $shadow-md;
+        }
+
+        .tournament-cell {
+          .tournament-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: $text-primary;
+          }
+
+          .tournament-description-small {
+            font-size: 0.875rem;
+            color: $text-secondary;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+
+        .sport, .date, .participants, .prize {
+          color: $text-secondary;
+          font-weight: 500;
+        }
+
+        .status {
+          padding: 0.25rem 0.75rem;
+          border-radius: 20px;
+          font-size: 0.875rem;
+          font-weight: 500;
+          text-align: center;
+          border: 1px solid;
+
+          &.text-green-600 {
+            background: #f0fdf4;
+            color: #059669;
+            border-color: #bbf7d0;
+          }
+
+          &.text-blue-600 {
+            background: #eff6ff;
+            color: #2563eb;
+            border-color: #bfdbfe;
+          }
+
+          &.text-gray-600 {
+            background: #f8fafc;
+            color: #475569;
+            border-color: #e2e8f0;
+          }
+        }
+
+        .actions {
+          display: flex;
+          gap: 0.5rem;
+
+          button {
+            @include flex-center;
+            padding: 0.5rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+            color: $text-secondary;
+
+            &:hover {
+              background: $background-tertiary;
+              color: $primary-color;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Tournament Card
+  .tournament-card {
+    padding: 1.5rem;
+    background: white;
+    border: 1px solid $border-color;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: $shadow;
+
+    &:hover {
+      border-color: $primary-color;
+      box-shadow: $shadow-md;
+      transform: translateY(-2px);
+    }
+
+    .tournament-header {
+      @include flex-between;
+      margin-bottom: 1rem;
+
+      .sport-badge {
+        padding: 0.25rem 0.75rem;
+        background: $primary-lighter;
+        color: $primary-color;
+        border: 1px solid $primary-light;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border: 1px solid;
+
+        &.text-green-600 {
+          background: #f0fdf4;
+          color: #059669;
+          border-color: #bbf7d0;
+        }
+
+        &.text-blue-600 {
+          background: #eff6ff;
+          color: #2563eb;
+          border-color: #bfdbfe;
+        }
+
+        &.text-gray-600 {
+          background: #f8fafc;
+          color: #475569;
+          border-color: #e2e8f0;
+        }
+
+        &.large {
+          padding: 0.5rem 1rem;
+          font-size: 1rem;
+        }
+      }
+    }
+
+    .tournament-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: $text-primary;
+    }
+
+    .tournament-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+
+      .detail-item {
+        @include flex-center;
+        gap: 0.75rem;
+        color: $text-secondary;
+
+        svg {
+          flex-shrink: 0;
+          color: $primary-color;
+        }
+      }
+    }
+
+    .tournament-description-preview {
+      color: $text-secondary;
+      font-size: 0.875rem;
+      line-height: 1.4;
+      margin-bottom: 1.5rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .tournament-actions {
+      display: flex;
+      gap: 0.5rem;
+
+      .action-btn {
+        @include flex-center;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &.view {
+          background: $primary-lighter;
+          color: $primary-color;
+
+          &:hover {
+            background: $primary-light;
+          }
+        }
+
+        &.edit {
+          background: #fefce8;
+          color: $warning-color;
+
+          &:hover {
+            background: #fef9c3;
+          }
+        }
+
+        &.delete {
+          background: #fef2f2;
+          color: $danger-color;
+
+          &:hover {
+            background: #fecaca;
+          }
+        }
+      }
+    }
+  }
+
+  // Empty State
+  .empty-state {
+    @include flex-center;
+    flex-direction: column;
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border: 1px solid $border-color;
+    border-radius: 12px;
+    box-shadow: $shadow;
+
+    svg {
+      color: $primary-light;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      color: $text-primary;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: $text-secondary;
+      margin-bottom: 2rem;
+    }
+
+    .create-btn {
+      @include flex-center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: $primary-color;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: darken($primary-color, 10%);
+        box-shadow: $shadow-md;
+      }
+    }
+  }
+
+  // Glass Card Effect (Updated for white theme)
+  .glass-card {
+    @include card-effect;
+  }
+
+  // Modal Styles
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    @include flex-center;
+    z-index: 1000;
+    padding: 2rem;
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      box-shadow: $shadow-lg;
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow: auto;
+      border: 1px solid $border-color;
+
+      &.large {
+        width: 800px;
+      }
+
+      .modal-header {
+        @include flex-between;
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid $border-color;
+        background: $primary-lighter;
+
+        h2 {
+          font-size: 1.5rem;
+          font-weight: 600;
+          color: $text-primary;
+        }
+
+        .close-btn {
+          @include flex-center;
+          padding: 0.5rem;
+          border: none;
+          background: transparent;
+          cursor: pointer;
+          border-radius: 6px;
+          color: $text-secondary;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: $background-tertiary;
+            color: $text-primary;
+          }
+        }
+      }
+
+      .modal-body {
+        padding: 2rem;
+
+        // Form Styles
+        .form-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1.5rem;
+
+          .form-group {
+            &.full-width {
+              grid-column: 1 / -1;
+            }
+
+            label {
+              display: block;
+              margin-bottom: 0.5rem;
+              font-weight: 500;
+              color: $text-primary;
+            }
+
+            input, select, textarea {
+              width: 100%;
+              padding: 0.75rem;
+              border: 1px solid $border-color;
+              border-radius: 6px;
+              font-size: 1rem;
+              transition: all 0.3s ease;
+              background: white;
+
+              &:focus {
+                outline: none;
+                border-color: $primary-color;
+                box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+              }
+
+              &::placeholder {
+                color: $text-tertiary;
+              }
+            }
+
+            textarea {
+              resize: vertical;
+              min-height: 100px;
+            }
+
+            select {
+              cursor: pointer;
+            }
+          }
+        }
+
+        // Tournament Detail View
+        .tournament-detail-header {
+          text-align: center;
+          margin-bottom: 2rem;
+          padding: 2rem;
+          background: $primary-lighter;
+          border-radius: 8px;
+          border: 1px solid $primary-light;
+
+          .detail-badge-group {
+            @include flex-center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+          }
+
+          h3 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: $text-primary;
+            margin-bottom: 1rem;
+          }
+
+          .tournament-description {
+            color: $text-secondary;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+          }
+        }
+
+        .detail-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 1rem;
+
+          .detail-card {
+            @include flex-center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: $background-secondary;
+            border: 1px solid $border-color;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+
+            &:hover {
+              border-color: $primary-color;
+              background: $primary-lighter;
+            }
+
+            svg {
+              color: $primary-color;
+              flex-shrink: 0;
+            }
+
+            .label {
+              display: block;
+              font-size: 0.875rem;
+              color: $text-secondary;
+              margin-bottom: 0.25rem;
+            }
+
+            .value {
+              display: block;
+              font-weight: 600;
+              color: $text-primary;
+            }
+          }
+        }
+
+        // Delete Confirmation
+        .delete-confirmation {
+          text-align: center;
+          padding: 2rem;
+
+          .delete-icon {
+            color: $danger-color;
+            margin-bottom: 1rem;
+          }
+
+          h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: $text-primary;
+            margin-bottom: 1rem;
+          }
+
+          p {
+            color: $text-secondary;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto;
+          }
+        }
+      }
+
+      .modal-footer {
+        @include flex-between;
+        padding: 1.5rem 2rem;
+        border-top: 1px solid $border-color;
+        gap: 1rem;
+        background: $background-secondary;
+
+        .btn {
+          @include flex-center;
+          gap: 0.5rem;
+          padding: 0.75rem 1.5rem;
+          border: none;
+          border-radius: 6px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &.primary {
+            background: $primary-color;
+            color: white;
+
+            &:hover {
+              background: darken($primary-color, 10%);
+              box-shadow: $shadow-md;
+            }
+          }
+
+          &.secondary {
+            background: white;
+            color: $text-primary;
+            border: 1px solid $border-color;
+
+            &:hover {
+              background: $background-tertiary;
+              border-color: $text-tertiary;
+            }
+          }
+
+          &.danger {
+            background: $danger-color;
+            color: white;
+
+            &:hover {
+              background: darken($danger-color, 10%);
+              box-shadow: $shadow-md;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .admin-tournaments {
+    padding: 1rem;
+
+    .admin-page-header {
+      .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .tournament-stats {
+          flex-wrap: wrap;
+        }
+      }
+    }
+
+    .controls-section {
+      .search-filter-container {
+        flex-direction: column;
+
+        .search-box {
+          max-width: none;
+        }
+      }
+    }
+
+    .tournaments-container {
+      .tournaments-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tournaments-list {
+        .list-header {
+          display: none;
+        }
+
+        .list-item {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+          text-align: center;
+
+          .tournament-cell {
+            text-align: center;
+          }
+
+          .actions {
+            justify-content: center;
+          }
+        }
+      }
+    }
+
+    .modal-overlay {
+      padding: 1rem;
+
+      .modal-content {
+        &.large {
+          width: 95vw;
+        }
+
+        .modal-body {
+          padding: 1rem;
+
+          .form-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .detail-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .tournament-detail-header {
+            padding: 1.5rem;
+          }
+        }
+
+        .modal-footer {
+          flex-direction: column;
+
+          .btn {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Animation Classes
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.admin-tournaments {
+  .admin-page-header {
+    .header-content {
+      .header-actions {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+
+        .create-btn {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: #10b981;
+          color: white;
+          border: none;
+          padding: 0.75rem 1.5rem;
+          border-radius: 0.5rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: #059669;
+          }
+        }
+
+        .logout-btn {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: #ef4444;
+          color: white;
+          border: none;
+          padding: 0.75rem 1.5rem;
+          border-radius: 0.5rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: #dc2626;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Utility Classes
+.text-primary { color: $text-primary; }
+.text-secondary { color: $text-secondary; }
+.bg-primary { background: $primary-color; }
+.bg-primary-light { background: $primary-light; }
+.bg-primary-lighter { background: $primary-lighter; }
+.border-primary { border-color: $primary-color; }

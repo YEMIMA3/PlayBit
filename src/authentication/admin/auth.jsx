@@ -18,10 +18,10 @@ const AdminAuth = () => {
 
   // Check if already logged in
   useEffect(() => {
-    const token = localStorage.getItem('admin_token');
+    const token = localStorage.getItem('adminToken');
     if (token) {
-      console.log('Admin already logged in, redirecting to dashboard...');
-      navigate('/admin/dashboard', { replace: true });
+      console.log('✅ Admin already logged in, redirecting to tournaments...');
+      navigate('/admin/tournaments', { replace: true });
     }
   }, [navigate]);
 
@@ -34,60 +34,56 @@ const AdminAuth = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError('');
-  setIsLoading(true);
-  
-  try {
-    console.log('🔐 Starting admin login process...');
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
     
-    const response = await fetch('http://localhost:3000/api/admin/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: formData.email,
-        password: formData.password
-      }),
-    });
+    try {
+      console.log('🔐 Starting admin login process...');
+      
+      const response = await fetch('http://localhost:3000/api/admin/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password
+        }),
+      });
 
-    console.log('📡 Response status:', response.status);
-    
-    const data = await response.json();
-    console.log('📦 Full response data:', data);
-    
-    // Fix: Check for successful login based on status code OR success field
-    if ((response.status === 200 || response.ok) && data.token) {
-      console.log('✅ Admin login successful!');
+      console.log('📡 Response status:', response.status);
       
-      // Store admin token and data
-      localStorage.setItem('admin_token', data.token);
-      localStorage.setItem('admin_data', JSON.stringify(data.admin || data.user || {}));
+      const data = await response.json();
+      console.log('📦 Full response data:', data);
       
-      console.log('💾 Token stored, navigating to dashboard...');
-      
-      // Use window.location for guaranteed navigation
-      setTimeout(() => {
-        window.location.href = '/admin/dashboard';
-      }, 100);
-      
-    } else {
-      console.error('❌ Login failed - API response:', data);
-      // Show the actual error message from API
-      setError(data.message || data.error || 'Login failed. Please check your credentials.');
+      if ((response.status === 200 || response.ok) && data.token) {
+        console.log('✅ Admin login successful!');
+        
+        // Store admin token with correct key name
+        localStorage.setItem('adminToken', data.token);
+        localStorage.setItem('adminData', JSON.stringify(data.admin || data.user || {}));
+        
+        console.log('💾 Token stored, navigating to tournaments...');
+        
+        // Navigate to tournaments page
+        navigate('/admin/tournaments', { replace: true });
+        
+      } else {
+        console.error('❌ Login failed - API response:', data);
+        setError(data.message || data.error || 'Login failed. Please check your credentials.');
+      }
+    } catch (error) {
+      console.error('💥 Network error:', error);
+      setError('Network error. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
-  } catch (error) {
-    console.error('💥 Network error:', error);
-    setError('Network error. Please try again.');
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
   return (
     <div className="admin-auth-container">
-      {/* Enhanced Animated Background */}
+      {/* Background and styling remains the same */}
       <div className="admin-animated-bg">
         <div className="admin-floating-shape shape-1"></div>
         <div className="admin-floating-shape shape-2"></div>
@@ -95,14 +91,12 @@ const AdminAuth = () => {
         <div className="admin-floating-shape shape-4"></div>
         <div className="admin-floating-shape shape-5"></div>
         
-        {/* Animated Particles */}
         <div className="particles-container">
           {[...Array(15)].map((_, i) => (
             <div key={i} className="particle" style={{'--i': i}}></div>
           ))}
         </div>
         
-        {/* Glowing Orbs */}
         <div className="glowing-orb orb-1"></div>
         <div className="glowing-orb orb-2"></div>
         <div className="glowing-orb orb-3"></div>
@@ -114,7 +108,7 @@ const AdminAuth = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, type: "spring" }}
       >
-        {/* Enhanced Header */}
+        {/* Header */}
         <div className="admin-auth-header">
           <motion.div
             className="logo-container"
@@ -290,7 +284,6 @@ const AdminAuth = () => {
                     </button>
                   </div>
 
-                  {/* Security Notice */}
                   <motion.div 
                     className="security-notice"
                     initial={{ opacity: 0 }}

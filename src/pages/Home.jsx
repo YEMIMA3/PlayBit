@@ -119,7 +119,7 @@ const Home = () => {
                   placeholder="Search coaches by sport, name, or location..."
                   className="search-input"
                 />
-                <Link to="/coach/auth" className="search-btn" style={{textDecoration:'none'}}>
+                <Link to="/athlete/auth" className="search-btn" style={{textDecoration:'none'}}>
                   Find Coaches
                 </Link>
               </div>
@@ -261,7 +261,7 @@ const Home = () => {
             <h2>Ready to Start Your Sports Journey?</h2>
             <p>Join thousands of athletes who have found their perfect coach on PlayBit</p>
             <div className="cta-actions">
-              <Link to="/register" className="btn-primary large">
+              <Link to="/athlete/auth" className="btn-primary large">
                 Find Your Coach
               </Link>
               <Link to="/coach/auth" className="btn-secondary large">
