@@ -1,113 +1,114 @@
-import React, { useState } from "react";
-import { MapPin, Calendar, CheckCircle2, XCircle, Filter, User, Mail, Phone, Award, Clock, Target } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { MapPin, Calendar, CheckCircle2, XCircle, Filter, User, Mail, Phone, Award, Clock, Target, Loader } from "lucide-react";
 import "../../styles/coach/requests.scss";
 import CoachNav from './coachnav';
+import { coachRequestsService } from "../../api/coachRequests";
 
 export default function CoachRequests() {
-  const [requests, setRequests] = useState([
-    {
-      id: 1,
-      name: "Alex Martinez",
-      sport: "Tennis",
-      location: "Los Angeles, CA",
-      date: "2025-10-20",
-      level: "Intermediate",
-      message: "Looking to improve my serve and backhand technique",
-      status: "pending",
-      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop",
-      email: "alex.martinez@email.com",
-      phone: "+1 (555) 123-4567",
-      age: 24,
-      experience: "3 years",
-      goals: ["Improve serve technique", "Enhance backhand power", "Tournament preparation"],
-      achievements: ["Local club champion 2024", "University team player"],
-      availability: ["Weekdays after 6 PM", "Weekends morning"],
-      preferredLocation: "Westside Tennis Club",
-      height: "6'1\"",
-      weight: "180 lbs"
-    },
-    {
-      id: 2,
-      name: "Emily Chen",
-      sport: "Badminton",
-      location: "Santa Monica, CA",
-      date: "2025-10-21",
-      level: "Beginner",
-      message: "New to badminton, seeking fundamentals training",
-      status: "pending",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop",
-      email: "emily.chen@email.com",
-      phone: "+1 (555) 987-6543",
-      age: 19,
-      experience: "6 months",
-      goals: ["Learn basic techniques", "Improve footwork", "Join recreational league"],
-      achievements: ["Beginner tournament participant"],
-      availability: ["Mon, Wed, Fri evenings", "Sunday afternoons"],
-      preferredLocation: "Santa Monica Sports Center",
-      height: "5'6\"",
-      weight: "135 lbs"
-    },
-    {
-      id: 3,
-      name: "Marcus Thompson",
-      sport: "Tennis",
-      location: "Pasadena, CA",
-      date: "2025-10-22",
-      level: "Advanced",
-      message: "Preparing for upcoming regional tournament",
-      status: "pending",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop",
-      email: "marcus.thompson@email.com",
-      phone: "+1 (555) 456-7890",
-      age: 28,
-      experience: "8 years",
-      goals: ["Tournament preparation", "Improve mental game", "Advanced strategy"],
-      achievements: ["State champion 2023", "College team captain", "UTR 10.5"],
-      availability: ["Flexible - full time athlete"],
-      preferredLocation: "Pasadena Tennis Center",
-      height: "6'3\"",
-      weight: "195 lbs"
-    },
-  ]);
-
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [updatingRequest, setUpdatingRequest] = useState(null);
   const [filterSport, setFilterSport] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
   const [sortBy, setSortBy] = useState("date");
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showProfileModal, setShowProfileModal] = useState(false);
 
-  const handleAccept = (id) => {
-    setRequests(
-      requests.map((r) =>
-        r.id === id ? { ...r, status: "accepted" } : r
-      )
-    );
+  // Fetch requests from backend
+  useEffect(() => {
+    fetchRequests();
+  }, []);
+
+  const fetchRequests = async () => {
+    try {
+      setLoading(true);
+      const requestsData = await coachRequestsService.getCoachRequests();
+      setRequests(requestsData);
+    } catch (error) {
+      console.error('Error fetching requests:', error);
+      alert('Failed to load requests. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleReject = (id) => {
-    setRequests(
-      requests.map((r) =>
-        r.id === id ? { ...r, status: "rejected" } : r
-      )
-    );
+  const handleAccept = async (requestId) => {
+    try {
+      setUpdatingRequest(requestId);
+      await coachRequestsService.updateRequestStatus(requestId, "accepted");
+      
+      // Update local state
+      setRequests(requests.map(req => 
+        req._id === requestId ? { ...req, status: "accepted" } : req
+      ));
+      
+      alert('Request accepted successfully!');
+    } catch (error) {
+      console.error('Error accepting request:', error);
+      alert(error.message || 'Failed to accept request. Please try again.');
+    } finally {
+      setUpdatingRequest(null);
+    }
   };
 
-  const handleViewProfile = (student) => {
-    setSelectedStudent(student);
+  const handleReject = async (requestId) => {
+    try {
+      setUpdatingRequest(requestId);
+      await coachRequestsService.updateRequestStatus(requestId, "rejected");
+      
+      // Update local state
+      setRequests(requests.map(req => 
+        req._id === requestId ? { ...req, status: "rejected" } : req
+      ));
+      
+      alert('Request rejected successfully!');
+    } catch (error) {
+      console.error('Error rejecting request:', error);
+      alert(error.message || 'Failed to reject request. Please try again.');
+    } finally {
+      setUpdatingRequest(null);
+    }
+  };
+
+  const handleViewProfile = (request) => {
+    setSelectedStudent({
+      ...request.athleteId,
+      requestId: request._id,
+      message: request.message,
+      status: request.status,
+      createdAt: request.createdAt
+    });
     setShowProfileModal(true);
   };
 
   const filtered = requests
-    .filter((r) => filterSport === "all" || r.sport === filterSport)
+    .filter((r) => filterSport === "all" || (r.athleteId?.sport && r.athleteId.sport === filterSport))
     .filter((r) => filterStatus === "all" || r.status === filterStatus)
     .sort((a, b) => {
-      if (sortBy === "date") return new Date(b.date) - new Date(a.date);
-      if (sortBy === "sport") return a.sport.localeCompare(b.sport);
+      if (sortBy === "date") return new Date(b.createdAt) - new Date(a.createdAt);
+      if (sortBy === "sport") return (a.athleteId?.sport || '').localeCompare(b.athleteId?.sport || '');
       return 0;
     });
 
   const pendingCount = requests.filter((r) => r.status === "pending").length;
   const acceptedCount = requests.filter((r) => r.status === "accepted").length;
+
+  // Get unique sports for filter
+  const allSports = ['all', ...new Set(requests.map(req => req.athleteId?.sport).filter(Boolean))];
+
+  if (loading) {
+    return (
+      <div>
+        <CoachNav />
+        <div className="requests-page">
+          <div className="loading-state">
+            <Loader size={32} />
+            <p>Loading requests...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -146,8 +147,9 @@ export default function CoachRequests() {
               onChange={(e) => setFilterSport(e.target.value)}
             >
               <option value="all">All Sports</option>
-              <option value="Tennis">Tennis</option>
-              <option value="Badminton">Badminton</option>
+              {allSports.filter(sport => sport !== 'all').map(sport => (
+                <option key={sport} value={sport}>{sport}</option>
+              ))}
             </select>
 
             <select
@@ -169,57 +171,85 @@ export default function CoachRequests() {
 
         {/* Request Cards */}
         <div className="request-list">
-          {filtered.map((r) => (
+          {filtered.map((request) => (
             <div
-              key={r.id}
-              className={`request-card ${r.status}`}
+              key={request._id}
+              className={`request-card ${request.status}`}
             >
-              <img src={r.image} alt={r.name} className="avatar" />
+              <img 
+                src={request.athleteId?.profileImage || `https://api.dicebear.com/7.x/avataaars/svg?seed=${request.athleteId?._id}`} 
+                alt={request.athleteId?.name} 
+                className="avatar" 
+              />
               <div className="info">
                 <div className="top">
-                  <h3>{r.name}</h3>
+                  <h3>{request.athleteId?.name || 'Unknown Athlete'}</h3>
                   <div className="badges">
-                    <span className="badge sport">{r.sport}</span>
-                    <span className="badge level">{r.level}</span>
-                    {r.status === "accepted" && (
+                    <span className="badge sport">{request.athleteId?.sport || 'General'}</span>
+                    <span className="badge level">{request.athleteId?.level || 'Not specified'}</span>
+                    {request.status === "accepted" && (
                       <span className="badge accepted">Accepted</span>
                     )}
-                    {r.status === "rejected" && (
+                    {request.status === "rejected" && (
                       <span className="badge rejected">Rejected</span>
                     )}
                   </div>
                 </div>
 
-                <p className="message">{r.message}</p>
+                <p className="message">{request.message || 'No message provided'}</p>
 
                 <div className="meta">
-                  <span>
-                    <MapPin size={14} /> {r.location}
-                  </span>
+                  {request.athleteId?.location && (
+                    <span>
+                      <MapPin size={14} /> {request.athleteId.location}
+                    </span>
+                  )}
                   <span>
                     <Calendar size={14} />{" "}
-                    {new Date(r.date).toLocaleDateString("en-US", {
+                    {new Date(request.createdAt).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
+                      year: "numeric"
                     })}
                   </span>
+                  {request.athleteId?.age && (
+                    <span>Age: {request.athleteId.age}</span>
+                  )}
                 </div>
 
                 <div className="actions">
                   <button 
                     className="view-profile" 
-                    onClick={() => handleViewProfile(r)}
+                    onClick={() => handleViewProfile(request)}
                   >
                     <User size={16} /> View Full Details
                   </button>
                   
-                  {r.status === "pending" && (
+                  {request.status === "pending" && (
                     <>
-                      <button className="accept" onClick={() => handleAccept(r.id)}>
-                        <CheckCircle2 size={16} /> Accept
+                      <button 
+                        className={`accept ${updatingRequest === request._id ? 'loading' : ''}`} 
+                        onClick={() => handleAccept(request._id)}
+                        disabled={updatingRequest === request._id}
+                      >
+                        {updatingRequest === request._id ? (
+                          <Loader size={16} />
+                        ) : (
+                          <CheckCircle2 size={16} />
+                        )}
+                        {updatingRequest === request._id ? 'Accepting...' : 'Accept'}
                       </button>
-                      <button className="reject" onClick={() => handleReject(r.id)}>
-                        <XCircle size={16} /> Reject
+                      <button 
+                        className={`reject ${updatingRequest === request._id ? 'loading' : ''}`} 
+                        onClick={() => handleReject(request._id)}
+                        disabled={updatingRequest === request._id}
+                      >
+                        {updatingRequest === request._id ? (
+                          <Loader size={16} />
+                        ) : (
+                          <XCircle size={16} />
+                        )}
+                        {updatingRequest === request._id ? 'Rejecting...' : 'Reject'}
                       </button>
                     </>
                   )}
@@ -228,7 +258,7 @@ export default function CoachRequests() {
             </div>
           ))}
 
-          {filtered.length === 0 && (
+          {filtered.length === 0 && !loading && (
             <div className="no-results">
               No requests found matching your filters.
             </div>
@@ -252,14 +282,24 @@ export default function CoachRequests() {
               <div className="profile-content">
                 {/* Header Section */}
                 <div className="profile-header">
-                  <img src={selectedStudent.image} alt={selectedStudent.name} className="profile-avatar" />
+                  <img 
+                    src={selectedStudent.profileImage || `https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedStudent._id}`} 
+                    alt={selectedStudent.name} 
+                    className="profile-avatar" 
+                  />
                   <div className="profile-info">
-                    <h3>{selectedStudent.name}</h3>
+                    <h3>{selectedStudent.name || 'Unknown Athlete'}</h3>
                     <div className="profile-badges">
-                      <span className="badge sport">{selectedStudent.sport}</span>
-                      <span className="badge level">{selectedStudent.level}</span>
+                      <span className="badge sport">{selectedStudent.sport || 'General'}</span>
+                      <span className="badge level">{selectedStudent.level || 'Not specified'}</span>
+                      {selectedStudent.status === "accepted" && (
+                        <span className="badge accepted">Accepted</span>
+                      )}
+                      {selectedStudent.status === "rejected" && (
+                        <span className="badge rejected">Rejected</span>
+                      )}
                     </div>
-                    <p className="profile-message">{selectedStudent.message}</p>
+                    <p className="profile-message">{selectedStudent.message || 'No message provided'}</p>
                   </div>
                 </div>
 
@@ -267,18 +307,24 @@ export default function CoachRequests() {
                 <div className="profile-section">
                   <h4>Contact Information</h4>
                   <div className="contact-grid">
-                    <div className="contact-item">
-                      <Mail size={16} />
-                      <span>{selectedStudent.email}</span>
-                    </div>
-                    <div className="contact-item">
-                      <Phone size={16} />
-                      <span>{selectedStudent.phone}</span>
-                    </div>
-                    <div className="contact-item">
-                      <MapPin size={16} />
-                      <span>{selectedStudent.location}</span>
-                    </div>
+                    {selectedStudent.email && (
+                      <div className="contact-item">
+                        <Mail size={16} />
+                        <span>{selectedStudent.email}</span>
+                      </div>
+                    )}
+                    {selectedStudent.phone && (
+                      <div className="contact-item">
+                        <Phone size={16} />
+                        <span>{selectedStudent.phone}</span>
+                      </div>
+                    )}
+                    {selectedStudent.location && (
+                      <div className="contact-item">
+                        <MapPin size={16} />
+                        <span>{selectedStudent.location}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -286,79 +332,92 @@ export default function CoachRequests() {
                 <div className="profile-section">
                   <h4>Personal Details</h4>
                   <div className="details-grid">
-                    <div className="detail-item">
-                      <strong>Age:</strong>
-                      <span>{selectedStudent.age}</span>
-                    </div>
-                    <div className="detail-item">
-                      <strong>Height:</strong>
-                      <span>{selectedStudent.height}</span>
-                    </div>
-                    <div className="detail-item">
-                      <strong>Weight:</strong>
-                      <span>{selectedStudent.weight}</span>
-                    </div>
+                    {selectedStudent.age && (
+                      <div className="detail-item">
+                        <strong>Age:</strong>
+                        <span>{selectedStudent.age}</span>
+                      </div>
+                    )}
+                    {selectedStudent.height && (
+                      <div className="detail-item">
+                        <strong>Height:</strong>
+                        <span>{selectedStudent.height}</span>
+                      </div>
+                    )}
+                    {selectedStudent.weight && (
+                      <div className="detail-item">
+                        <strong>Weight:</strong>
+                        <span>{selectedStudent.weight}</span>
+                      </div>
+                    )}
                     <div className="detail-item">
                       <strong>Experience:</strong>
-                      <span>{selectedStudent.experience}</span>
+                      <span>{selectedStudent.level || 'Not specified'}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Training Goals */}
-                <div className="profile-section">
-                  <h4>
-                    <Target size={18} />
-                    Training Goals
-                  </h4>
-                  <div className="goals-list">
-                    {selectedStudent.goals.map((goal, index) => (
-                      <div key={index} className="goal-item">
-                        <CheckCircle2 size={16} />
-                        <span>{goal}</span>
-                      </div>
-                    ))}
+                {selectedStudent.goals && (
+                  <div className="profile-section">
+                    <h4>
+                      <Target size={18} />
+                      Training Goals
+                    </h4>
+                    <div className="goals-list">
+                      {Array.isArray(selectedStudent.goals) ? (
+                        selectedStudent.goals.map((goal, index) => (
+                          <div key={index} className="goal-item">
+                            <CheckCircle2 size={16} />
+                            <span>{goal}</span>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="goal-item">
+                          <CheckCircle2 size={16} />
+                          <span>{selectedStudent.goals}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Achievements */}
-                <div className="profile-section">
-                  <h4>
-                    <Award size={18} />
-                    Achievements
-                  </h4>
-                  <div className="achievements-list">
-                    {selectedStudent.achievements.map((achievement, index) => (
-                      <div key={index} className="achievement-item">
-                        <Award size={14} />
-                        <span>{achievement}</span>
-                      </div>
-                    ))}
+                {selectedStudent.achievements && (
+                  <div className="profile-section">
+                    <h4>
+                      <Award size={18} />
+                      Achievements
+                    </h4>
+                    <div className="achievements-list">
+                      {Array.isArray(selectedStudent.achievements) ? (
+                        selectedStudent.achievements.map((achievement, index) => (
+                          <div key={index} className="achievement-item">
+                            <Award size={14} />
+                            <span>{achievement}</span>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="achievement-item">
+                          <Award size={14} />
+                          <span>{selectedStudent.achievements}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
 
-                {/* Availability */}
+                {/* Request Date */}
                 <div className="profile-section">
-                  <h4>
-                    <Clock size={18} />
-                    Availability
-                  </h4>
-                  <div className="availability-list">
-                    {selectedStudent.availability.map((slot, index) => (
-                      <div key={index} className="availability-item">
-                        <Calendar size={14} />
-                        <span>{slot}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Preferred Location */}
-                <div className="profile-section">
-                  <h4>Preferred Training Location</h4>
-                  <div className="location-preferred">
-                    <MapPin size={16} />
-                    <span>{selectedStudent.preferredLocation}</span>
+                  <h4>Request Date</h4>
+                  <div className="request-date">
+                    <Calendar size={16} />
+                    <span>{new Date(selectedStudent.createdAt).toLocaleDateString("en-US", {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}</span>
                   </div>
                 </div>
 
@@ -366,24 +425,34 @@ export default function CoachRequests() {
                 {selectedStudent.status === "pending" && (
                   <div className="profile-actions">
                     <button 
-                      className="accept-btn large"
+                      className={`accept-btn large ${updatingRequest === selectedStudent.requestId ? 'loading' : ''}`}
                       onClick={() => {
-                        handleAccept(selectedStudent.id);
+                        handleAccept(selectedStudent.requestId);
                         setShowProfileModal(false);
                       }}
+                      disabled={updatingRequest === selectedStudent.requestId}
                     >
-                      <CheckCircle2 size={18} />
-                      Accept Request
+                      {updatingRequest === selectedStudent.requestId ? (
+                        <Loader size={18} />
+                      ) : (
+                        <CheckCircle2 size={18} />
+                      )}
+                      {updatingRequest === selectedStudent.requestId ? 'Accepting...' : 'Accept Request'}
                     </button>
                     <button 
-                      className="reject-btn large"
+                      className={`reject-btn large ${updatingRequest === selectedStudent.requestId ? 'loading' : ''}`}
                       onClick={() => {
-                        handleReject(selectedStudent.id);
+                        handleReject(selectedStudent.requestId);
                         setShowProfileModal(false);
                       }}
+                      disabled={updatingRequest === selectedStudent.requestId}
                     >
-                      <XCircle size={18} />
-                      Reject Request
+                      {updatingRequest === selectedStudent.requestId ? (
+                        <Loader size={18} />
+                      ) : (
+                        <XCircle size={18} />
+                      )}
+                      {updatingRequest === selectedStudent.requestId ? 'Rejecting...' : 'Reject Request'}
                     </button>
                   </div>
                 )}

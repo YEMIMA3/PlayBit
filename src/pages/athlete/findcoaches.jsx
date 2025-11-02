@@ -1,82 +1,8 @@
-import { useState } from 'react';
-import { Search, MapPin, Star, Award, Users, CheckCircle, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Search, MapPin, Star, Award, Users, CheckCircle, X, Send } from 'lucide-react';
 import '../../styles/athlete/findcoaches.scss';
 import AthleteNav from './athleteNav';
-
-const mockCoaches = [
-  {
-    id: 1,
-    name: 'Rajesh Kumar',
-    sport: 'Basketball',
-    experience: '10 years',
-    rating: 4.8,
-    students: 45,
-    location: 'Mumbai, Maharashtra',
-    bio: 'Former state-level basketball player. Specialized in youth development and skill enhancement for college teams.',
-    certifications: ['Basketball Federation of India Certified', 'Youth Coach License'],
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=coach1',
-  },
-  {
-    id: 2,
-    name: 'Priya Sharma',
-    sport: 'Football',
-    experience: '8 years',
-    rating: 4.9,
-    students: 38,
-    location: 'Bangalore, Karnataka',
-    bio: 'Former university football captain. Focus on technical skills and team coordination for college players.',
-    certifications: ['AIFF D License', 'Sports Science Degree'],
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=coach2',
-  },
-  {
-    id: 3,
-    name: 'Arjun Patel',
-    sport: 'Cricket',
-    experience: '12 years',
-    rating: 4.7,
-    students: 52,
-    location: 'Ahmedabad, Gujarat',
-    bio: 'Ranji Trophy experience. Mentored multiple university teams to championships.',
-    certifications: ['BCCI Level 2 Coach', 'NIS Diploma'],
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=coach3',
-  },
-  {
-    id: 4,
-    name: 'Sneha Reddy',
-    sport: 'Basketball',
-    experience: '6 years',
-    rating: 4.6,
-    students: 29,
-    location: 'Hyderabad, Telangana',
-    bio: 'Dedicated to developing fundamental skills and building confidence in college athletes.',
-    certifications: ['BFI Certified', 'Sports Psychology Certificate'],
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=coach4',
-  },
-  {
-    id: 5,
-    name: 'Vikram Singh',
-    sport: 'Football',
-    experience: '15 years',
-    rating: 4.9,
-    students: 67,
-    location: 'Delhi, NCR',
-    bio: 'Former I-League player. Specializing in strength conditioning and technical training.',
-    certifications: ['AIFF C License', 'Strength & Conditioning'],
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=coach5',
-  },
-  {
-    id: 6,
-    name: 'Ananya Iyer',
-    sport: 'Cricket',
-    experience: '9 years',
-    rating: 4.8,
-    students: 41,
-    location: 'Chennai, Tamil Nadu',
-    bio: 'State-level women\'s cricket player. Passionate about helping student athletes reach their potential.',
-    certifications: ['BCCI Level 1 Coach', 'University Sports Instructor'],
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=coach6',
-  },
-];
+import { coachService } from '../../api/findCoaches'; // Import the API service
 
 export default function FindCoaches() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -84,24 +10,90 @@ export default function FindCoaches() {
   const [selectedLocation, setSelectedLocation] = useState('all');
   const [selectedCoach, setSelectedCoach] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [coaches, setCoaches] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [sendingRequest, setSendingRequest] = useState(false);
+  const [requestMessage, setRequestMessage] = useState('');
 
-  const filteredCoaches = mockCoaches.filter((coach) => {
+  // Fetch coaches from backend
+  useEffect(() => {
+    fetchCoaches();
+  }, []);
+
+  const fetchCoaches = async () => {
+    try {
+      setLoading(true);
+      const coachesData = await coachService.getAllCoaches();
+      setCoaches(coachesData);
+    } catch (error) {
+      console.error('Error fetching coaches:', error);
+      alert('Failed to load coaches. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredCoaches = coaches.filter((coach) => {
     const matchesSearch = coach.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         coach.sport.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesSport = selectedSport === 'all' || coach.sport === selectedSport;
-    const matchesLocation = selectedLocation === 'all' || coach.location.includes(selectedLocation);
+                         (coach.sports && coach.sports.some(sport => 
+                           sport.toLowerCase().includes(searchQuery.toLowerCase())
+                         ));
+    const matchesSport = selectedSport === 'all' || 
+                        (coach.sports && coach.sports.includes(selectedSport));
+    const matchesLocation = selectedLocation === 'all' || 
+                           (coach.location && coach.location.includes(selectedLocation));
     return matchesSearch && matchesSport && matchesLocation;
   });
 
   const openModal = (coach) => {
     setSelectedCoach(coach);
     setShowModal(true);
+    setRequestMessage(`Hi ${coach.name}, I would like to train with you!`);
   };
 
   const closeModal = () => {
     setShowModal(false);
     setSelectedCoach(null);
+    setRequestMessage('');
   };
+
+  const handleSendRequest = async () => {
+    if (!selectedCoach) return;
+
+    try {
+      setSendingRequest(true);
+      await coachService.sendCoachRequest(selectedCoach._id, requestMessage);
+      alert('Request sent successfully!');
+      closeModal();
+      
+      // Refresh coaches to update request status
+      fetchCoaches();
+    } catch (error) {
+      console.error('Error sending request:', error);
+      alert(error.message || 'Failed to send request. Please try again.');
+    } finally {
+      setSendingRequest(false);
+    }
+  };
+
+  // Get unique sports and locations for filters
+  const allSports = ['all', ...new Set(coaches.flatMap(coach => coach.sports || []))];
+  const allLocations = ['all', ...new Set(coaches.map(coach => coach.location).filter(Boolean))];
+
+  if (loading) {
+    return (
+      <div className="athlete-profile-container">
+        <AthleteNav />
+        <div className="find-coaches-page">
+          <div className="container">
+            <div className="loading-state">
+              <p>Loading coaches...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="athlete-profile-container">
@@ -129,19 +121,16 @@ export default function FindCoaches() {
 
               <select value={selectedSport} onChange={(e) => setSelectedSport(e.target.value)}>
                 <option value="all">All Sports</option>
-                <option value="Basketball">Basketball</option>
-                <option value="Football">Football</option>
-                <option value="Cricket">Cricket</option>
+                {allSports.filter(sport => sport !== 'all').map(sport => (
+                  <option key={sport} value={sport}>{sport}</option>
+                ))}
               </select>
 
               <select value={selectedLocation} onChange={(e) => setSelectedLocation(e.target.value)}>
                 <option value="all">All Locations</option>
-                <option value="Mumbai">Mumbai</option>
-                <option value="Bangalore">Bangalore</option>
-                <option value="Hyderabad">Hyderabad</option>
-                <option value="Delhi">Delhi</option>
-                <option value="Ahmedabad">Ahmedabad</option>
-                <option value="Chennai">Chennai</option>
+                {allLocations.filter(location => location !== 'all').map(location => (
+                  <option key={location} value={location}>{location}</option>
+                ))}
               </select>
             </div>
           </div>
@@ -149,15 +138,25 @@ export default function FindCoaches() {
           {/* Results */}
           <div className="coaches-grid">
             {filteredCoaches.map((coach) => (
-              <div key={coach.id} className="coach-card fade-in">
+              <div key={coach._id} className="coach-card fade-in">
                 <div className="coach-card-header">
                   <div className="coach-header-content">
                     <div className="avatar">
-                      <img src={coach.avatar} alt={coach.name} />
+                      <img 
+                        src={coach.profileImage || `https://api.dicebear.com/7.x/avataaars/svg?seed=${coach._id}`} 
+                        alt={coach.name} 
+                      />
                     </div>
                     <div className="coach-info">
                       <h3>{coach.name}</h3>
-                      <span className="badge sport-badge">{coach.sport}</span>
+                      <span className="badge sport-badge">
+                        {coach.sports ? coach.sports[0] : 'Coach'}
+                      </span>
+                      {coach.requestStatus && coach.requestStatus !== 'not_sent' && (
+                        <span className={`badge status-badge ${coach.requestStatus}`}>
+                          {coach.requestStatus}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -166,37 +165,42 @@ export default function FindCoaches() {
                   <div className="stats-grid">
                     <div className="stat">
                       <Star className="star-icon" />
-                      <span>{coach.rating} Rating</span>
-                    </div>
-                    
-                    <div className="stat">
-                      <Users />
-                      <span>{coach.students} Students</span>
-                    </div>
-                    
-                    <div className="stat">
-                      <MapPin />
-                      <span>{coach.location}</span>
+                      <span>{coach.rating || 'No'} Rating</span>
                     </div>
                     
                     <div className="stat">
                       <Award />
-                      <span>{coach.experience}</span>
+                      <span>{coach.experience || 'Experienced'}</span>
+                    </div>
+                    
+                    <div className="stat">
+                      <MapPin />
+                      <span>{coach.location || 'Location not specified'}</span>
+                    </div>
+                    
+                    <div className="stat">
+                      <span className="rate">₹{coach.hourlyRate || 'N/A'}/hr</span>
                     </div>
                   </div>
 
+                  {coach.bio && (
+                    <p className="coach-bio">{coach.bio.substring(0, 100)}...</p>
+                  )}
+
                   <button 
-                    className="view-profile-btn"
+                    className={`view-profile-btn ${coach.requestStatus === 'pending' ? 'pending' : ''}`}
                     onClick={() => openModal(coach)}
+                    disabled={coach.requestStatus === 'pending' || coach.requestStatus === 'accepted'}
                   >
-                    View Profile
+                    {coach.requestStatus === 'pending' ? 'Request Sent' : 
+                     coach.requestStatus === 'accepted' ? 'Accepted' : 'View Profile'}
                   </button>
                 </div>
               </div>
             ))}
           </div>
 
-          {filteredCoaches.length === 0 && (
+          {filteredCoaches.length === 0 && !loading && (
             <div className="empty-state">
               <p>No coaches found matching your criteria</p>
             </div>
@@ -219,19 +223,23 @@ export default function FindCoaches() {
                 <div className="profile-section">
                   <div className="profile-header">
                     <div className="avatar large">
-                      <img src={selectedCoach.avatar} alt={selectedCoach.name} />
+                      <img 
+                        src={selectedCoach.profileImage || `https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedCoach._id}`} 
+                        alt={selectedCoach.name} 
+                      />
                     </div>
                     <div className="profile-info">
                       <h2>{selectedCoach.name}</h2>
-                      <span className="badge sport-badge">{selectedCoach.sport}</span>
+                      <span className="badge sport-badge">
+                        {selectedCoach.sports ? selectedCoach.sports.join(', ') : 'Coach'}
+                      </span>
                       <div className="meta-info">
                         <span>
                           <Star className="star-icon" />
-                          {selectedCoach.rating}
+                          {selectedCoach.rating || 'No rating'}
                         </span>
-                        <span>
-                          <Users />
-                          {selectedCoach.students} students
+                        <span className="rate">
+                          ₹{selectedCoach.hourlyRate || 'N/A'}/hr
                         </span>
                       </div>
                     </div>
@@ -239,33 +247,67 @@ export default function FindCoaches() {
 
                   <div className="section-block">
                     <h3>About</h3>
-                    <p>{selectedCoach.bio}</p>
+                    <p>{selectedCoach.bio || 'No bio available'}</p>
                   </div>
 
                   <div className="section-block">
                     <h3>Experience</h3>
-                    <p>{selectedCoach.experience} of professional coaching</p>
+                    <p>{selectedCoach.experience || 'Experience not specified'}</p>
                   </div>
 
                   <div className="section-block">
                     <h3>Location</h3>
-                    <p>{selectedCoach.location}</p>
+                    <p>{selectedCoach.location || 'Location not specified'}</p>
                   </div>
+
+                  {selectedCoach.certifications && selectedCoach.certifications.length > 0 && (
+                    <div className="section-block">
+                      <h3>Certifications</h3>
+                      <div className="certifications-list">
+                        {selectedCoach.certifications.map((cert, index) => (
+                          <span key={index} className="cert-badge">
+                            <CheckCircle size={16} />
+                            {cert}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedCoach.availability && (
+                    <div className="section-block">
+                      <h3>Availability</h3>
+                      <p>{selectedCoach.availability}</p>
+                    </div>
+                  )}
 
                   <div className="section-block">
-                    <h3>Certifications</h3>
-                    <div className="certifications-list">
-                      {selectedCoach.certifications.map((cert, index) => (
-                        <span key={index} className="cert-badge">
-                          <CheckCircle size={16} />
-                          {cert}
-                        </span>
-                      ))}
-                    </div>
+                    <h3>Your Message</h3>
+                    <textarea
+                      value={requestMessage}
+                      onChange={(e) => setRequestMessage(e.target.value)}
+                      placeholder="Write a message to the coach..."
+                      rows="4"
+                    />
                   </div>
 
-                  <button className="action-button primary">
-                    Send Coaching Request
+                  <button 
+                    className={`action-button primary ${sendingRequest ? 'loading' : ''}`}
+                    onClick={handleSendRequest}
+                    disabled={sendingRequest || selectedCoach.requestStatus === 'pending' || selectedCoach.requestStatus === 'accepted'}
+                  >
+                    {sendingRequest ? (
+                      'Sending...'
+                    ) : selectedCoach.requestStatus === 'pending' ? (
+                      'Request Already Sent'
+                    ) : selectedCoach.requestStatus === 'accepted' ? (
+                      'Request Accepted'
+                    ) : (
+                      <>
+                        <Send size={16} />
+                        Send Coaching Request
+                      </>
+                    )}
                   </button>
                 </div>
               </div>

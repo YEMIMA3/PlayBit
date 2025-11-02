@@ -582,3 +582,64 @@
     margin: 10px;
   }
 }
+// Add these to your existing SCSS
+
+.loading-state {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  
+  svg {
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.request-card {
+  .accept.loading,
+  .reject.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+    
+    svg {
+      animation: spin 1s linear infinite;
+    }
+  }
+}
+
+.profile-actions {
+  .accept-btn.loading,
+  .reject-btn.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+    
+    svg {
+      animation: spin 1s linear infinite;
+    }
+  }
+}
+
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-style: italic;
+}
+
+.request-date {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  color: #495057;
+  
+  svg {
+    color: #6c757d;
+  }
+}
