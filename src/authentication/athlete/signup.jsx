@@ -10,6 +10,9 @@ const AthleteSignup = () => {
     password: '',
     sport: '',
     experience: '',
+    phone: '',
+    location: '',
+    dateOfBirth: '',
     achievements: '',
     isCertified: false
   });
@@ -38,7 +41,8 @@ const AthleteSignup = () => {
     setMessage({ type: '', text: '' });
     
     try {
-      const response = await fetch('http://localhost:3000/api/auth/athlete/register', {
+      // Updated to port 3000 and correct endpoint
+      const response = await fetch('http://localhost:3000/api/auth/athlete/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,7 +53,10 @@ const AthleteSignup = () => {
           password: formData.password,
           sport: formData.sport,
           experience: formData.experience,
-          achievements: formData.achievements
+          phone: formData.phone,
+          location: formData.location,
+          dateOfBirth: formData.dateOfBirth,
+          achievements: formData.achievements ? [formData.achievements] : []
         }),
       });
 
@@ -64,7 +71,12 @@ const AthleteSignup = () => {
         
         // Redirect to athlete dashboard
         setTimeout(() => {
-          navigate('/athlete/dashboard');
+          navigate('/athlete/dashboard', { 
+            state: { 
+              athlete: data.athlete,
+              hasProfile: data.hasProfile || false
+            }
+          });
         }, 1500);
       } else {
         throw new Error(data.message || 'Registration failed');
@@ -157,6 +169,39 @@ const AthleteSignup = () => {
           <option value="5-10">5-10 years</option>
           <option value="10+">10+ years</option>
         </select>
+      </motion.div>
+
+      <motion.div className="form-group" whileHover={!isLoading ? { scale: 1.02 } : {}}>
+        <input
+          type="text"
+          name="phone"
+          value={formData.phone}
+          onChange={handleChange}
+          placeholder="Phone Number"
+          disabled={isLoading}
+        />
+      </motion.div>
+
+      <motion.div className="form-group" whileHover={!isLoading ? { scale: 1.02 } : {}}>
+        <input
+          type="text"
+          name="location"
+          value={formData.location}
+          onChange={handleChange}
+          placeholder="Location"
+          disabled={isLoading}
+        />
+      </motion.div>
+
+      <motion.div className="form-group" whileHover={!isLoading ? { scale: 1.02 } : {}}>
+        <input
+          type="date"
+          name="dateOfBirth"
+          value={formData.dateOfBirth}
+          onChange={handleChange}
+          placeholder="Date of Birth"
+          disabled={isLoading}
+        />
       </motion.div>
 
       <motion.div className="form-group" whileHover={!isLoading ? { scale: 1.02 } : {}}>

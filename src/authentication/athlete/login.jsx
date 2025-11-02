@@ -26,6 +26,9 @@ const AthleteLogin = () => {
     setMessage({ type: '', text: '' });
     
     try {
+      console.log('🔄 Attempting login with:', { email: formData.email });
+      
+      // Updated to port 5000
       const response = await fetch('http://localhost:3000/api/auth/athlete/login', {
         method: 'POST',
         headers: {
@@ -37,11 +40,16 @@ const AthleteLogin = () => {
         }),
       });
 
-      const data = await response.json();
+      console.log('📡 Response Status:', response.status);
       
-      if (data.success) {
+      const data = await response.json();
+      console.log('📡 Response Data:', data);
+      
+      if (response.ok && data.success) {
         // Store token and athlete data in localStorage
         localStorage.setItem('athlete_token', data.token);
+        
+        // Store the athlete data from credentials collection
         localStorage.setItem('athlete_data', JSON.stringify(data.athlete));
         
         setMessage({ type: 'success', text: data.message || 'Login successful! Redirecting...' });
@@ -51,15 +59,24 @@ const AthleteLogin = () => {
           navigate('/athlete/dashboard', { 
             state: { 
               athlete: data.athlete,
-              isNewUser: false
+              hasProfile: data.hasProfile || false
             }
           });
         }, 1500);
       } else {
-        throw new Error(data.message || 'Login failed');
+        // Handle different error cases
+        let errorMessage = data.message || 'Login failed';
+        
+        if (response.status === 401) {
+          errorMessage = 'Invalid email or password. Please check your credentials.';
+        } else if (response.status === 404) {
+          errorMessage = 'Account not found. Please check your email or sign up.';
+        }
+        
+        throw new Error(errorMessage);
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('❌ Login error:', error);
       setMessage({ type: 'error', text: error.message });
     } finally {
       setIsLoading(false);
@@ -72,6 +89,7 @@ const AthleteLogin = () => {
     setMessage({ type: '', text: '' });
 
     try {
+      // Updated to port 5000
       const response = await fetch('http://localhost:3000/api/auth/athlete/forgot-password', {
         method: 'POST',
         headers: {
@@ -101,6 +119,7 @@ const AthleteLogin = () => {
     }
   };
 
+  // ... rest of your JSX remains the same
   return (
     <motion.div 
       className="athlete-login-form"
@@ -193,15 +212,26 @@ const AthleteLogin = () => {
           </motion.button>
 
           <div className="form-footer">
-            <button style={{ backgroundColor: "none", border: "none", color: "#2e7d32",fontSize:"14px", cursor: "pointer", textDecoration: "underline", fontWeight: 600, transition: "color 0.3s ease",marginLeft:"120px",marginTop:"10px" }}
+            <button 
               type="button"
               className="link-btn"
               onClick={() => setForgotPassword(true)}
               disabled={isLoading}
+              style={{ 
+                backgroundColor: "transparent", 
+                border: "none", 
+                color: "#2e7d32",
+                fontSize: "14px", 
+                cursor: "pointer", 
+                textDecoration: "underline", 
+                fontWeight: 600, 
+                transition: "color 0.3s ease",
+                marginLeft: "120px",
+                marginTop: "10px" 
+              }}
             >
               Forgot your password?
             </button>
-            
           </div>
         </motion.form>
       ) : (

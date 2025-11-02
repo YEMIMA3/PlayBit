@@ -1,8 +1,8 @@
-// White and Blue Theme Variables
+// White and Blue Light Theme Variables
 :root {
-  --primary-blue: #2563eb;
-  --primary-blue-dark: #1d4ed8;
-  --primary-blue-light: #3b82f6;
+  --primary-blue: #3b82f6;
+  --primary-blue-dark: #2563eb;
+  --primary-blue-light: #60a5fa;
   --primary-blue-bg: #eff6ff;
   
   --background-white: #ffffff;
@@ -17,7 +17,7 @@
   --border-medium: #cbd5e1;
   
   --badge-blue: #dbeafe;
-  --badge-blue-foreground: #1e40af;
+  --badge-blue-foreground: #1d4ed8;
   
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
@@ -61,8 +61,8 @@
   }
 }
 
-// Main Navbar
-.coach-nav {
+// Main Admin Navbar
+.admin-nav {
   position: fixed;
   top: 0;
   left: 0;
@@ -97,7 +97,8 @@
       transition: all 0.2s ease;
 
       &:hover {
-        background: var(--background-muted);
+        background: var(--primary-blue-bg);
+        color: var(--primary-blue);
         transform: scale(1.05);
       }
 
@@ -149,7 +150,7 @@
       border: 1px solid transparent;
 
       &:hover {
-        background: var(--background-muted);
+        background: var(--primary-blue-bg);
         border-color: var(--border-light);
       }
 
@@ -167,7 +168,7 @@
         border: 2px solid var(--background-white);
         box-shadow: var(--shadow-sm);
 
-        .avatar-image {
+        img {
           width: 100%;
           height: 100%;
           object-fit: cover;
@@ -188,7 +189,7 @@
 
         .user-role {
           font-size: 0.75rem;
-          color: var(--foreground-muted);
+          color: var(--primary-blue);
           font-weight: 500;
         }
       }
@@ -199,7 +200,7 @@
         transition: transform 0.2s ease;
         margin-left: 0.25rem;
 
-        &.open {
+        &.rotated {
           transform: rotate(180deg);
         }
       }
@@ -243,7 +244,7 @@
       border: 3px solid var(--background-white);
       box-shadow: var(--shadow-md);
 
-      .avatar-image-large {
+      img {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -265,14 +266,14 @@
       .user-email {
         font-size: 0.8rem;
         color: var(--foreground-muted);
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.5rem;
       }
 
-      .user-sport {
-        font-size: 0.8rem;
+      .user-role-badge {
+        font-size: 0.75rem;
         color: var(--primary-blue);
         font-weight: 600;
-        background: rgba(37, 99, 235, 0.1);
+        background: rgba(59, 130, 246, 0.1);
         padding: 0.2rem 0.5rem;
         border-radius: var(--radius-sm);
         display: inline-block;
@@ -306,8 +307,9 @@
       text-align: left;
 
       &:hover {
-        background: var(--background-muted);
+        background: var(--primary-blue-bg);
         transform: translateX(4px);
+        color: var(--primary-blue);
       }
 
       .dropdown-badge {
@@ -322,7 +324,7 @@
         text-align: center;
       }
 
-      &.signout {
+      &.signout-item {
         color: var(--destructive);
 
         &:hover {
@@ -383,7 +385,7 @@
         border: 3px solid var(--background-white);
         box-shadow: var(--shadow-md);
 
-        .avatar-image-sidebar {
+        img {
           width: 100%;
           height: 100%;
           object-fit: cover;
@@ -401,7 +403,7 @@
           margin-bottom: 0.25rem;
         }
 
-        .user-sport {
+        .user-role {
           font-size: 0.875rem;
           color: var(--primary-blue);
           font-weight: 600;
@@ -433,9 +435,10 @@
         border: 1px solid transparent;
 
         &:hover {
-          background: var(--background-muted);
+          background: var(--primary-blue-bg);
           border-color: var(--border-light);
           transform: translateX(4px);
+          color: var(--primary-blue);
         }
 
         &.active {
@@ -480,60 +483,54 @@
       }
     }
 
-    .sidebar-progress {
+    .sidebar-stats {
       padding: 1.25rem;
       background: var(--background-muted);
       border-radius: var(--radius-lg);
       border: 1px solid var(--border-light);
 
-      .progress-info {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.75rem;
-        font-size: 0.875rem;
-
-        span:first-child {
-          color: var(--foreground-dark);
-          font-weight: 600;
-        }
-
-        span:last-child {
-          color: var(--primary-blue);
-          font-weight: 700;
-        }
-      }
-
-      .progress-bar {
-        height: 8px;
-        background: var(--background-white);
-        border-radius: var(--radius-sm);
-        overflow: hidden;
-        margin-bottom: 0.75rem;
-
-        .progress-fill {
-          height: 100%;
-          background: linear-gradient(90deg, var(--primary-blue), var(--primary-blue-light));
-          border-radius: var(--radius-sm);
-          transition: width 0.3s ease;
-          box-shadow: var(--shadow-sm);
-        }
-      }
-
-      .progress-stats {
+      .stats-header {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        font-size: 0.8rem;
-        color: var(--foreground-muted);
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--foreground-dark);
+      }
 
-        span {
-          &:nth-child(1), &:nth-child(3) {
-            font-weight: 500;
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+
+        .stat-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 0.75rem;
+          background: var(--background-white);
+          border-radius: var(--radius-md);
+          border: 1px solid var(--border-light);
+          transition: all 0.2s ease;
+
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+            border-color: var(--primary-blue);
           }
 
-          &:nth-child(2) {
-            color: var(--border-medium);
+          .stat-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 0.25rem;
+          }
+
+          .stat-label {
+            font-size: 0.75rem;
+            color: var(--foreground-muted);
+            text-align: center;
           }
         }
       }
@@ -556,13 +553,13 @@
 
 // Responsive Design
 @media (max-width: 768px) {
-  .coach-nav {
+  .admin-nav {
     padding: 0 1rem;
 
     .nav-left {
       .platform-brand {
         .platform-name {
-          display: none;
+          font-size: 1.1rem;
         }
       }
     }
@@ -591,22 +588,23 @@
     width: 100%;
   }
 
-  .coach-nav {
+  .admin-nav {
     .nav-right {
-      .notification-icon {
-        width: 36px;
-        height: 36px;
-      }
-
       .user-profile {
         padding: 0.5rem;
       }
     }
   }
+
+  .sidebar-stats {
+    .stats-grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
 }
 
 // Loading State
-.coach-nav .user-profile .user-info .user-name {
+.admin-nav .user-profile .user-info .user-name {
   color: var(--foreground-light);
   font-style: italic;
 }

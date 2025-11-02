@@ -21,7 +21,6 @@ const CoachNav = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeItem, setActiveItem] = useState('dashboard');
-  const [unreadNotifications, setUnreadNotifications] = useState(4);
   const [coachData, setCoachData] = useState({
     name: '',
     email: '',
@@ -154,10 +153,6 @@ const CoachNav = () => {
       case 'profile':
         navigate('/coach/profile');
         break;
-      case 'notifications':
-        navigate('/coach/notifications');
-        setUnreadNotifications(0);
-        break;
       case 'settings':
         navigate('/coach/settings');
         break;
@@ -276,15 +271,6 @@ const CoachNav = () => {
         
         {/* Right Section - User Profile Dropdown */}
         <div className="nav-right">
-          <div 
-            className="notification-icon"
-            onClick={() => navigate('/coach/notifications')}
-          >
-            <Bell size={20} />
-            {unreadNotifications > 0 && (
-              <span className="notification-badge">{unreadNotifications}</span>
-            )}
-          </div>
 
           <div 
             className="user-profile"
@@ -341,16 +327,6 @@ const CoachNav = () => {
                     <span>My Profile</span>
                   </div>
                   
-                  <div 
-                    className="dropdown-item"
-                    onClick={() => handleDropdownItemClick('notifications')}
-                  >
-                    <Bell size={16} />
-                    <span>Notifications</span>
-                    {unreadNotifications > 0 && (
-                      <span className="dropdown-badge">{unreadNotifications}</span>
-                    )}
-                  </div>
                   
                   <div 
                     className="dropdown-item"

@@ -6,7 +6,8 @@ import {
   Loader, CheckCircle, XCircle, MapPin, User, Clock, BookOpen
 } from 'lucide-react';
 import { tournamentService } from '../../api/admin';
-import '../../styles/admin/athlete.scss'
+import AdminNav from './AdminNav'; // Import AdminNav
+import '../../styles/admin/athlete.scss';
 
 const AdminAthlete = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -92,14 +93,11 @@ const AdminAthlete = () => {
 
   const handleViewProfile = async (athlete) => {
     try {
-      // If you want detailed data, fetch it here
-      // const response = await tournamentService.getAthlete(athlete._id);
-      // setSelectedAthlete(response.data.data);
       setSelectedAthlete(athlete);
       setShowProfileModal(true);
     } catch (error) {
       console.error('Error fetching athlete details:', error);
-      setSelectedAthlete(athlete); // Fallback to basic data
+      setSelectedAthlete(athlete);
       setShowProfileModal(true);
     }
   };
@@ -194,286 +192,292 @@ const AdminAthlete = () => {
   }
 
   return (
-    <div className="admin-athletes">
-      {/* Header */}
-      <motion.div
-        className="admin-page-header"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <div className="header-content">
-          <div className="header-text">
-            <h1>Athlete Management</h1>
-            <p>Manage and monitor all athletes</p>
+    <>
+      {/* Admin Navigation */}
+      <AdminNav />
+      
+      {/* Main Content */}
+      <div className="admin-athletes">
+        {/* Header */}
+        <motion.div
+          className="admin-page-header"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="header-content">
+            <div className="header-text">
+              <h1>Athlete Management</h1>
+              <p>Manage and monitor all athletes</p>
+            </div>
+            <div className="header-actions">
+              <motion.button
+                className="export-btn"
+                onClick={handleExportData}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Download size={18} />
+                Export Data
+              </motion.button>
+            </div>
           </div>
-          <div className="header-actions">
-            <motion.button
-              className="export-btn"
-              onClick={handleExportData}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Download size={18} />
-              Export Data
-            </motion.button>
-          </div>
-        </div>
 
-        {/* Stats Overview */}
-        <motion.div 
-          className="stats-overview"
+          {/* Stats Overview */}
+          <motion.div 
+            className="stats-overview"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <div className="stat-card mini">
+              <span className="stat-number">{stats?.total || 0}</span>
+              <span className="stat-label">Total Athletes</span>
+            </div>
+            <div className="stat-card mini">
+              <span className="stat-number">{stats?.active || 0}</span>
+              <span className="stat-label">Active</span>
+            </div>
+            <div className="stat-card mini">
+              <span className="stat-number">{stats?.verified || 0}</span>
+              <span className="stat-label">Verified</span>
+            </div>
+            <div className="stat-card mini">
+              <span className="stat-number">{stats?.levels?.Advanced || 0}</span>
+              <span className="stat-label">Advanced</span>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Controls */}
+        <motion.div
+          className="search-section"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay: 0.2 }}
         >
-          <div className="stat-card mini">
-            <span className="stat-number">{stats?.total || 0}</span>
-            <span className="stat-label">Total Athletes</span>
-          </div>
-          <div className="stat-card mini">
-            <span className="stat-number">{stats?.active || 0}</span>
-            <span className="stat-label">Active</span>
-          </div>
-          <div className="stat-card mini">
-            <span className="stat-number">{stats?.verified || 0}</span>
-            <span className="stat-label">Verified</span>
-          </div>
-          <div className="stat-card mini">
-            <span className="stat-number">{stats?.levels?.Advanced || 0}</span>
-            <span className="stat-label">Advanced</span>
+          <div className="search-filters-container">
+            <div className="search-box">
+              <Search size={20} />
+              <input
+                type="text"
+                placeholder="Search athletes by name, sport, or email..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            
+            <div className="filters-container">
+              <div className="filter-group">
+                <Filter size={16} />
+                <select 
+                  value={selectedSport} 
+                  onChange={(e) => setSelectedSport(e.target.value)}
+                >
+                  <option value="all">All Sports</option>
+                  {sports.filter(sport => sport !== 'all').map(sport => (
+                    <option key={sport} value={sport}>{sport}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="filter-group">
+                <Star size={16} />
+                <select 
+                  value={selectedLevel} 
+                  onChange={(e) => setSelectedLevel(e.target.value)}
+                >
+                  <option value="all">All Levels</option>
+                  {levels.filter(level => level !== 'all').map(level => (
+                    <option key={level} value={level}>{level}</option>
+                  ))}
+                </select>
+              </div>
+
+              {(selectedSport !== 'all' || selectedLevel !== 'all' || searchTerm) && (
+                <button onClick={clearFilters} className="clear-filters-btn">
+                  Clear Filters
+                </button>
+              )}
+            </div>
           </div>
         </motion.div>
-      </motion.div>
 
-      {/* Controls */}
-      <motion.div
-        className="search-section"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
-        <div className="search-filters-container">
-          <div className="search-box">
-            <Search size={20} />
-            <input
-              type="text"
-              placeholder="Search athletes by name, sport, or email..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+        {/* Operation Loading */}
+        {operationLoading && (
+          <div className="operation-loading">
+            <Loader size={20} className="animate-spin" />
+            <span>Processing request...</span>
           </div>
-          
-          <div className="filters-container">
-            <div className="filter-group">
-              <Filter size={16} />
-              <select 
-                value={selectedSport} 
-                onChange={(e) => setSelectedSport(e.target.value)}
+        )}
+
+        {/* Athletes Grid */}
+        <motion.div
+          className="coaches-grid"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          <AnimatePresence>
+            {filteredAthletes.map((athlete, index) => (
+              <motion.div
+                key={athlete._id || athlete.id}
+                className="coach-card"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ y: -5 }}
               >
-                <option value="all">All Sports</option>
-                {sports.filter(sport => sport !== 'all').map(sport => (
-                  <option key={sport} value={sport}>{sport}</option>
-                ))}
-              </select>
-            </div>
+                <div className="coach-header">
+                  <div className="coach-avatar">
+                    {athlete.name?.split(' ').map(n => n[0]).join('') || 'AT'}
+                  </div>
+                  <div className="coach-basic-info">
+                    <h3 className="coach-name">{athlete.name || 'Unknown Athlete'}</h3>
+                    <p className="coach-sport">{athlete.sport || 'General'}</p>
+                  </div>
+                  <div className={`status-badge ${getStatusColor(athlete.status)}`}>
+                    {athlete.status === 'active' ? <CheckCircle size={16} /> : <XCircle size={16} />}
+                    {athlete.status || 'unknown'}
+                  </div>
+                </div>
 
-            <div className="filter-group">
-              <Star size={16} />
-              <select 
-                value={selectedLevel} 
-                onChange={(e) => setSelectedLevel(e.target.value)}
-              >
-                <option value="all">All Levels</option>
-                {levels.filter(level => level !== 'all').map(level => (
-                  <option key={level} value={level}>{level}</option>
-                ))}
-              </select>
-            </div>
+                <div className="coach-details">
+                  <div className="detail-row">
+                    <Mail size={16} />
+                    <span>{athlete.email || 'No email'}</span>
+                  </div>
+                  <div className="detail-row">
+                    <Phone size={16} />
+                    <span>{athlete.phone || 'No phone'}</span>
+                  </div>
+                  <div className="detail-row">
+                    <MapPin size={16} />
+                    <span>{athlete.location || 'Location not set'}</span>
+                  </div>
+                </div>
 
-            {(selectedSport !== 'all' || selectedLevel !== 'all' || searchTerm) && (
-              <button onClick={clearFilters} className="clear-filters-btn">
-                Clear Filters
-              </button>
-            )}
-          </div>
-        </div>
-      </motion.div>
+                <div className="coach-stats">
+                  <div className="stat">
+                    <User size={16} />
+                    <span>Age: {athlete.age || 'N/A'}</span>
+                  </div>
+                  <div className="stat">
+                    <Star size={16} />
+                    <span>{athlete.level || 'Beginner'}</span>
+                  </div>
+                  <div className="stat">
+                    <Award size={16} />
+                    <span>{athlete.experience || '0'} yrs</span>
+                  </div>
+                </div>
 
-      {/* Operation Loading */}
-      {operationLoading && (
-        <div className="operation-loading">
-          <Loader size={20} className="animate-spin" />
-          <span>Processing request...</span>
-        </div>
-      )}
+                <div className="specialties">
+                  <div className={`status-badge ${getVerificationColor(athlete.isVerified)}`}>
+                    {athlete.isVerified ? <CheckCircle size={14} /> : <Clock size={14} />}
+                    {athlete.isVerified ? 'Verified' : 'Unverified'}
+                  </div>
+                  {athlete.achievements?.slice(0, 2).map((achievement, idx) => (
+                    <span key={idx} className="specialty-tag">
+                      {achievement.fileName || achievement}
+                    </span>
+                  ))}
+                </div>
 
-      {/* Athletes Grid */}
-      <motion.div
-        className="coaches-grid"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-      >
-        <AnimatePresence>
-          {filteredAthletes.map((athlete, index) => (
-            <motion.div
-              key={athlete._id || athlete.id}
-              className="coach-card"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -5 }}
-            >
-              <div className="coach-header">
-                <div className="coach-avatar">
-                  {athlete.name?.split(' ').map(n => n[0]).join('') || 'AT'}
-                </div>
-                <div className="coach-basic-info">
-                  <h3 className="coach-name">{athlete.name || 'Unknown Athlete'}</h3>
-                  <p className="coach-sport">{athlete.sport || 'General'}</p>
-                </div>
-                <div className={`status-badge ${getStatusColor(athlete.status)}`}>
-                  {athlete.status === 'active' ? <CheckCircle size={16} /> : <XCircle size={16} />}
-                  {athlete.status || 'unknown'}
-                </div>
-              </div>
-
-              <div className="coach-details">
-                <div className="detail-row">
-                  <Mail size={16} />
-                  <span>{athlete.email || 'No email'}</span>
-                </div>
-                <div className="detail-row">
-                  <Phone size={16} />
-                  <span>{athlete.phone || 'No phone'}</span>
-                </div>
-                <div className="detail-row">
-                  <MapPin size={16} />
-                  <span>{athlete.location || 'Location not set'}</span>
-                </div>
-              </div>
-
-              <div className="coach-stats">
-                <div className="stat">
-                  <User size={16} />
-                  <span>Age: {athlete.age || 'N/A'}</span>
-                </div>
-                <div className="stat">
-                  <Star size={16} />
-                  <span>{athlete.level || 'Beginner'}</span>
-                </div>
-                <div className="stat">
-                  <Award size={16} />
-                  <span>{athlete.experience || '0'} yrs</span>
-                </div>
-              </div>
-
-              <div className="specialties">
-                <div className={`status-badge ${getVerificationColor(athlete.isVerified)}`}>
-                  {athlete.isVerified ? <CheckCircle size={14} /> : <Clock size={14} />}
-                  {athlete.isVerified ? 'Verified' : 'Unverified'}
-                </div>
-                {athlete.achievements?.slice(0, 2).map((achievement, idx) => (
-                  <span key={idx} className="specialty-tag">
-                    {achievement.fileName || achievement}
-                  </span>
-                ))}
-              </div>
-
-              <div className="coach-actions">
-                <motion.button
-                  className="action-btn primary"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handleViewProfile(athlete)}
-                >
-                  View Profile
-                </motion.button>
-                <motion.button
-                  className="action-btn secondary"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handleSendMessage(athlete)}
-                >
-                  Message
-                </motion.button>
-              </div>
-
-              {!athlete.isVerified && (
-                <div className="verification-actions">
+                <div className="coach-actions">
                   <motion.button
-                    className="verify-btn"
+                    className="action-btn primary"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => handleVerifyAthlete(athlete._id)}
+                    onClick={() => handleViewProfile(athlete)}
                   >
-                    <CheckCircle size={16} />
-                    Verify Athlete
+                    View Profile
                   </motion.button>
-                </div>
-              )}
-
-              {athlete.isVerified && (
-                <div className="verification-actions">
                   <motion.button
                     className="action-btn secondary"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => handleUpdateStatus(athlete._id, athlete.status === 'active' ? 'inactive' : 'active')}
+                    onClick={() => handleSendMessage(athlete)}
                   >
-                    {athlete.status === 'active' ? 'Deactivate' : 'Activate'}
+                    Message
                   </motion.button>
                 </div>
-              )}
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </motion.div>
 
-      {/* Empty State */}
-      {filteredAthletes.length === 0 && athletes.length === 0 && !loading && (
-        <div className="empty-state">
-          <Users size={64} />
-          <h3>No athletes found</h3>
-          <p>There are no athletes in the system yet.</p>
-          <button onClick={fetchAthletes} className="retry-btn">
-            Refresh
-          </button>
-        </div>
-      )}
+                {!athlete.isVerified && (
+                  <div className="verification-actions">
+                    <motion.button
+                      className="verify-btn"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleVerifyAthlete(athlete._id)}
+                    >
+                      <CheckCircle size={16} />
+                      Verify Athlete
+                    </motion.button>
+                  </div>
+                )}
 
-      {/* No Results State */}
-      {filteredAthletes.length === 0 && athletes.length > 0 && !loading && (
-        <motion.div
-          className="empty-state"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-        >
-          <Search size={64} />
-          <h3>No athletes found</h3>
-          <p>Try adjusting your search criteria or filters</p>
-          <button onClick={clearFilters} className="clear-filters-btn">
-            Clear All Filters
-          </button>
+                {athlete.isVerified && (
+                  <div className="verification-actions">
+                    <motion.button
+                      className="action-btn secondary"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleUpdateStatus(athlete._id, athlete.status === 'active' ? 'inactive' : 'active')}
+                    >
+                      {athlete.status === 'active' ? 'Deactivate' : 'Activate'}
+                    </motion.button>
+                  </div>
+                )}
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </motion.div>
-      )}
 
-      {/* Athlete Profile Modal */}
-      <AnimatePresence>
-        {showProfileModal && selectedAthlete && (
-          <AthleteProfileModal 
-            athlete={selectedAthlete}
-            onClose={() => setShowProfileModal(false)}
-            onSendMessage={() => {
-              setShowProfileModal(false);
-              handleSendMessage(selectedAthlete);
-            }}
-            formatDate={formatDate}
-          />
+        {/* Empty State */}
+        {filteredAthletes.length === 0 && athletes.length === 0 && !loading && (
+          <div className="empty-state">
+            <Users size={64} />
+            <h3>No athletes found</h3>
+            <p>There are no athletes in the system yet.</p>
+            <button onClick={fetchAthletes} className="retry-btn">
+              Refresh
+            </button>
+          </div>
         )}
-      </AnimatePresence>
-    </div>
+
+        {/* No Results State */}
+        {filteredAthletes.length === 0 && athletes.length > 0 && !loading && (
+          <motion.div
+            className="empty-state"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
+            <Search size={64} />
+            <h3>No athletes found</h3>
+            <p>Try adjusting your search criteria or filters</p>
+            <button onClick={clearFilters} className="clear-filters-btn">
+              Clear All Filters
+            </button>
+          </motion.div>
+        )}
+
+        {/* Athlete Profile Modal */}
+        <AnimatePresence>
+          {showProfileModal && selectedAthlete && (
+            <AthleteProfileModal 
+              athlete={selectedAthlete}
+              onClose={() => setShowProfileModal(false)}
+              onSendMessage={() => {
+                setShowProfileModal(false);
+                handleSendMessage(selectedAthlete);
+              }}
+              formatDate={formatDate}
+            />
+          )}
+        </AnimatePresence>
+      </div>
+    </>
   );
 };
 

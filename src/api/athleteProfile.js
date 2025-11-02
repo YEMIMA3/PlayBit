@@ -1,8 +1,8 @@
 import axios from "axios";
 
-// Create axios instance with correct base URL
+// Create axios instance with correct base URL (your backend runs on port 5000)
 const api = axios.create({
-  baseURL: "http://localhost:3000/api/athlete",
+  baseURL: "http://localhost:3000/api/athlete", // Changed from 3000 to 5000
 });
 
 // Add token to requests automatically
@@ -31,6 +31,7 @@ export const getAthleteProfile = async () => {
     if (error.response?.status === 401) {
       // Token expired or invalid
       localStorage.removeItem('athlete_token');
+      localStorage.removeItem('athlete_data');
       window.location.href = '/athlete/login';
     }
     
@@ -54,6 +55,7 @@ export const updateAthleteProfile = async (profileData) => {
     
     if (error.response?.status === 401) {
       localStorage.removeItem('athlete_token');
+      localStorage.removeItem('athlete_data');
       window.location.href = '/athlete/login';
     }
     

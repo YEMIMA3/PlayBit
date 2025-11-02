@@ -6,6 +6,7 @@ import {
   BookOpen, Loader, Filter
 } from 'lucide-react';
 import { tournamentService } from '../../api/admin';
+import AdminNav from './AdminNav'; // Import AdminNav
 import '../../styles/admin/coaches.scss';
 
 const AdminCoaches = () => {
@@ -185,6 +186,8 @@ const AdminCoaches = () => {
   }
 
   return (
+    <>
+      <AdminNav />
     <div className="admin-coaches">
       {/* Header */}
       <motion.div
@@ -462,6 +465,7 @@ const AdminCoaches = () => {
         )}
       </AnimatePresence>
     </div>
+    </>
   );
 };
 
