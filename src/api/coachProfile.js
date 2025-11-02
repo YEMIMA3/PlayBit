@@ -60,3 +60,56 @@ export const updateCoachProfile = async (profileData) => {
     throw error.response?.data || { message: "Failed to update profile" };
   }
 };
+
+// ✅ TOURNAMENT METHODS - ONLY GET AND CREATE
+
+// Get tournaments available for coach
+export const getCoachTournaments = async () => {
+  try {
+    const response = await api.get("/tournaments");
+    console.log('✅ GET Tournaments API Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('❌ GET Tournaments API Error:', {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message
+    });
+    
+    if (error.response?.status === 401) {
+      localStorage.removeItem('coach_token');
+      window.location.href = '/coach/login';
+    }
+    
+    throw error.response?.data || { message: "Failed to fetch tournaments" };
+  }
+};
+
+// Create new tournament
+export const createTournament = async (tournamentData) => {
+  try {
+    console.log('🔄 Creating tournament:', tournamentData);
+    const response = await api.post("/tournaments", tournamentData);
+    console.log('✅ CREATE Tournament API Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('❌ CREATE Tournament API Error:', {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message
+    });
+    
+    if (error.response?.status === 401) {
+      localStorage.removeItem('coach_token');
+      window.location.href = '/coach/login';
+    }
+    
+    throw error.response?.data || { message: "Failed to create tournament" };
+  }
+};
+
+// Export only the needed methods
+export const tournamentService = {
+  getCoachTournaments,
+  createTournament
+};

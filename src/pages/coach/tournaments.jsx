@@ -1,61 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../styles/coach/tournaments.scss";
 import CoachNav from './coachnav';
+import { tournamentService, getCoachProfile } from '../../api/coachProfile';
 
 export default function CoachTournaments() {
-  const [tournaments, setTournaments] = useState([
-    {
-      id: 1,
-      title: "Regional Tennis Championship",
-      date: "2025-11-15",
-      location: "Los Angeles Sports Complex",
-      sport: "Tennis",
-      level: "Advanced",
-      description: "Annual regional championship for advanced players. Singles and doubles categories.",
-      registeredAthletes: 12,
-      maxPlayers: 16,
-      registrationFee: 75,
-      athletes: [
-        { id: 1, name: "Alex Martinez", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=60&h=60&fit=crop" },
-        { id: 2, name: "Marcus Thompson", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop" },
-        { id: 3, name: "Sophie Williams", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=60&h=60&fit=crop" },
-        { id: 4, name: "James Wilson", avatar: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?w=60&h=60&fit=crop" },
-        { id: 5, name: "Emma Davis", avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=60&h=60&fit=crop" },
-        { id: 6, name: "Michael Brown", avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=60&h=60&fit=crop" },
-        { id: 7, name: "Sarah Johnson", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop" }
-      ]
-    },
-    {
-      id: 2,
-      title: "Badminton Open Tournament",
-      date: "2025-11-16",
-      location: "Metro Indoor Arena",
-      sport: "Badminton",
-      level: "All Levels",
-      description: "Open tournament for all skill levels. Great opportunity for beginners to gain experience.",
-      registeredAthletes: 8,
-      maxPlayers: 12,
-      registrationFee: 35,
-      athletes: [
-        { id: 1, name: "Emily Chen", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop" },
-        { id: 2, name: "David Lee", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop" }
-      ]
-    },
-    {
-      id: 3,
-      title: "City Basketball Championship",
-      date: "2025-11-20",
-      location: "Downtown Sports Center",
-      sport: "Basketball",
-      level: "Intermediate",
-      description: "5v5 basketball tournament for intermediate level players.",
-      registeredAthletes: 10,
-      maxPlayers: 20,
-      registrationFee: 120,
-      athletes: []
-    }
-  ]);
-
+  const [tournaments, setTournaments] = useState([]);
   const [announcements, setAnnouncements] = useState([
     {
       id: 1,
@@ -74,13 +23,13 @@ export default function CoachTournaments() {
   ]);
 
   const [newTournament, setNewTournament] = useState({
-    title: "",
+    name: "",
     date: "",
     location: "",
     sport: "",
     level: "",
     description: "",
-    maxPlayers: "",
+    participants: "", // Changed from maxPlayers to participants
     registrationFee: "",
   });
 
@@ -93,28 +42,105 @@ export default function CoachTournaments() {
   const [activeTab, setActiveTab] = useState("tournaments");
   const [calendarView, setCalendarView] = useState(false);
   const [selectedTournament, setSelectedTournament] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [coachName, setCoachName] = useState("");
 
-  const handleAddTournament = () => {
-    if (!newTournament.title) return;
-    const newT = {
-      id: tournaments.length + 1,
-      ...newTournament,
-      maxPlayers: parseInt(newTournament.maxPlayers) || 0,
-      registrationFee: parseFloat(newTournament.registrationFee) || 0,
-      registeredAthletes: 0,
-      athletes: []
+  // Fetch coach name and tournaments
+  useEffect(() => {
+    fetchCoachName();
+    fetchTournaments();
+  }, []);
+
+  const fetchCoachName = async () => {
+    try {
+      const response = await getCoachProfile();
+      setCoachName(response.profile?.name || "Coach");
+    } catch (error) {
+      console.error('Error fetching coach name:', error);
+      setCoachName("Coach");
+    }
+  };
+
+  const fetchTournaments = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await tournamentService.getCoachTournaments();
+      console.log('📊 Full API response:', response);
+      console.log('📊 Response data:', response.data);
+      
+      // FIX: The tournaments are in response.data directly, not response.data.data
+      const tournamentsData = response.data || [];
+      console.log('📊 Setting tournaments to:', tournamentsData);
+      
+      setTournaments(tournamentsData);
+    } catch (err) {
+      console.error('Error fetching tournaments:', err);
+      setError('Failed to load tournaments. Please check your connection.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddTournament = async () => {
+    // Validate all required fields
+    const requiredFields = {
+      name: 'Tournament Name',
+      date: 'Date',
+      location: 'Location',
+      sport: 'Sport',
+      participants: 'Number of Participants' // Added participants to required fields
     };
-    setTournaments([...tournaments, newT]);
-    setNewTournament({
-      title: "",
-      date: "",
-      location: "",
-      sport: "",
-      level: "",
-      description: "",
-      maxPlayers: "",
-      registrationFee: "",
-    });
+    
+    const missingFields = Object.keys(requiredFields).filter(field => !newTournament[field]);
+    
+    if (missingFields.length > 0) {
+      const missingFieldNames = missingFields.map(field => requiredFields[field]);
+      alert(`Please fill in all required fields: ${missingFieldNames.join(', ')}`);
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      const tournamentData = {
+        name: newTournament.name.trim(),
+        date: newTournament.date,
+        location: newTournament.location.trim(),
+        sport: newTournament.sport,
+        level: newTournament.level || 'All Levels',
+        description: newTournament.description.trim() || 'No description provided',
+        participants: parseInt(newTournament.participants) || 10, // Changed to participants
+        registrationFee: parseFloat(newTournament.registrationFee) || 0,
+        organizer: coachName || "Coach",
+      };
+
+      console.log('🔄 Creating tournament with data:', tournamentData);
+
+      const response = await tournamentService.createTournament(tournamentData);
+      
+      // Add the new tournament to the list
+      setTournaments(prev => [response.data, ...prev]);
+      
+      // Reset form
+      setNewTournament({
+        name: "",
+        date: "",
+        location: "",
+        sport: "",
+        level: "",
+        description: "",
+        participants: "", // Changed from maxPlayers to participants
+        registrationFee: "",
+      });
+      
+      alert('Tournament created successfully!');
+    } catch (error) {
+      console.error('Error creating tournament:', error);
+      alert(`Failed to create tournament: ${error.response?.data?.message || error.message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAddAnnouncement = () => {
@@ -132,49 +158,74 @@ export default function CoachTournaments() {
     setSelectedTournament(tournament);
   };
 
-  const handleShareTournament = (tournament) => {
-    const seatsLeft = tournament.maxPlayers - tournament.registeredAthletes;
+  const handleShareTournament = async (tournament) => {
+    const maxPlayers = tournament.participants || tournament.maxPlayers || 10;
+    const registeredCount = tournament.registeredAthletes || tournament.currentAthleteCount || 0;
+    const seatsLeft = maxPlayers - registeredCount;
     const feeText = tournament.registrationFee > 0 ? `Registration fee: $${tournament.registrationFee}` : "Free registration";
-    const shareText = `Check out this ${tournament.sport} tournament: ${tournament.title} on ${formatDate(tournament.date)} at ${tournament.location}. ${seatsLeft} seats left! ${feeText}`;
+    const shareText = `Check out this ${tournament.sport} tournament: ${tournament.name} on ${formatDate(tournament.date)} at ${tournament.location}. ${seatsLeft} seats left! ${feeText}`;
     
-    if (navigator.share) {
-      navigator.share({
-        title: tournament.title,
-        text: shareText,
-        url: window.location.href,
-      })
-      .catch(console.error);
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(shareText).then(() => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: tournament.name,
+          text: shareText,
+          url: window.location.href,
+        });
+      } else {
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText(shareText);
         alert('Tournament details copied to clipboard!');
-      });
+      }
+    } catch (error) {
+      console.error('Error sharing tournament:', error);
+      // Don't show error for user cancellation
+      if (error.name !== 'AbortError') {
+        alert('Tournament shared successfully!');
+      }
     }
   };
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
+    if (!dateString) return 'Date not specified';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    } catch (error) {
+      return 'Invalid date';
+    }
   };
 
   const getShortDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.getDate().toString();
+    if (!dateString) return '?';
+    try {
+      const date = new Date(dateString);
+      return date.getDate().toString();
+    } catch (error) {
+      return '?';
+    }
   };
 
   const getMonth = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { month: 'short' });
+    if (!dateString) return '???';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { month: 'short' });
+    } catch (error) {
+      return '???';
+    }
   };
 
   // Calculate seats left
   const getSeatsLeft = (tournament) => {
-    return tournament.maxPlayers - tournament.registeredAthletes;
+    const maxPlayers = tournament.participants || tournament.maxPlayers || 10;
+    const registeredCount = tournament.registeredAthletes || tournament.currentAthleteCount || 0;
+    return maxPlayers - registeredCount;
   };
 
   // Get availability status
@@ -191,11 +242,25 @@ export default function CoachTournaments() {
 
   // Format currency
   const formatCurrency = (amount) => {
+    if (!amount || amount === 0) return "Free";
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
     }).format(amount);
   };
+
+  // Loading state
+  if (loading && tournaments.length === 0) {
+    return (
+      <div>
+        <CoachNav />
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p>Loading tournaments...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -244,35 +309,39 @@ export default function CoachTournaments() {
               <div className="form-grid">
                 <input
                   type="text"
-                  placeholder="Tournament Title"
-                  value={newTournament.title}
+                  placeholder="Tournament Name *"
+                  value={newTournament.name}
                   onChange={(e) =>
-                    setNewTournament({ ...newTournament, title: e.target.value })
+                    setNewTournament({ ...newTournament, name: e.target.value })
                   }
+                  className={!newTournament.name ? 'required-field' : ''}
                 />
                 <input
                   type="date"
-                  placeholder="Date"
+                  placeholder="Date *"
                   value={newTournament.date}
                   onChange={(e) =>
                     setNewTournament({ ...newTournament, date: e.target.value })
                   }
+                  className={!newTournament.date ? 'required-field' : ''}
                 />
                 <input
                   type="text"
-                  placeholder="Location"
+                  placeholder="Location *"
                   value={newTournament.location}
                   onChange={(e) =>
                     setNewTournament({ ...newTournament, location: e.target.value })
                   }
+                  className={!newTournament.location ? 'required-field' : ''}
                 />
                 <select
                   value={newTournament.sport}
                   onChange={(e) =>
                     setNewTournament({ ...newTournament, sport: e.target.value })
                   }
+                  className={!newTournament.sport ? 'required-field' : ''}
                 >
-                  <option value="">Select Sport</option>
+                  <option value="">Select Sport *</option>
                   <option value="Tennis">Tennis</option>
                   <option value="Badminton">Badminton</option>
                   <option value="Basketball">Basketball</option>
@@ -293,12 +362,13 @@ export default function CoachTournaments() {
                 </select>
                 <input
                   type="number"
-                  placeholder="Maximum Players"
-                  value={newTournament.maxPlayers}
+                  placeholder="Number of Participants *"
+                  value={newTournament.participants}
                   onChange={(e) =>
-                    setNewTournament({ ...newTournament, maxPlayers: e.target.value })
+                    setNewTournament({ ...newTournament, participants: e.target.value })
                   }
                   min="1"
+                  className={!newTournament.participants ? 'required-field' : ''}
                 />
                 <input
                   type="number"
@@ -321,36 +391,49 @@ export default function CoachTournaments() {
                   })
                 }
               ></textarea>
-              <button className="primary-btn" onClick={handleAddTournament}>
-                Create Tournament
+              <button 
+                className="primary-btn" 
+                onClick={handleAddTournament}
+                disabled={loading}
+              >
+                {loading ? 'Creating...' : 'Create Tournament'}
               </button>
             </div>
 
             <div className="list-section">
-              <h2>Upcoming Tournaments</h2>
+              <h2>Available Tournaments</h2>
+              
+              {error && (
+                <div className="error-message">
+                  {error}
+                  <button onClick={fetchTournaments} className="retry-btn">
+                    Try Again
+                  </button>
+                </div>
+              )}
               
               {calendarView ? (
                 <div className="calendar-view">
                   {tournaments.map((tournament) => {
                     const availability = getAvailabilityStatus(tournament);
                     return (
-                      <div className="calendar-tournament-card" key={tournament.id}>
+                      <div className="calendar-tournament-card" key={tournament._id || tournament.id}>
                         <div className="calendar-date">
                           <span className="date-number">{getShortDate(tournament.date)}</span>
                           <span className="date-month">{getMonth(tournament.date)}</span>
                         </div>
                         <div className="calendar-details">
-                          <h3>{tournament.title}</h3>
-                          <p className="sport-info">{tournament.sport} • {tournament.level}</p>
-                          <p className="description">{tournament.description}</p>
+                          <h3>{tournament.name}</h3>
+                          <p className="sport-info">{tournament.sport} • {tournament.level || 'All Levels'}</p>
+                          <p className="description">{tournament.description || 'No description provided'}</p>
                           <div className="tournament-footer">
                             <span className="location">📍 {tournament.location}</span>
                             <div className="availability-info">
                               <span className="seats-left">
-                                {getSeatsLeft(tournament)}/{tournament.maxPlayers} seats
+                                {getSeatsLeft(tournament)}/{tournament.participants} seats
                               </span>
                               <span className="registration-fee">
-                                {tournament.registrationFee > 0 ? formatCurrency(tournament.registrationFee) : "Free"}
+                                {formatCurrency(tournament.registrationFee)}
                               </span>
                               <span 
                                 className={`availability-status ${availability.status}`}
@@ -361,7 +444,6 @@ export default function CoachTournaments() {
                             </div>
                           </div>
                         </div>
-                        {/* Action Buttons for Calendar View */}
                         <div className="card-actions">
                           <button 
                             className="btn-view-details"
@@ -385,21 +467,21 @@ export default function CoachTournaments() {
                   {tournaments.map((tournament) => {
                     const availability = getAvailabilityStatus(tournament);
                     return (
-                      <div className="tournament-card" key={tournament.id}>
+                      <div className="tournament-card" key={tournament._id || tournament.id}>
                         <div className="tournament-header">
                           <div className="date-badge">
                             <span className="month">{getMonth(tournament.date)}</span>
                             <span className="day">{getShortDate(tournament.date)}</span>
                           </div>
                           <div className="tournament-title">
-                            <h3>{tournament.title}</h3>
-                            <p className="sport-level">{tournament.sport} {tournament.level}</p>
+                            <h3>{tournament.name}</h3>
+                            <p className="sport-level">{tournament.sport} {tournament.level || 'All Levels'}</p>
                             <div className="tournament-meta">
                               <span className="registered-count">
-                                {tournament.registeredAthletes} registered
+                                {(tournament.registeredAthletes || tournament.currentAthleteCount || 0)} registered
                               </span>
                               <span className="fee-badge">
-                                {tournament.registrationFee > 0 ? formatCurrency(tournament.registrationFee) : "Free"}
+                                {formatCurrency(tournament.registrationFee)}
                               </span>
                               <span 
                                 className={`availability-status ${availability.status}`}
@@ -409,7 +491,6 @@ export default function CoachTournaments() {
                               </span>
                             </div>
                           </div>
-                          {/* Action Buttons for List View */}
                           <div className="tournament-actions">
                             <button 
                               className="btn-view-details"
@@ -426,39 +507,26 @@ export default function CoachTournaments() {
                           </div>
                         </div>
                         
-                        <p className="tournament-description">{tournament.description}</p>
+                        <p className="tournament-description">{tournament.description || 'No description provided'}</p>
                         
                         <div className="tournament-footer">
                           <span className="location">📍 {tournament.location}</span>
                           <div className="seats-info">
                             <span className="seats-left">
-                              {getSeatsLeft(tournament)} seats left of {tournament.maxPlayers}
+                              {getSeatsLeft(tournament)} seats left of {tournament.participants}
                             </span>
                             <span className="full-date">{formatDate(tournament.date)}</span>
                           </div>
                         </div>
-
-                        {tournament.athletes.length > 0 && (
-                          <div className="registered-athletes">
-                            <p className="section-label">Registered Athletes:</p>
-                            <div className="athletes-grid">
-                              {tournament.athletes.map((athlete) => (
-                                <div key={athlete.id} className="athlete-avatar">
-                                  <img src={athlete.avatar} alt={athlete.name} />
-                                  <span className="tooltip">{athlete.name}</span>
-                                </div>
-                              ))}
-                              {tournament.registeredAthletes > tournament.athletes.length && (
-                                <div className="more-athletes">
-                                  +{tournament.registeredAthletes - tournament.athletes.length}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        )}
                       </div>
                     );
                   })}
+                </div>
+              )}
+
+              {tournaments.length === 0 && !loading && (
+                <div className="empty-state">
+                  <p>No tournaments available at the moment.</p>
                 </div>
               )}
             </div>
@@ -536,7 +604,7 @@ export default function CoachTournaments() {
           <div className="modal-overlay">
             <div className="tournament-modal">
               <div className="modal-header">
-                <h2>{selectedTournament.title}</h2>
+                <h2>{selectedTournament.name}</h2>
                 <button 
                   className="close-btn"
                   onClick={() => setSelectedTournament(null)}
@@ -561,20 +629,17 @@ export default function CoachTournaments() {
                   </div>
                   <div className="info-row">
                     <label>Level:</label>
-                    <span>{selectedTournament.level}</span>
+                    <span>{selectedTournament.level || 'All Levels'}</span>
                   </div>
                   <div className="info-row">
                     <label>Registration Fee:</label>
                     <span className={`fee-amount ${selectedTournament.registrationFee === 0 ? 'free' : ''}`}>
-                      {selectedTournament.registrationFee > 0 
-                        ? formatCurrency(selectedTournament.registrationFee) 
-                        : "Free Entry"
-                      }
+                      {formatCurrency(selectedTournament.registrationFee)}
                     </span>
                   </div>
                   <div className="info-row">
                     <label>Registered Athletes:</label>
-                    <span>{selectedTournament.registeredAthletes} of {selectedTournament.maxPlayers}</span>
+                    <span>{(selectedTournament.registeredAthletes || selectedTournament.currentAthleteCount || 0)} of {selectedTournament.participants}</span>
                   </div>
                   <div className="info-row">
                     <label>Seats Left:</label>
@@ -586,40 +651,25 @@ export default function CoachTournaments() {
                 
                 <div className="description-section">
                   <h3>Description</h3>
-                  <p>{selectedTournament.description}</p>
+                  <p>{selectedTournament.description || 'No description provided'}</p>
                 </div>
 
-                {/* Progress Bar for Seats */}
                 <div className="seats-progress">
                   <h3>Registration Progress</h3>
                   <div className="progress-bar">
                     <div 
                       className="progress-fill"
                       style={{ 
-                        width: `${(selectedTournament.registeredAthletes / selectedTournament.maxPlayers) * 100}%`,
+                        width: `${((selectedTournament.registeredAthletes || selectedTournament.currentAthleteCount || 0) / selectedTournament.participants) * 100}%`,
                         backgroundColor: getAvailabilityStatus(selectedTournament).color
                       }}
                     ></div>
                   </div>
                   <div className="progress-stats">
-                    <span>{selectedTournament.registeredAthletes} registered</span>
+                    <span>{(selectedTournament.registeredAthletes || selectedTournament.currentAthleteCount || 0)} registered</span>
                     <span>{getSeatsLeft(selectedTournament)} seats left</span>
                   </div>
                 </div>
-
-                {selectedTournament.athletes.length > 0 && (
-                  <div className="athletes-section">
-                    <h3>Registered Athletes</h3>
-                    <div className="athletes-list">
-                      {selectedTournament.athletes.map((athlete) => (
-                        <div key={athlete.id} className="athlete-item">
-                          <img src={athlete.avatar} alt={athlete.name} />
-                          <span>{athlete.name}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
 
                 <div className="modal-actions">
                   <button 
