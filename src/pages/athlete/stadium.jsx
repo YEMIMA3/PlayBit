@@ -1,69 +1,127 @@
-import { useState } from 'react';
-import { MapPin, Navigation, Phone, Clock, Search } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { MapPin, Navigation, Phone, Clock, Search, Crosshair, AlertCircle } from 'lucide-react';
 import '../../styles/athlete/stadiums.scss';
 import AthleteNav from './athleteNav';
 
 const mockStadiums = [
   {
     id: 1,
-    name: 'University Sports Complex',
-    type: 'Multi-Sport',
-    address: 'Juhu Tara Road, Vile Parle, Mumbai 400056',
-    distance: '1.2 km',
-    phone: '+91 98765 43210',
-    hours: '6:00 AM - 10:00 PM',
-    facilities: ['Basketball Court', 'Cricket Nets', 'Running Track'],
+    name: 'Surya Sports Center',
+    type: 'Cricket & Football',
+    address: 'Eluru Road, Tadepalligudem 534101',
+    lat: 16.818,
+    lon: 81.526,
+    phone: '+91 98765 43100',
+    hours: '5:30 AM - 10:00 PM',
+    facilities: ['Cricket Nets', 'Football Field', 'Indoor Practice Zone'],
   },
   {
     id: 2,
-    name: 'YMCA Basketball Arena',
-    type: 'Basketball',
-    address: '18 Nathalal Parekh Marg, Fort, Mumbai 400001',
-    distance: '2.5 km',
-    phone: '+91 98765 43211',
-    hours: '7:00 AM - 9:00 PM',
-    facilities: ['Indoor Courts', 'Training Area', 'Locker Rooms'],
+    name: 'Cricket Box Plot',
+    type: 'Cricket',
+    address: 'Tanuku Main Road, Tadepalligudem 534102',
+    lat: 16.820,
+    lon: 81.532,
+    phone: '+91 98765 43101',
+    hours: '6:00 AM - 9:00 PM',
+    facilities: ['Pitch Nets', 'Bowling Machine', 'Turf Practice Area'],
   },
   {
     id: 3,
-    name: 'Shivaji Park Ground',
-    type: 'Cricket & Football',
-    address: 'Shivaji Park, Dadar, Mumbai 400028',
-    distance: '3.8 km',
-    phone: '+91 98765 43212',
-    hours: '6:00 AM - 8:00 PM',
-    facilities: ['Cricket Ground', 'Football Field', 'Practice Nets'],
+    name: 'Dhoni Sports Arena',
+    type: 'Multi-Sport',
+    address: 'Near Bus Stand, Tadepalligudem 534103',
+    lat: 16.823,
+    lon: 81.528,
+    phone: '+91 98765 43102',
+    hours: '5:00 AM - 10:30 PM',
+    facilities: ['Cricket Ground', 'Badminton Court', 'Gym Zone'],
   },
   {
     id: 4,
-    name: 'Cricket Academy Andheri',
-    type: 'Cricket',
-    address: 'DN Nagar, Andheri West, Mumbai 400053',
-    distance: '4.2 km',
-    phone: '+91 98765 43213',
-    hours: '5:30 AM - 10:30 PM',
-    facilities: ['Turf Wickets', 'Net Practice', 'Indoor Coaching'],
+    name: 'KKep Sports Club',
+    type: 'Badminton & Fitness',
+    address: 'Railway Station Road, Tadepalligudem 534104',
+    lat: 16.816,
+    lon: 81.523,
+    phone: '+91 98765 43103',
+    hours: '6:00 AM - 11:00 PM',
+    facilities: ['Indoor Courts', 'Fitness Center', 'Yoga Studio'],
   },
   {
     id: 5,
-    name: 'College Sports Ground',
+    name: 'Boxpot Sports Ground',
     type: 'Multi-Sport',
-    address: 'Bandra Kurla Complex, Bandra East, Mumbai 400051',
-    distance: '5.5 km',
-    phone: '+91 98765 43214',
-    hours: '6:00 AM - 11:00 PM',
-    facilities: ['Football Field', 'Basketball Court', 'Fitness Center'],
+    address: 'Bypass Road, Tadepalligudem 534105',
+    lat: 16.825,
+    lon: 81.529,
+    phone: '+91 98765 43104',
+    hours: '6:00 AM - 9:30 PM',
+    facilities: ['Basketball Court', 'Running Track', 'Cricket Field'],
   },
 ];
+
 
 export default function Stadiums() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStadium, setSelectedStadium] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+  const [locationError, setLocationError] = useState('');
 
-  const filteredStadiums = mockStadiums.filter((stadium) =>
-    stadium.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    stadium.type.toLowerCase().includes(searchQuery.toLowerCase())
+  // 🧭 Get live location
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      setLocationError('Geolocation is not supported by your browser.');
+      return;
+    }
+
+    const watcher = navigator.geolocation.watchPosition(
+      (position) => {
+        setUserLocation({
+          lat: position.coords.latitude,
+          lon: position.coords.longitude,
+        });
+        setLocationError('');
+      },
+      (err) => {
+        console.error('Location error:', err);
+        setLocationError('Unable to fetch your location.');
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+
+    return () => navigator.geolocation.clearWatch(watcher);
+  }, []);
+
+  // 🔍 Filter stadiums by name/type
+  const filteredStadiums = mockStadiums.filter(
+    (stadium) =>
+      stadium.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      stadium.type.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // 📏 Calculate rough distance (in km)
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // km
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) ** 2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return (R * c).toFixed(1);
+  };
+
+  const enhancedStadiums = userLocation
+    ? filteredStadiums.map((s) => ({
+        ...s,
+        distance:
+          calculateDistance(userLocation.lat, userLocation.lon, s.lat, s.lon) +
+          ' km',
+      }))
+    : filteredStadiums;
 
   return (
     <div className="athlete-profile-container">
@@ -73,7 +131,7 @@ export default function Stadiums() {
           {/* Header */}
           <div className="header">
             <h1>Nearby Stadiums</h1>
-            <p>Find practice facilities near you</p>
+            <p>Find practice facilities near your live location</p>
           </div>
 
           {/* Search */}
@@ -89,61 +147,44 @@ export default function Stadiums() {
             </div>
           </div>
 
+          {locationError && (
+            <div className="error-banner">
+              <AlertCircle size={18} />
+              <p>{locationError}</p>
+            </div>
+          )}
+
           <div className="main-grid">
-            {/* Map Placeholder */}
+            {/* 🗺️ Google Map + iframe preview */}
             <div className="map-card">
               <div className="map-card-header">
                 <h2>Map View</h2>
+                <Crosshair className="crosshair-icon" />
               </div>
-              <div className="map-content">
-                <div className="map-view">
-                  {/* Simple map visualization */}
-                  <div className="map-grid">
-                    {Array.from({ length: 64 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="grid-cell"
-                        style={{
-                          backgroundColor: Math.random() > 0.7 ? '#e2e8f0' : '#f1f5f9',
-                        }}
-                      />
-                    ))}
-                  </div>
-                  
-                  {/* Stadium markers */}
-                  {filteredStadiums.map((stadium, index) => (
-                    <div
-                      key={stadium.id}
-                      className="stadium-marker"
-                      style={{
-                        left: `${20 + index * 15}%`,
-                        top: `${30 + (index % 3) * 20}%`,
-                      }}
-                      onClick={() => setSelectedStadium(stadium)}
-                    >
-                      <MapPin
-                        className={selectedStadium?.id === stadium.id ? 'selected-marker' : 'default-marker'}
-                      />
-                      <div className="marker-tooltip">
-                        <p>{stadium.name}</p>
-                      </div>
-                    </div>
-                  ))}
 
-                  {/* Current location marker */}
-                  <div className="current-location">
-                    <div className="location-dot" />
-                  </div>
-                </div>
+              <div className="map-content">
+                {/* Static embedded map */}
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15276.518955659294!2d81.5267274!3d16.819918649999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1762156770575!5m2!1sen!2sin"
+                  width="100%"
+                  height="450"
+                  style={{ border: 0, borderRadius: '12px' }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Tadepalligudem Map"
+                ></iframe>
               </div>
             </div>
 
-            {/* Stadium List */}
+            {/* 🏟️ Stadium List */}
             <div className="stadiums-list">
-              {filteredStadiums.map((stadium) => (
+              {enhancedStadiums.map((stadium) => (
                 <div
                   key={stadium.id}
-                  className={`stadium-card ${selectedStadium?.id === stadium.id ? 'selected' : ''}`}
+                  className={`stadium-card ${
+                    selectedStadium?.id === stadium.id ? 'selected' : ''
+                  }`}
                   onClick={() => setSelectedStadium(stadium)}
                 >
                   <div className="stadium-card-header">
@@ -154,10 +195,11 @@ export default function Stadiums() {
                       </div>
                       <div className="distance">
                         <Navigation size={16} />
-                        <span>{stadium.distance}</span>
+                        <span>{stadium.distance || '—'}</span>
                       </div>
                     </div>
                   </div>
+
                   <div className="stadium-card-content">
                     <div className="info-row">
                       <MapPin size={16} />
@@ -185,7 +227,19 @@ export default function Stadiums() {
                       </div>
                     </div>
 
-                    <button className="directions-btn">Get Directions</button>
+                    <button
+                      className="directions-btn"
+                      onClick={() =>
+                        window.open(
+                          `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+                            stadium.address
+                          )}`,
+                          '_blank'
+                        )
+                      }
+                    >
+                      Get Directions
+                    </button>
                   </div>
                 </div>
               ))}

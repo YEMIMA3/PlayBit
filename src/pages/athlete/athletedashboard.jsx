@@ -21,9 +21,9 @@ const upcomingTournaments = [
 ];
 
 const announcements = [
-  { id: 1, title: 'New Training Schedule Released', date: '2025-10-23', from: 'Coach Rajesh' },
-  { id: 2, title: 'Diet Plan Updated - Check WhatsApp', date: '2025-10-22', from: 'Coach Rajesh' },
-  { id: 3, title: 'Group Practice This Sunday', date: '2025-10-20', from: 'Coach Rajesh' },
+  { id: 1, title: 'New Training Schedule Released', date: '2025-10-23', from: 'Coach Sam' },
+  { id: 2, title: 'Diet Plan Updated - Check WhatsApp', date: '2025-10-22', from: 'Coach Sam' },
+  { id: 3, title: 'Group Practice This Sunday', date: '2025-10-20', from: 'Coach Sam' },
 ];
 
 export default function AthleteDashboard() {
@@ -83,10 +83,10 @@ export default function AthleteDashboard() {
   // Calculate dynamic stats based on athlete data
   const getAthleteStats = () => {
     return {
-      pendingRequests: 2,
-      upcomingTournaments: 5,
+      pendingRequests: 1,
+      upcomingTournaments: 0,
       performanceScore: 85,
-      activeCoach: 'Coach Rajesh'
+      activeCoach: 'Coach Sam'
     };
   };
 

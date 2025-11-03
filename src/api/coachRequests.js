@@ -14,12 +14,14 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// ✅ Get coach's incoming requests
+// ✅ Get coach's incoming requests - FIXED
 export const getCoachRequests = async () => {
   try {
     const response = await api.get("/requests");
     console.log('✅ GET Coach Requests API Response:', response.data);
-    return response.data;
+    
+    // FIX: Extract the requests array from the response object
+    return response.data.requests || response.data || [];
   } catch (error) {
     console.error('❌ GET Coach Requests API Error:', {
       status: error.response?.status,
@@ -37,13 +39,15 @@ export const getCoachRequests = async () => {
   }
 };
 
-// ✅ Accept or reject request
+// ✅ Accept or reject request - FIXED
 export const updateRequestStatus = async (requestId, status) => {
   try {
     console.log('🔄 Updating request status:', { requestId, status });
     const response = await api.put(`/requests/${requestId}`, { status });
     console.log('✅ UPDATE Request Status API Response:', response.data);
-    return response.data;
+    
+    // FIX: Return the updated request object
+    return response.data.updated || response.data;
   } catch (error) {
     console.error('❌ UPDATE Request Status API Error:', {
       status: error.response?.status,
@@ -61,12 +65,14 @@ export const updateRequestStatus = async (requestId, status) => {
   }
 };
 
-// ✅ Get coach's accepted athletes
+// ✅ Get coach's accepted athletes - FIXED
 export const getAcceptedAthletes = async () => {
   try {
     const response = await api.get("/requests/accepted-athletes");
     console.log('✅ GET Accepted Athletes API Response:', response.data);
-    return response.data;
+    
+    // FIX: Extract the athletes array from the response object
+    return response.data.athletes || response.data || [];
   } catch (error) {
     console.error('❌ GET Accepted Athletes API Error:', {
       status: error.response?.status,

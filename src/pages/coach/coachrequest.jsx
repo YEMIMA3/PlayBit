@@ -22,8 +22,19 @@ export default function CoachRequests() {
   const fetchRequests = async () => {
     try {
       setLoading(true);
-      const requestsData = await coachRequestsService.getCoachRequests();
-      setRequests(requestsData);
+      console.log('🔄 Starting to fetch coach requests...');
+      
+      const response = await coachRequestsService.getCoachRequests();
+      
+      console.log('📊 Response type:', typeof response);
+      console.log('📊 Is array?', Array.isArray(response));
+      console.log('📊 Response data:', response);
+      
+      // FIX: Extract requests array from response object
+      const requestsArray = response.requests || response || [];
+      
+      console.log('✅ Final requests array:', requestsArray);
+      setRequests(requestsArray);
     } catch (error) {
       console.error('Error fetching requests:', error);
       alert('Failed to load requests. Please try again.');
@@ -35,9 +46,11 @@ export default function CoachRequests() {
   const handleAccept = async (requestId) => {
     try {
       setUpdatingRequest(requestId);
-      await coachRequestsService.updateRequestStatus(requestId, "accepted");
+      const result = await coachRequestsService.updateRequestStatus(requestId, "accepted");
       
-      // Update local state
+      // Update local state - handle both object and direct response
+      const updatedRequest = result.updated || result;
+      
       setRequests(requests.map(req => 
         req._id === requestId ? { ...req, status: "accepted" } : req
       ));
@@ -54,9 +67,11 @@ export default function CoachRequests() {
   const handleReject = async (requestId) => {
     try {
       setUpdatingRequest(requestId);
-      await coachRequestsService.updateRequestStatus(requestId, "rejected");
+      const result = await coachRequestsService.updateRequestStatus(requestId, "rejected");
       
-      // Update local state
+      // Update local state - handle both object and direct response
+      const updatedRequest = result.updated || result;
+      
       setRequests(requests.map(req => 
         req._id === requestId ? { ...req, status: "rejected" } : req
       ));
@@ -260,7 +275,7 @@ export default function CoachRequests() {
 
           {filtered.length === 0 && !loading && (
             <div className="no-results">
-              No requests found matching your filters.
+              {requests.length === 0 ? 'No requests found.' : 'No requests found matching your filters.'}
             </div>
           )}
         </div>
